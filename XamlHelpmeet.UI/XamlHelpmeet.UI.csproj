@@ -1,0 +1,316 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{51D8F5EF-2E44-450B-94A5-03895206FFD2}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XamlHelpmeet.UI</RootNamespace>
+    <AssemblyName>XamlHelpmeet.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\mono.cecil\bin\net_4_0_Release\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="About\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CheckListBox\CheckListBoxResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateBusinessForm\CreateBusinessFormWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\CheckBoxEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DynamicForm\CreateBusinessFromFromClassWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\ComboBoxEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\DatePickerEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\DynamicFormCheckBoxEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\DynamicFormComboBoxEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\DynamicFormDatePickerEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\DynamicFormEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\DynamicFormTextBlockEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\DynamicFormTextBoxEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\GridCellEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\ImageEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\LabelEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\TextBlockEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\TextBoxEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModelCreation\CreateCommandWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModelCreation\CreateViewModelWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExtractPropertiesToStyle\ExtractSelectedPropertiesToStyleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FieldsList\FieldsListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GridColumnAndRowEditor\GridRowColumnEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectClass\SelectClassFromAssembliesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UIControlFactory\UIControlDefaultsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="About\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CheckListBox\CheckListBox.cs" />
+    <Compile Include="CheckListBox\CheckListBoxIndicatorItem.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Converters\BindingModeEnumConverter.cs" />
+    <Compile Include="Converters\DynamicFormControlTypeEnumConverter.cs" />
+    <Compile Include="Converters\FieldListForegroundConverter.cs" />
+    <Compile Include="Converters\FieldsGroupingConverter.cs" />
+    <Compile Include="Converters\PropertyTypeNameConverter.cs" />
+    <Compile Include="CreateBusinessForm\CreateBusinessFormWindow.xaml.cs">
+      <DependentUpon>CreateBusinessFormWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DynamicForm\DragAndDrop\DragDropHelper.cs" />
+    <Compile Include="DynamicForm\DragAndDrop\DraggedAdorner.cs" />
+    <Compile Include="DynamicForm\DragAndDrop\DynamicFormUtilities.cs" />
+    <Compile Include="DynamicForm\DragAndDrop\InsertionAdorner.cs" />
+    <Compile Include="DynamicForm\DynamicFormListBoxContent.cs" />
+    <Compile Include="Editors\CheckBoxEditor.xaml.cs">
+      <DependentUpon>CheckBoxEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DynamicForm\CreateBusinessFromFromClassWindow.xaml.cs">
+      <DependentUpon>CreateBusinessFromFromClassWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ComboBoxEditor.xaml.cs">
+      <DependentUpon>ComboBoxEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DatePickerEditor.xaml.cs">
+      <DependentUpon>DatePickerEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DynamicFormCheckBoxEditor.xaml.cs">
+      <DependentUpon>DynamicFormCheckBoxEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DynamicFormComboBoxEditor.xaml.cs">
+      <DependentUpon>DynamicFormComboBoxEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DynamicFormDatePickerEditor.xaml.cs">
+      <DependentUpon>DynamicFormDatePickerEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DynamicFormEditor.xaml.cs">
+      <DependentUpon>DynamicFormEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DynamicFormTextBlockEditor.xaml.cs">
+      <DependentUpon>DynamicFormTextBlockEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DynamicFormTextBoxEditor.xaml.cs">
+      <DependentUpon>DynamicFormTextBoxEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\GridCellEditor.xaml.cs">
+      <DependentUpon>GridCellEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ImageEditor.xaml.cs">
+      <DependentUpon>ImageEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\LabelEditor.xaml.cs">
+      <DependentUpon>LabelEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\TextBlockEditor.xaml.cs">
+      <DependentUpon>TextBlockEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\TextBoxEditor.xaml.cs">
+      <DependentUpon>TextBoxEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Enums\DynamicFormControlType.cs" />
+    <Compile Include="UIControlFactory\UIControl.cs" />
+    <Compile Include="UIControlFactory\UIControlFactory.cs" />
+    <Compile Include="UIControlFactory\UIControlRole.cs" />
+    <Compile Include="UIControlFactory\UIControls.cs" />
+    <Compile Include="UIControlFactory\UIPlatform.cs" />
+    <Compile Include="UIControlFactory\UIProperty.cs" />
+    <Compile Include="Utilities\ObservableCollectionSerializationSurrogate.cs" />
+    <Compile Include="Utilities\UIHelpers.cs" />
+    <Compile Include="ValidationRules\PositiveIntegerValidationRule.cs" />
+    <Compile Include="ViewModelCreation\CreateCommandSource.cs" />
+    <Compile Include="ViewModelCreation\CreateCommandWindow.xaml.cs">
+      <DependentUpon>CreateCommandWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModelCreation\CreateViewModelWindow.xaml.cs">
+      <DependentUpon>CreateViewModelWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExtractPropertiesToStyle\ExtractSelectedPropertiesToStyleWindow.xaml.cs">
+      <DependentUpon>ExtractSelectedPropertiesToStyleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FieldsList\FieldsListWindow.xaml.cs">
+      <DependentUpon>FieldsListWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GridColumnAndRowEditor\GridRowColumnEditWindow.xaml.cs">
+      <DependentUpon>GridRowColumnEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="SelectClass\SelectClassFromAssembliesWindow.xaml.cs">
+      <DependentUpon>SelectClassFromAssembliesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIControlFactory\UIControlDefaultsWindow.xaml.cs">
+      <DependentUpon>UIControlDefaultsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\UIUtilities.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Key.snk" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XamlHelpmeet.Model\XamlHelpmeet.Model.csproj">
+      <Project>{C6EB8699-E5BC-4575-AC9A-E712AE58AAAC}</Project>
+      <Name>XamlHelpmeet.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XamlHelpmeet.Extentions\XamlHelpmeet.Extentions.csproj">
+      <Project>{70db1dc2-5400-486a-955a-ef5cfb320926}</Project>
+      <Name>XamlHelpmeet.Extentions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Snapshot_20121225_1.PNG" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

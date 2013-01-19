@@ -1,0 +1,411 @@
+﻿<Window x:Class="XamlHelpmeet.UI.DynamicForm.CreateBusinessFormFromClassWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cvtrs="clr-namespace:XamlHelpmeet.UI.Converters"
+        xmlns:dandd="clr-namespace:XamlHelpmeet.UI.DynamicForm.DragAndDrop"
+        xmlns:local="clr-namespace:XamlHelpmeet.UI.DynamicForm"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        x:Name="frmCreateBusinessFormFromClassWindow"
+        Width="1100"
+        Height="600"
+        MinWidth="675"
+        Loaded="CreateBusinessFormFromClass_Loaded"
+        WindowStyle="ToolWindow">
+    <Window.Resources>
+
+        <cvtrs:BindingModeEnumConverter x:Key="bindingModeEnumConverter" />
+        <cvtrs:FieldsGroupingConverter x:Key="fieldsGroupingConverter" />
+        <cvtrs:DynamicFormControlTypeEnumConverter x:Key="dynamicFormControlTypeEnumConverter" />
+        <cvtrs:FieldListForegroundConverter x:Key="fieldListForegroundConverter" />
+
+        <ControlTemplate x:Key="validationTemplate">
+            <DockPanel>
+                <AdornedElementPlaceholder x:Name="errorAdorner" />
+                <TextBlock Margin="2,0,5,0"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           Foreground="Red"
+                           Text="*"
+                           ToolTip="{Binding ElementName=errorAdorner,
+                                             Path=AdornedElement.(Validation.Errors)[0].ErrorContent}" />
+            </DockPanel>
+        </ControlTemplate>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+        </Style>
+
+        <DataTemplate x:Key="fieldsListDragDropDataTemplate">
+            <StackPanel Background="LightYellow">
+                <TextBlock FontWeight="Bold"
+                           Text="{Binding Path=NameAndWriteable}"
+                           TextAlignment="Center" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="dynamicFormDragDropDataTemplate">
+            <StackPanel>
+                <TextBlock Background="LightYellow"
+                           FontWeight="Bold"
+                           Text="{Binding Path=DataContext.NameAndWriteable}"
+                           TextAlignment="Center" />
+            </StackPanel>
+        </DataTemplate>
+
+        <Style x:Key="GridSplitterPreviewStyle">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Fill="#80000000" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type GridSplitter}">
+            <Setter Property="PreviewStyle" Value="{StaticResource GridSplitterPreviewStyle}" />
+            <Setter Property="Cursor" Value="SizeWE" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="ShowsPreview" Value="True" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Width" Value="4" />
+            <Setter Property="Height" Value="Auto" />
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridSplitter}">
+                        <Border Background="#FFC5C5C5"
+                                BorderBrush="{x:Null}"
+                                BorderThickness="0">
+                            <Rectangle x:Name="rectangle"
+                                       Height="25"
+                                       Stroke="#FFFFFFFF"
+                                       StrokeThickness="0">
+                                <Rectangle.Fill>
+                                    <DrawingBrush TileMode="Tile"
+                                                  Viewbox="0,0,4,4"
+                                                  ViewboxUnits="Absolute"
+                                                  Viewport="0,0,4,4"
+                                                  ViewportUnits="Absolute">
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <GeometryDrawing Brush="{Binding Path=Stroke, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Rectangle}}}" Geometry="M 1 1 L 1 3 L 3 3 L 3 1 z" />
+                                                <GeometryDrawing Brush="#C6C3C6" Geometry="M 0 0 L 0 2 L 2 2 L 2 0 z" />
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="rectangle" Property="Stroke" Value="#FF515151" />
+                                <Setter TargetName="rectangle" Property="StrokeThickness" Value="0" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" MinWidth="200" />
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.ColumnSpan="3"
+                Background="WhiteSmoke"
+                BorderBrush="#FFC5C5C5"
+                BorderThickness="0,0,0,3"
+                Padding="5">
+            <StackPanel Orientation="Horizontal">
+
+                <TextBlock HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold"
+                           Text="Select Object To Create" />
+                <ComboBox x:Name="cboSelectObjectToCreate"
+                          Margin="10,0,10,0"
+                          VerticalAlignment="Center"
+                          SelectionChanged="cboSelectObjectToCreate_SelectionChanged" />
+
+                <WrapPanel x:Name="wpWPFDataGrid" Visibility="Collapsed">
+                    <WrapPanel.Resources>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Margin" Value="7,0,0,3" />
+                        </Style>
+                    </WrapPanel.Resources>
+                    <TextBlock VerticalAlignment="Center" Text="Click to read resources: " />
+                    <TextBlock VerticalAlignment="Center">
+                        <Hyperlink Click="hlJaime_Click"
+                                   NavigateUri="http://blogs.msdn.com/jaimer/archive/2008/08/13/dabbling-around-the-new-wpf-datagrid-part-1.aspx"
+                                   ToolTip="http://blogs.msdn.com/jaimer/archive/2008/08/13/dabbling-around-the-new-wpf-datagrid-part-1.aspx">
+                            Jaime Rodriguez Series
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock VerticalAlignment="Center">
+                        <Hyperlink Click="hlJaime_Click"
+                                   NavigateUri="http://blogs.msdn.com/vinsibal/archive/2008/09/08/wpf-bindinggroup-and-validation-feedback.aspx"
+                                   ToolTip="http://blogs.msdn.com/vinsibal/archive/2008/09/08/wpf-bindinggroup-and-validation-feedback.aspx">
+                            Vincent Sibal Validation
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock VerticalAlignment="Center">
+                        <Hyperlink Click="hlJaime_Click"
+                                   NavigateUri="http://blogs.msdn.com/vinsibal/archive/2008/08/14/wpf-datagrid-dissecting-the-visual-layout.aspx"
+                                   ToolTip="http://blogs.msdn.com/vinsibal/archive/2008/08/14/wpf-datagrid-dissecting-the-visual-layout.aspx">
+                            Vincent Sibal Layout
+                        </Hyperlink>
+                    </TextBlock>
+                </WrapPanel>
+
+                <WrapPanel x:Name="wpSilverlightDataGrid" Visibility="Collapsed">
+                    <WrapPanel.Resources>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Margin" Value="7,0,0,3" />
+                        </Style>
+                    </WrapPanel.Resources>
+                    <TextBlock VerticalAlignment="Center" Text="Click to read resources: " />
+                    <TextBlock VerticalAlignment="Center">
+                        <Hyperlink Click="hlJaime_Click"
+                                   NavigateUri="http://weblogs.asp.net/manishdalal/archive/2008/08/28/silverlight-business-application-part-3-validation-sync.aspx"
+                                   ToolTip="http://weblogs.asp.net/manishdalal/archive/2008/08/28/silverlight-business-application-part-3-validation-sync.aspx">
+                            Manish Dalal Silverlight DataGrid Validation
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock VerticalAlignment="Center">
+                        <Hyperlink Click="hlJaime_Click"
+                                   NavigateUri="http://blogs.msdn.com/scmorris/default.aspx"
+                                   ToolTip="http://blogs.msdn.com/scmorris/default.aspx">
+                            Scott Morrision Silverlight Blog
+                        </Hyperlink>
+                    </TextBlock>
+
+                </WrapPanel>
+
+                <WrapPanel x:Name="wpListView" Visibility="Collapsed">
+                    <TextBlock VerticalAlignment="Center" Text="This creates a simple ListView control with all columns as read-only GridViewColumn." />
+                </WrapPanel>
+
+                <WrapPanel x:Name="wpBusinessForm">
+                    <StackPanel Margin="5" Orientation="Horizontal">
+                        <TextBlock Margin="10,0,5,0"
+                                   VerticalAlignment="Center"
+                                   Text="Column Groups" />
+                        <TextBox x:Name="txtNumberOfColumnGroups"
+                                 Width="35"
+                                 Margin="0,0,20,0"
+                                 KeyDown="txtNumberOfColumnGroups_KeyDown"
+                                 MaxLength="2"
+                                 Text="2" />
+                    </StackPanel>
+
+                    <StackPanel Margin="5" Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="Form Title" />
+                        <TextBox x:Name="txtFormTitle"
+                                 Width="150"
+                                 Margin="5,0,0,0"
+                                 VerticalAlignment="Center"
+                                 MaxLength="100"
+                                 ToolTip="If entered, a row will be prepended with this text in a TextBlock control." />
+                    </StackPanel>
+
+                    <CheckBox x:Name="chkWrapInBorder"
+                              Margin="5"
+                              VerticalAlignment="Center"
+                              Content="Wrap In Border"
+                              ToolTip="If selected, the created form will be wrapped in a Border Control." />
+                    <CheckBox x:Name="chkIncludeButtonRow"
+                              Margin="5"
+                              VerticalAlignment="Center"
+                              Content="Include Button Row"
+                              ToolTip="If selected, an addition row will be add to the bottom that contains an OK and Cancel button." />
+                </WrapPanel>
+
+                <WrapPanel x:Name="wpSilverlightDataForm" Visibility="Collapsed">
+                    <StackPanel Margin="5" Orientation="Horizontal">
+                        <TextBlock Margin="10,0,5,0"
+                                   VerticalAlignment="Center"
+                                   Text="Column Groups" />
+                        <TextBox x:Name="txtNumberOfColumnGroupsDataForm"
+                                 Width="35"
+                                 Margin="0,0,20,0"
+                                 KeyDown="txtNumberOfColumnGroups_KeyDown"
+                                 MaxLength="2"
+                                 Text="2" />
+                    </StackPanel>
+
+                    <StackPanel Margin="5" Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="Form Header" />
+                        <TextBox x:Name="txtDataFormHeader"
+                                 Width="150"
+                                 Margin="5,0,0,0"
+                                 VerticalAlignment="Center"
+                                 MaxLength="100"
+                                 ToolTip="Not required." />
+                    </StackPanel>
+
+                    <CheckBox x:Name="chkRenderEditTemplate"
+                              Margin="5"
+                              VerticalAlignment="Center"
+                              Content="Render Edit Template"
+                              IsChecked="True" />
+                    <CheckBox x:Name="chkRenderNewItemTemplate"
+                              Margin="5"
+                              VerticalAlignment="Center"
+                              Content="Render New Item Template" />
+                    <CheckBox x:Name="chkRenderReadOnlyTemplate"
+                              Margin="5"
+                              VerticalAlignment="Center"
+                              Content="Render ReadOnly Template" />
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+        <StackPanel Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="5,0,0,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+            <CheckBox Margin="0,0,20,0"
+                      VerticalAlignment="Center"
+                      Content="Show Expanded View"
+                      IsChecked="{Binding ElementName=frmCreateBusinessFormFromClassWindow,
+                                          Path=ShowFullDynamicFormContent,
+                                          Mode=TwoWay,
+                                          UpdateSourceTrigger=PropertyChanged}" />
+            <Button Click="btnClearnAllFields_Click" Content="Clear All Fields" />
+            <TextBlock Margin="20,0,0,0"
+                       VerticalAlignment="Center"
+                       Text="Binding Property Prefix"
+                       ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding properyt names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
+            <TextBox x:Name="txtBindingPropertyPrefix"
+                     Width="150"
+                     Margin="7,0,0,0"
+                     VerticalAlignment="Center"
+                     MaxLength="50"
+                     ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding properyt names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
+        </StackPanel>
+
+        <Grid Grid.Row="1"
+              Grid.RowSpan="3"
+              Grid.Column="0">
+            <TextBlock Height="32"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Top"
+                       Background="WhiteSmoke"
+                       Padding="5,9,5,5"
+                       Text="Class Properties" />
+            <ListBox x:Name="lbFields"
+                     Width="Auto"
+                     Margin="0,35,0,0"
+                     HorizontalAlignment="Stretch"
+                     HorizontalContentAlignment="Stretch"
+                     Background="AliceBlue"
+                     Padding="3"
+                     dandd:DragDropHelper.DragDropTemplate="{StaticResource fieldsListDragDropDataTemplate}"
+                     dandd:DragDropHelper.IsDragSource="True"
+                     dandd:DragDropHelper.IsDropTarget="True">
+                <ListBox.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="0,5,0,0"
+                                           Background="AntiqueWhite"
+                                           FontWeight="Bold"
+                                           Padding="2,0,0,0"
+                                           Text="{Binding Path=Name,
+                                                          Converter={StaticResource fieldsGroupingConverter}}" />
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListBox.GroupStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Margin="0,0,10,0"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Foreground="{Binding Path=HasBeenUsed,
+                                                            Converter={StaticResource fieldListForegroundConverter}}"
+                                       Text="{Binding Path=NameAndWriteable}"
+                                       TextWrapping="NoWrap">
+                                <TextBlock.ToolTip>
+                                    <ToolTip Content="{Binding Path=NameSpaceTypeName}" />
+                                </TextBlock.ToolTip>
+                            </TextBlock>
+                            <TextBlock Grid.Column="1"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding Path=TypeName}"
+                                       TextAlignment="Right"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap">
+                                <TextBlock.ToolTip>
+                                    <ToolTip Content="{Binding Path=NameSpaceTypeName}" />
+                                </TextBlock.ToolTip>
+                            </TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+
+        </Grid>
+
+
+        <GridSplitter Grid.Row="1"
+                      Grid.RowSpan="3"
+                      Grid.Column="1" />
+
+        <Grid x:Name="gridColumnsContainer"
+              Grid.Row="2"
+              Grid.Column="2"
+              VerticalAlignment="Stretch">
+            <Grid.Resources>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Style.Resources>
+                        <!--  this is where the default colors for the ListBox SelectedItem are changed  -->
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="WhiteSmoke" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{x:Static SystemColors.ControlTextColor}" />
+                    </Style.Resources>
+                </Style>
+            </Grid.Resources>
+        </Grid>
+
+        <DockPanel Grid.Row="4"
+                   Grid.Column="2"
+                   Margin="0,10,0,10"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Center">
+            <Button Margin="0,0,10,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Click="btnCancel_Click"
+                    Content="Cancel"
+                    DockPanel.Dock="Right" />
+            <Button Margin="0,0,10,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Click="btnCreateForm_Click"
+                    Content="Create"
+                    DockPanel.Dock="Right" />
+        </DockPanel>
+
+    </Grid>
+</Window>

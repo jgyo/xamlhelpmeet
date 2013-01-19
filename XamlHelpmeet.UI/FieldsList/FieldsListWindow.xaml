@@ -1,0 +1,76 @@
+﻿<Window 
+    x:Class="XamlHelpmeet.UI.FieldsListWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:model="clr-namespace:XamlHelpmeet.Model;assembly=XamlHelpmeet.Model"
+    ShowInTaskbar="True"
+    Height="300" Width="450">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="75" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.ColumnSpan="2" Margin="5" Text="Controls to Create When Field is Dragged to XAML Editor" VerticalAlignment="Top" Foreground="DarkGray" FontSize="11" />
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type RadioButton}">
+                    <Setter Property="Margin" Value="7" />
+                </Style>
+            </StackPanel.Resources>
+            <RadioButton x:Name="rdoLabelAndControl" IsChecked="True" Content="Label &amp; Control" />
+            <RadioButton x:Name="rdoControlOnly" Content="Control" />
+            <RadioButton x:Name="rdoLabelOnly" Content="Label" />
+        </StackPanel>
+        <Button Grid.Column="1" Grid.Row="1" Content="Collapse" Click="btnCollapseExpand_click" VerticalAlignment="Center" HorizontalAlignment="Center" Width="60" />
+        
+        <ListBox 
+            Grid.Row="2" Grid.ColumnSpan="2" 
+            AlternationCount="2"
+            HorizontalContentAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            x:Name="lbFields" Margin="5" >
+            <ListBox.Resources>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Style.Resources>
+                        <!--this is where the default colors for the ListBox SelectedItem are changed-->
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightGray" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{x:Static SystemColors.ControlTextColor}" />
+                    </Style.Resources>
+                    <Style.Triggers>
+                        <Trigger Property="ListBox.AlternationIndex" Value="1">
+                            <Setter Property="Background" Value="WhiteSmoke"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.Resources>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="10,5,10,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="75" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock MouseDown="TextBlockDrag_MouseDown" MouseMove="TextBlockDrag_MouseMove" Text="{Binding Path=FullName}" VerticalAlignment="Center" HorizontalAlignment="Left" ToolTip="{Binding Path=NameSpaceTypeName}" />
+                        <CheckBox Grid.Column="1" Margin="5,0,5,0" Content="Incl. Grid" ToolTip="Check to include Grid.Column and Grid.Row properties in created controls." IsChecked="{Binding Path=FieldListIncludeGridAttachedProperties, Mode=TwoWay}" VerticalAlignment="Center" />
+                        <ComboBox 
+                            VerticalAlignment="Center"
+                            Grid.Column="2" 
+                            SelectedItem="{Binding Path=FieldListControlType}"
+                            Focusable="False"
+                            FontSize="10"
+                            Loaded="cboControlType_Loaded"
+                            IsSynchronizedWithCurrentItem="True" Width="Auto"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

@@ -1,0 +1,65 @@
+﻿<Window x:Class="XamlHelpmeet.UI.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About Xaml Helpmeet"
+        Background="Black"
+        BorderBrush="#FFEDB343"
+        BorderThickness="10"
+        Foreground="#FFFEF7D7"
+        Loaded="Window_Loaded_1"
+        MouseDown="Window_MouseDown"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" Width="616" Height="320">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Image Height="100"
+               Margin="10"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Source="/XamlHelpmeet.UI;component/Snapshot_20121225_1.PNG" />
+        <StackPanel Grid.Column="1">
+            <TextBlock FontSize="24"
+                       FontWeight="Bold"
+                       Text="Xaml Helpmeet for Visual Studio 2012" Margin="0,0,10,0" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="0,5,5,0" FontSize="14">Version:</TextBlock>
+                <TextBlock Margin="0,5,0,0" FontSize="14">
+                    <Run x:Name="VersionRun" Text="1.0.0.0" />
+                </TextBlock>
+            </StackPanel>
+            <TextBlock Margin="0,12,5,0"
+                       FontSize="14"
+                       TextWrapping="Wrap">
+                Xaml Helpmeet is derived from XAML Power Toys by Karl Shifflett. The original
+                VisualBasic has been rewritten in CSharp. This version is designed as an add-in for
+                Visual Studio 2012. The purpose of the program is to help programmers work with
+                WPF and Silverlight Xaml code.
+            </TextBlock>
+            <TextBlock Margin="0,6,5,0"
+                       FontSize="14"
+                       TextWrapping="Wrap">
+                In accord with the original license this software is licensed under
+                the terms of the MIT X11 license and is free for all uses. You may
+                see the terms of the license here:
+            </TextBlock>
+            <TextBlock Margin="0,6,0,0">
+                <Hyperlink FontSize="14"
+                           Foreground="#FFFDFDFD"
+                           ToolTip="http://www.opensource.org/licenses/mit-license.html" Click="Hyperlink_Click_1"><Run FontSize="14" Text="http://www.opensource.org/licenses/mit-license.html" />
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="0,12,5,0"
+                       FontSize="18"
+                       TextWrapping="Wrap">
+                Copyright © Gil Yoder 2013
+            </TextBlock>
+
+        </StackPanel>
+    </Grid>
+</Window>

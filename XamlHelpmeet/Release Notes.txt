@@ -1,0 +1,51 @@
+﻿RELEASE NOTES FOR XAML HELPMEET 1.0
+Copyright (c) Gil Yoder 2013
+
+Xaml Helpmeet (XHM) is a derivative of XAML Power Toys written by
+Karl Shifflett for Visual Studio 2008, and Visual Studio 2010. XHM is
+configured to install and run as an add-in to Visual Studio 2012.
+The author converted Shifflett's VisualBasic code to CSharp in
+order to understand the code as well as to have the code
+available in a more familar format.
+
+Most of the structure and coding logic is of Shifflett's excellent
+design. Because of the differences between VisualBasic and
+CSharp a few modifications in logic were required (for example
+there are minor differences between the use of "Nothing" in
+VisualBasic and "null" in CSharp that forced a change in at
+least one place, and differences between VisualBasic's "Exit"
+command and CSharp's "break" command, forced a workaround or two.
+Some refactoring of the logic has also occurred in order to
+elliminate a few reduntant code blocks.
+
+Other than those few differences, there is little difference
+between the versions. Whatever you may have been able to do in
+Shifflett's older versions should be possible in this new version.
+In future I hope to work in some improvements in the workflow of
+certain functions, and add new functions as I go along, but that
+will depend on the amount of time I find to work on the code.
+
+Support for this software can be found at the following Internet
+address:
+
+http://xamlhelpmeet.codeplex.com/
+
+There you may find source code used to compile this product, and
+some documentation, a forum to obtain help, and other information.
+
+This software makes use of Mono.Cecil for gathering information from
+assemblies. Mono.Cecil.rtf cointains information about the copyright
+and licensing of that software.
+
+Xaml Helpmeet carries the MIT license and thus may be used free of
+charge by any person for any reason. A copy of the license may be
+seen in the XamlHelpmeet.rtf file that comes with this software or
+at the following address:
+
+http://www.opensource.org/licenses/mit-license.html
+
+Gil Yoder
+3731 Crescent Drive
+Pearland, TX 77584
+
+gil.yoder@oabs.org

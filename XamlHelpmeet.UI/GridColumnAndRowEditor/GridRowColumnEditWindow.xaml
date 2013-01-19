@@ -1,0 +1,34 @@
+﻿<Window x:Class="XamlHelpmeet.UI.GridColumnAndRowEditor.GridRowColumnEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Grid Row-Column Editor"
+        Loaded="Window_Loaded"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="ToolWindow">
+
+    <StackPanel>
+        <TextBlock HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="12"
+                   Text="Grid Row-Column Editor" />
+        <TextBlock Margin="0,10,0,15"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="10"
+                   Foreground="Gray"
+                   Text="Right click on cells" />
+        <Grid x:Name="gridLayout" />
+        <StackPanel Margin="10"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button Margin="0,0,10,0"
+                    Click="btnCreate_Click"
+                    Content="Create"
+                    FontSize="10" />
+            <Button Click="btnCancel_Click"
+                    Content="Cancel"
+                    FontSize="10" />
+        </StackPanel>
+    </StackPanel>
+
+</Window>

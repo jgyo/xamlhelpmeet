@@ -1,0 +1,42 @@
+﻿<UserControl 
+    x:Class="XamlHelpmeet.UI.Editors.DynamicFormCheckBoxEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:XamlHelpmeet.UI.Editors"
+    xmlns:cvtrs="clr-namespace:XamlHelpmeet.UI.Converters"
+    >
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <cvtrs:BindingModeEnumConverter x:Key="bindingModeEnumConverter" />
+
+    </UserControl.Resources>
+
+    <StackPanel>
+        <DockPanel Margin="3">
+            <Grid DockPanel.Dock="Right">
+                <TextBox TabIndex="2" Text="{Binding Path=ControlLabel, Mode=TwoWay}" VerticalAlignment="Top" Width="125" />
+            </Grid>
+            <TextBlock DockPanel.Dock="Right" Text="CheckBox Label" Margin="0,0,5,0">
+                <TextBlock.ToolTip>
+                    <ToolTip Content="This is the label that is part of the actual CheckBox control and not the label placed to the left of the control in a TextBlock." />
+                </TextBlock.ToolTip>
+            </TextBlock>
+            <TextBlock Text="Label" Width="40" />
+            <TextBox TabIndex="1" HorizontalAlignment="Left" Text="{Binding Path=AssociatedLabel, Mode=TwoWay}" Width="125" />
+        </DockPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="3" HorizontalAlignment="Left">
+            <TextBlock Text="Mode" Width="40" />
+            <ComboBox
+                Focusable="False"
+                FontSize="10"
+                IsSynchronizedWithCurrentItem="True" Width="Auto" 
+                Loaded="cboBindingMode_Loaded"
+                SelectedValue="{Binding Path=BindingMode, Mode=TwoWay, Converter={StaticResource bindingModeEnumConverter}}"  />
+        </StackPanel>
+    </StackPanel>
+</UserControl>
