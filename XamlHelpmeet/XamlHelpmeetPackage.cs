@@ -117,9 +117,11 @@ namespace XamlHelpmeet
 
 		private void CallBack(object sender, EventArgs e)
 		{
-			var command = sender as MenuCommand;
+			var command = sender as OleMenuCommand;
 			if (command == null)
 				throw new ArgumentNullException("sender");
+
+			Trace.WriteLine("Command received: {0}", command.Text);
 
 			var myCommand = CommandsDictionary[command.CommandID];
 			myCommand.Execute();
@@ -148,13 +150,13 @@ namespace XamlHelpmeet
 				// ==================  VISUAL STUDIO CODE EDITOR MENU  ==================
 				// Create ViewModel Command
 				
-				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCodeMenu, PkgCmdList.CreateViewModelCommandFromSelectedClassCommand);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.CreateViewModelFromSelectedClassCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);	
 				AddCommand(menuItem, new CreateViewModelCommandFromSelectedClassCommand(Application));
 
 				// Create AboutCommand Command
 
-				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCodeMenu, PkgCmdList.AboutCommand);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.AboutCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new AboutCommand(Application));
 
@@ -163,106 +165,106 @@ namespace XamlHelpmeet
 
 				// Edit grid columns and rows
 
-				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetXamlMenu, PkgCmdList.EditGridRowAndColumnsCommand);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.EditGridRowAndColumnsCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new EditGridRowAndColumnsCommand(Application));
 
 				// Extract selected properties to style
 
-				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetXamlMenu, PkgCmdList.ExtractSelectedPropertiesToStyleCommand);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.ExtractSelectedPropertiesToStyleCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new ExtractSelectedPropertiesToStyleCommand(Application));
 
 				// Create business form
-				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetXamlMenu, PkgCmdList.CreateBusinessFormCommand);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.CreateBusinessFormCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new CreateBusinessFormCommand(Application));
 
 				// Create business form from selected class
-				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetXamlMenu, PkgCmdList.CreateFormListViewDataGridFromSelectedClassCommand);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.CreateFormListViewDataGridFromSelectedClassCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new CreateFormListViewDataGridFromSelectedClassCommand(Application));
 
 				// Fields list from selected class
-				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetXamlMenu, PkgCmdList.FieldsListFromSelectedClassCommand);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.FieldsListFromSelectedClassCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new FieldsListFromSelectedClassCommand(Application));
 
 				// Remove all margins
-				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetXamlMenu, PkgCmdList.RemoveMarginsCommand);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.RemoveMarginsCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new RemoveMarginsCommand(Application));
 
 				// Set grid to auto layout
-				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetXamlMenu, PkgCmdList.ChangeGridToFlowLayout);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.ChangeGridToFlowLayoutCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new ChangeGridToFlowLayout(Application));
 
 				// Chainsaw
-				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetXamlMenu, PkgCmdList.ChainsawDesignerExtraProperties);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.ChainsawDesignerExtraPropertiesCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new ChainsawDesignerExtraProperties(Application));
 
 				// GROUP INTO COMMANDS
-				menuCommandID = new CommandID(GuidList.guidGroupIntoMenu, PkgCmdList.GroupIntoCanvas);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoCanvasCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoCanvas(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoMenu, PkgCmdList.GroupIntoDockPanel);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoDockPanelCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoDockPanel(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoMenu, PkgCmdList.GroupIntoGrid);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoGridCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoGrid(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoMenu, PkgCmdList.GroupIntoScrollViewer);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoScrollViewerCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoScrollViewer(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoMenu, PkgCmdList.GroupIntoStackPanelVertical);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoStackPanelVerticalCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoStackPanelVertical(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoMenu, PkgCmdList.GroupIntoStackPanelHorizontal);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoStackPanelHorizontalCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoStackPanelHorizontal(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoMenu, PkgCmdList.GroupIntoUniformGrid);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoUniformGridCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoUniformGrid(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoMenu, PkgCmdList.GroupIntoViewBox);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoViewBoxCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoViewBox(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoMenu, PkgCmdList.GroupIntoWrapPanel);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoWrapPanelCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoWrapPanel(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoMenu, PkgCmdList.GroupIntoGroupBox);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoGroupBoxCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoGroupBox(Application));
 
 				// GROUP INTO BORDER COMMANDS
-				menuCommandID = new CommandID(GuidList.guidGroupIntoBorderMenu, PkgCmdList.GroupIntoBorderNoChildRoot);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoBorderNoChildRootCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoBorderNoChildRoot(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoBorderMenu, PkgCmdList.GroupIntoBorderWithGridRoot);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoBorderWithGridRootCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoBorderWithGridRoot(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoBorderMenu, PkgCmdList.GroupIntoBorderWithStackPanelVerticalRoot);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoBorderWithStackPanelVerticalRootCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoBorderWithStackPanelVerticalRoot(Application));
 
-				menuCommandID = new CommandID(GuidList.guidGroupIntoBorderMenu, PkgCmdList.GroupIntoBorderWithStackPanelHorizontalRoot);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.GroupIntoBorderWithStackPanelHorizontalRootCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new GroupIntoBorderWithStackPanelHorizontalRoot(Application));
 
 				// Tools menu commands
-				menuCommandID = new CommandID(GuidList.guidToolsMenu, PkgCmdList.ControlDefaultsCommand);
+				menuCommandID = new CommandID(GuidList.guidXamlHelpmeetCmdSet, PkgCmdList.ControlDefaultsCommand);
 				menuItem = new OleMenuCommand(CallBack, menuCommandID);
 				AddCommand(menuItem, new ControlDefaultsCommand(Application));
 

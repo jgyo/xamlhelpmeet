@@ -62,7 +62,7 @@
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\mono.cecil\bin\net_4_0_Release\Mono.Cecil.dll</HintPath>
+      <HintPath>Resources\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -163,7 +163,6 @@
     <Compile Include="Commands\UI\EditGridRowAndColumnsCommand.cs" />
     <Compile Include="Commands\UI\ExtractSelectedPropertiesToStyleCommand.cs" />
     <Compile Include="Commands\UI\FieldsListFromSelectedClassCommand.cs" />
-    <Compile Include="Connect.cs" />
     <Compile Include="Guid.cs" />
     <Compile Include="PkgCmdList.cs" />
     <Compile Include="Utility\VSLangProjPrjKind.cs" />
@@ -195,6 +194,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Resources\Mono.Cecil.dll" />
+    <Content Include="Resources\Mono.Cecil.pdb" />
     <Content Include="XamlHelpmeet.rtf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

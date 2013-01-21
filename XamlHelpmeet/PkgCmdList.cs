@@ -4,41 +4,58 @@ namespace XamlHelpmeet
 {
 	internal static class PkgCmdList
 	{
-			// CODEWINDOW_CONTEXTMENU
-			public const int CreateViewModelCommandFromSelectedClassCommand     = 0x0101;
-			public const int AboutCommand                                       = 0x0102;
+			// GROUP SYMBOLS
+			public const int CodeWindowCtxMenuGroup                             = 0x0100;
+			public const int XamlHelpmeetCodeWindowMenuGroup                    = 0x0200;
+			public const int XamlWindowCtxMenuGroup                             = 0x0300;
+			public const int XamlHelpmeetXamlWindowMenuGroup                    = 0x0400;
+			public const int ToolsMenuGroup                                     = 0x0500;
+			public const int GroupIntoMenuGroup                                 = 0x0600;
+			public const int GroupIntoBorderMenuGroup                           = 0x0700;
+			
+			// MENU SYMBOLS
+			public const int XamlHelpmeetCodeWindowMenu                         = 0x01A0;
+			public const int XamlHelpmeetXamlWindowMenu                         = 0x03A0;
+			public const int ToolsMenu                                          = 0x04A0;
+			public const int GroupIntoMenu                                      = 0x05A0;
+			public const int GroupIntoBorderMenu                                = 0x06A0;
 
-			// XAMLEDITOR_CONTEXTMENU
-			// XAMLEDITOR_CONTEXTMENU_GROUPINTO_CONTEXTMENU
-			// XAMLEDITOR_CONTEXTMENU_GROUPINTO_CONTEXTMENU_BORDER_CONTEXTMENU
-			public const int GroupIntoBorderNoChildRoot                         = 0x0201;
-			public const int GroupIntoBorderWithGridRoot                        = 0x0202;
-			public const int GroupIntoBorderWithStackPanelVerticalRoot          = 0x0203;
-			public const int GroupIntoBorderWithStackPanelHorizontalRoot        = 0x0204;
+			// BUTTON SYMBOLS
+			// XamlHelpmeetCodeWindowMenu in XamlHelpmeetCodeWindowMenuGroup
+			public const int CreateViewModelFromSelectedClassCommand            = 0x02B1;
+			public const int AboutCommand                                       = 0x02B2;
 
-			// XAMLEDITOR_CONTEXTMENU_GROUPINTO_CONTEXTMENU (continued)
-			public const int GroupIntoCanvas                                    = 0x0301;
-			public const int GroupIntoDockPanel                                 = 0x0302;
-			public const int GroupIntoGrid                                      = 0x0303;
-			public const int GroupIntoScrollViewer                              = 0x0304;
-			public const int GroupIntoStackPanelVertical                        = 0x0305;
-			public const int GroupIntoStackPanelHorizontal                      = 0x0306;
-			public const int GroupIntoUniformGrid                               = 0x0307;
-			public const int GroupIntoViewBox                                   = 0x0308;
-			public const int GroupIntoWrapPanel                                 = 0x0309;
-			public const int GroupIntoGroupBox                                  = 0x030a;
+			// XamlHelpmeetXamlWindowMenu in XamlHelpmeetXamlWindowMenuGroup
+			public const int EditGridRowAndColumnsCommand                       = 0x04B1;
+			public const int ExtractSelectedPropertiesToStyleCommand            = 0x04B2;
+			public const int CreateBusinessFormCommand                          = 0x04B3;
+			public const int CreateFormListViewDataGridFromSelectedClassCommand = 0x04B4;
+			public const int FieldsListFromSelectedClassCommand                 = 0x04B5;
+			public const int RemoveMarginsCommand                               = 0x04B6;
+			public const int ChangeGridToFlowLayoutCommand                      = 0x04B7;
+			public const int ChainsawDesignerExtraPropertiesCommand             = 0x04B8;
 
-			// XAMLEDITOR_CONTEXTMENU (continued)
-			public const int EditGridRowAndColumnsCommand                       = 0x0401;
-			public const int ExtractSelectedPropertiesToStyleCommand            = 0x0402;
-			public const int CreateBusinessFormCommand                          = 0x0403;
-			public const int CreateFormListViewDataGridFromSelectedClassCommand = 0x0404;
-			public const int FieldsListFromSelectedClassCommand                 = 0x0405;
-			public const int RemoveMarginsCommand                               = 0x0406;
-			public const int ChangeGridToFlowLayout                             = 0x0407;
-			public const int ChainsawDesignerExtraProperties                    = 0x0408;
+			// ToolsMenu in ToolsMenuGroup
+			public const int ControlDefaultsCommand                             = 0x05B1;
+			//             AboutCommand (duplicate in this menu)                       
 
-			// XAMLEDITOR_CONTEXTMENU_TOOLS_CONTEXTMENU
-			public const int ControlDefaultsCommand                             = 0x0501;
+			// GroupIntoMenu in GroupIntoMenuGroup
+			public const int GroupIntoCanvasCommand                             = 0x06B1;
+			public const int GroupIntoDockPanelCommand                          = 0x06B2;
+			public const int GroupIntoGridCommand                               = 0x06B3;
+			public const int GroupIntoScrollViewerCommand                       = 0x06B4;
+			public const int GroupIntoStackPanelVerticalCommand                 = 0x06B5;
+			public const int GroupIntoStackPanelHorizontalCommand               = 0x06B6;
+			public const int GroupIntoUniformGridCommand                        = 0x06B7;
+			public const int GroupIntoViewBoxCommand                            = 0x06B8;
+			public const int GroupIntoWrapPanelCommand                          = 0x06B9;
+			public const int GroupIntoGroupBoxCommand                           = 0x06BA;
+
+
+			// GroupIntoBorderMenu in GroupIntoBorderMenuGroup
+			public const int GroupIntoBorderNoChildRootCommand                  = 0x07B1;
+			public const int GroupIntoBorderWithGridRootCommand                 = 0x07B2;
+			public const int GroupIntoBorderWithStackPanelVerticalRootCommand   = 0x07B3;
+			public const int GroupIntoBorderWithStackPanelHorizontalRootCommand = 0x07B4;
 	}
 }

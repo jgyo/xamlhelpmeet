@@ -1,389 +1,488 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable"
-			  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-	<!--  This is the file that defines the actual layout and type of the commands.
-		It is divided in different sections (e.g. command definition, command
-		placement, ...), with each defining a specific set of properties.
-		See the comment before each section for more details about how to
-		use it. -->
+	<!-- This is the file that defines the actual layout and type of the
+		 commands. It is divided in different sections (e.g. command
+		 definition, command placement, ...), with each defining a specific
+		 set of properties. See the comment before each section for more
+		 details about how to use it.
 
-	<!--  The VSCT compiler (the tool that translates this file into the binary
-		format that VisualStudio will consume) has the ability to run a preprocessor
-		on the vsct file; this preprocessor is (usually) the C++ preprocessor, so
-		it is possible to define includes and macros with the same syntax used
-		in C++ files. Using this ability of the compiler here, we include some files
-		defining some of the constants that we will use inside the file. -->
+		 The VSCT compiler (the tool that translates this file into the binary
+		 format that VisualStudio will consume) has the ability to run a
+		 preprocessor on the vsct file; this preprocessor is (usually) the C++
+		 preprocessor, so it is possible to define includes and macros with the
+		 same syntax used in C++ files. Using this ability of the compiler
+		 here, we include some files defining some of the constants that we
+		 will use inside the file.
 
-	<!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+		 This is the file that defines the IDs for all the commands exposed by
+		 VisualStudio. -->
 	<Extern href="stdidcmd.h" />
 
-	<!--This header contains the command ids for the menus provided by the shell. -->
+	<!-- This header contains the command ids for the menus provided by the
+		 shell. -->
 	<Extern href="vsshlids.h" />
 
+	<!-- The Commands section is where we define the commands, menus and menu
+		 groups. This section uses a Guid to identify the package that provides
+		 the items defined inside it.
+
+		 Inside this section we have different sub-sections: one for the menus,
+		 another for the menu groups, one for the buttons (the actual
+		 commands), one for the combos and the last one for the bitmaps used.
+		 Each element is identified by a command id that is a unique pair of
+		 guid and numeric identifier; the guid part of the identifier is
+		 usually called "command set" and is used to group different command
+		 inside a logically related group; your package should define its own
+		 command set in order to avoid collisions with command ids defined by
+		 other packages. -->
 	<Commands package="guidXamlHelpmeetPkg">
+
 		<Menus>
-			<Menu guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeMenu"
-				  priority="0x100" type="Menu">
+			<!-- In: code window context menu.  Contains: XamlHelpmeetCodeWindowMenuGroup. -->
+			<Menu guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeWindowMenu" priority="0x100" type="Menu">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="CodeWindowCtxMenuGroup" />
 				<Strings>
 					<ButtonText>Xaml Helpmeet</ButtonText>
 				</Strings>
 			</Menu>
-			<Menu guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenu"
-				  priority="0x100" type="Menu">
+
+			<!-- In: XamlWindowCtxMenuGroup.  Contains: XamlHelpmeetXamlWindowMenuGroup. -->
+			<Menu guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenu" priority="0x100" type="Menu">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlWindowCtxMenuGroup" />
 				<Strings>
 					<ButtonText>Xaml Helpmeet</ButtonText>
 				</Strings>
 			</Menu>
-			<Menu guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenu" priority="0x0100"
-				  type="Menu">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" />
-				<Strings>
-					<ButtonText>Group Into</ButtonText>
-				</Strings>
-			</Menu>
-			<Menu guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenu"
-				  priority="0x0100" type="Menu">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
-				<Strings>
-					<ButtonText>Group Into Border</ButtonText>
-				</Strings>
-			</Menu>
-			<Menu guid="guidXamlHelpmeetCmdSet" id="ToolsMenu" priority="0x1100" type="Menu">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" />
+
+			<!-- In: XamlHelpmeetXamlWindowMenuGroup.  Contains: ToolsMenuGroup. -->
+			<Menu guid="guidXamlHelpmeetCmdSet" id="ToolsMenu" priority="0x0100" type="Menu">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
 				<Strings>
 					<ButtonText>Tools</ButtonText>
 				</Strings>
 			</Menu>
+
+			<!-- In: XamlHelpmeetXamlWindowMenuGroup.  Contains: GroupIntoMenuGroup. -->
+			<Menu guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenu" priority="0x0100" type="Menu">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<Strings>
+					<ButtonText>Group Into</ButtonText>
+				</Strings>
+			</Menu>
+
+			<!-- In: GroupIntoMenuGroup.  Contains: GroupIntoBorderMenuGroup. -->
+			<Menu guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenu" priority="0x0100" type="Menu">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<Strings>
+					<ButtonText>Border</ButtonText>
+				</Strings>
+			</Menu>
 		</Menus>
 
+		<!-- Buttons section. -->
+		<!-- This section defines the elements the user can interact with, like
+			 a menu command or a button or combo box in a toolbar. -->
 		<Buttons>
-			<!-- CODEWINDOW_CONTEXTMENU -->
-			<Button guid="guidXamlHelpmeetCmdSet"
-					id="CreateViewModelBtn" priority="0x0100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeMenuGroup" />
+			<!-- To define a button you need to specify the ID of the command
+				 it will envoke, the name of the Guid that contains the ID, and
+				 its display priority.  The command is visible and enabled by
+				 default. If you need to change the visibility, status, etc,
+				 you can use the CommandFlag node. You can add more than one
+				 CommandFlag node e.g.:
+					<CommandFlag>DefaultInvisible</CommandFlag>
+					<CommandFlag>DynamicVisibility</CommandFlag>
+
+				 The Parent tag is used to locate the button within a specific
+				 group. It takes a group ID, and the Guid that contains the ID.
+
+				 The Icon tag is used to associate an image with the button.
+				 If you do not want an image next to your command, remove the
+				 Icon node.
+
+				 The Strings tag is used to specify text for the button.
+				 Several tags may be placed with Strings to specify different
+				 text elements. I think ButtonText is required, but the tag may
+				 be empty. If empty, text for a button can be specified in code
+				 by setting the Text field of an OleMenuCommand object. -->
+			
+			<!-- These buttons go in the Xaml Helpmeet menu that is placed
+			     in the code window context menu. -->
+
+			<Button guid="guidXamlHelpmeetCmdSet" id="CreateViewModelFromSelectedClassCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeWindowMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
 					<ButtonText>Create View Model</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="AboutCommandBtn" priority="0x500">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeMenuGroup" />
+			<Button guid="guidXamlHelpmeetCmdSet" id="AboutCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeWindowMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>About Xaml Helpmeet</ButtonText>
+					<ButtonText>About Xamlhelpmeet</ButtonText>
+				</Strings>
+			</Button>
+			
+			<!-- Buttons for the Xaml Helpmeet menu in the Xaml window editor
+			     context menu. -->
+
+			<Button guid="guidXamlHelpmeetCmdSet" id="EditGridRowAndColumnsCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Edit Grid Rows and Columns</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidXamlHelpmeetCmdSet" id="ExtractSelectedPropertiesToStyleCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Extract Properties to Style</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidXamlHelpmeetCmdSet" id="CreateBusinessFormCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Create Business Form</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidXamlHelpmeetCmdSet" id="CreateFormListViewDataGridFromSelectedClassCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Create Form from Class</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidXamlHelpmeetCmdSet" id="FieldsListFromSelectedClassCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Fields List from Class</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidXamlHelpmeetCmdSet" id="RemoveMarginsCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Remove All Margins</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidXamlHelpmeetCmdSet" id="ChangeGridToFlowLayoutCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Set Grid to Auto Layout</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidXamlHelpmeetCmdSet" id="ChainsawDesignerExtraPropertiesCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Chainsaw</ButtonText>
+				</Strings>
+			</Button>
+			
+			<!-- One of the buttons in the Tools menu that is contained in the
+			     Xaml Helpmeet menu for Xaml code. -->
+
+			<Button guid="guidXamlHelpmeetCmdSet" id="ControlDefaultsCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="ToolsMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Set Control Defaults</ButtonText>
 				</Strings>
 			</Button>
 
-			<!-- XAMLEDITOR_CONTEXTMENU_GROUPINTO_CONTEXTMENU_BORDER_CONTEXTMENU -->
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderNoChildRootBtn"
-					priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenuGroup" />
-				<Strings>
-					<ButtonText>No Child Root</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderWithGridRootBtn"
-					priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenuGroup" />
-				<Strings>
-					<ButtonText>With Grid Root</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet"
-					id="GroupIntoBorderWithStackPanelVerticalRootBtn" priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenuGroup" />
-				<Strings>
-					<ButtonText>With Stack Panel Vertical Root</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet"
-					id="GroupIntoBorderWithStackPanelHorizontalRootBtn" priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenuGroup" />
-				<Strings>
-					<ButtonText>With Stack Panel Horizontal Root</ButtonText>
-				</Strings>
-			</Button>
-
-			<!-- XAMLEDITOR_CONTEXTMENU_GROUPINTO_CONTEXTMENU -->
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoCanvasBtn" priority="0x100">
+			<!-- Buttons for the Group Into menu that is contained in the
+			     Xaml Helpmeet menu for Xaml code. -->
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoCanvasCommand" priority="0x100">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
 					<ButtonText>Canvas</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoDockPanelBtn"
-					priority="0x100">
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoDockPanelCommand" priority="0x100">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>DocPanel</ButtonText>
+					<ButtonText>DockPanel</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoGridBtn" priority="0x100">
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoGridCommand" priority="0x100">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>Guid</ButtonText>
+					<ButtonText>Grid</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoScrollViewerBtn"
-					priority="0x100">
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoScrollViewerCommand" priority="0x100">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>ScrollViewer</ButtonText>
+					<ButtonText>ScrollViewer with Root Grid</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoStackPanelVerticalBtn"
-					priority="0x100">
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoStackPanelVerticalCommand" priority="0x100">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>StackPanel Vertical</ButtonText>
+					<ButtonText>Vertical StackPanel</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoStackPanelHorizontalBtn"
-					priority="0x100">
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoStackPanelHorizontalCommand" priority="0x100">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>StackPanel Horizontal</ButtonText>
+					<ButtonText>Horizontal StackPanel</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoUniformGridBtn"
-					priority="0x100">
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoUniformGridCommand" priority="0x100">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
 					<ButtonText>UniformGrid</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoViewBoxBtn" priority="0x100">
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoViewBoxCommand" priority="0x100">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>ViewBox</ButtonText>
+					<ButtonText>Viewbox</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoWrapPanelBtn" priority="0x100">
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoWrapPanelCommand" priority="0x100">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
 					<ButtonText>WrapPanel</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoGroupBoxBtn" priority="0x100">
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoGroupBoxCommand" priority="0x100">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
 					<ButtonText>GroupBox</ButtonText>
 				</Strings>
 			</Button>
 
-			<!-- XAMLEDITOR_CONTEXTMENU -->
-			<Button guid="guidXamlHelpmeetCmdSet" id="EditGridRowAndColumnsCommandBtn"
-					priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" />
+			<!-- The Group Into menu has a sub menu for the border element.
+			     These are the buttons for that sub menu. -->
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderNoChildRootCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>Edit Grid Row and Columns</ButtonText>
+					<ButtonText>Without Child Root</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet"
-					id="ExtractSelectedPropertiesToStyleCommandBtn" priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" />
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderWithGridRootCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>Extract Selected Properties to Style</ButtonText>
+					<ButtonText>With Grid Root</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="CreateBusinessFormCommandBtn"
-					priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" />
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderWithStackPanelVerticalRootCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>Create Business Form</ButtonText>
+					<ButtonText>With Vertical StackPanel Root</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet"
-					id="CreateFormListViewDataGridFromSelectedClassCommandBtn" priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" />
+			<Button guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderWithStackPanelHorizontalRootCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenuGroup" />
+				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>Create ListView DataGrid Form</ButtonText>
+					<ButtonText>With Horizontal StackPanel Root</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet"
-					id="FieldsListFromSelectedClassCommandBtn" priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" />
-				<Strings>
-					<ButtonText>Create Fields List</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="RemoveMarginsCommandBtn" priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" />
-				<Strings>
-					<ButtonText>Remove Margins</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="ChangeGridToFlowLayoutBtn" priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" />
-				<Strings>
-					<ButtonText>Grid to Flow Layout</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidXamlHelpmeetCmdSet" id="ChainsawDesignerExtraPropertiesBtn"
-					priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" />
-				<Strings>
-					<ButtonText>Chainsaw</ButtonText>
-				</Strings>
-			</Button>
-
-			<!-- XAMLEDITOR_CONTEXTMENU_TOOLS_CONTEXTMENU -->
-			<Button guid="guidXamlHelpmeetCmdSet" id="ControlDefaultsCommandBtn"
-					priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="ToolsMenuGroup" />
-				<Strings>
-					<ButtonText>Control Defaults</ButtonText>
-				</Strings>
-			</Button>
-			<!-- AboutMenu also goes here, but since the button already exists, we will reusing
-				 by specifying a placement below. -->
 		</Buttons>
 
+		<!-- The bitmaps section is used to define the bitmaps that are used
+			 for the commands.-->
+		<!--<Bitmaps>
+			-->
+		<!-- The bitmap id is defined in a way that is a little different
+				 from the others: the declaration starts with a guid for the
+				 bitmap strip, then there is the resource id of the bitmap
+				 strip containing the bitmaps and then there are the numeric
+				 ids of the elements used inside a button definition. An
+				 important aspect of this declaration is that the element id
+				 must be the actual index (1-based) of the bitmap inside the
+				 bitmap strip. -->
+		
+		<!--
+			<Bitmap
+				guid="guidImages" href="Resources\Images.png"
+				usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows" />
+		    </Bitmaps>-->
+		
+		<!-- In this section you can define new menu groups. A menu group is a
+			 container for other menus or buttons (commands); from a visual
+			 point of view you can see the group as the part of a menu
+			 contained between two lines. The parent of a group must be a menu. -->
 		<Groups>
-			<!-- Group to contain the Xaml Helpmeet submenu in the code window's context
-				 menu. -->
-			<Group guid="guidXamlHelpmeetCmdSet" id="CodeWindowCtxMenuGroup" priority="0x0100">
+			<!-- This group will be added to the code window context menu. -->
+			<Group guid="guidXamlHelpmeetCmdSet" id="CodeWindowCtxMenuGroup" priority="0x0600">
 				<Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
 			</Group>
-
-			<!-- Groups buttons that go into the code window's context menu Xaml Helpmeet
-			     submenu. -->
-			<Group guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeMenuGroup" priority="0x100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeMenu" />
+			<Group guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeWindowMenuGroup" priority="0x000">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeWindowMenu" />
 			</Group>
-
-			<!-- Group to contain the Xaml Helpmeet submenu in the Xaml window's context
-			     menu. -->
-			<Group guid="guidXamlHelpmeetCmdSet" id="XamlWindowCtxMenuGroup" priority="0x0100">
+			<!-- This group will be added to the xaml window context menu. -->
+			<Group guid="guidXamlHelpmeetCmdSet" id="XamlWindowCtxMenuGroup" priority="0x000">
 				<Parent guid="guidXamlEdGrp" id="IDMX_XAML_SOURCE_XAML" />
 			</Group>
-
-			<!-- Groups submenus and buttons that go into the Xaml window's context menu
-			     Xaml Helpmeet submenu-->
-			<Group guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenuGroup" priority="0x0100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlMenu" />
+			<Group guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" priority="0x000">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenu" />
 			</Group>
-
-			<!-- Groups submenus and buttons in the Group Into menu -->
-			<Group guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" priority="0x0100">
+			<Group guid="guidXamlHelpmeetCmdSet" id="ToolsMenuGroup" priority="0x000">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="ToolsMenu" />
+			</Group>
+			<Group guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenuGroup" priority="0x000">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenu" />
 			</Group>
-
-			<!-- Groups buttons in the Group into border menu -->
-			<Group guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenuGroup" priority="0x0100">
+			<Group guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenuGroup" priority="0x000">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="GroupIntoBorderMenu" />
-			</Group>
-
-			<!-- Groups buttons in the Tools menu -->
-			<Group guid="guidXamlHelpmeetCmdSet" id="ToolsMenuGroup" priority="0x1100">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="ToolsMenu" />
 			</Group>
 		</Groups>
 	</Commands>
 
+	<CommandPlacements>
+		<CommandPlacement guid="guidXamlHelpmeetCmdSet" id="AboutCommand" priority="0x0900">
+			<Parent guid="guidXamlHelpmeetCmdSet" id="ToolsMenuGroup" />
+		</CommandPlacement>
+	</CommandPlacements>
+
+	<!--
+	The Symbols tag holds a list of Guid and ID symbols (i.e., names associated
+	with specific values). Guid symbols can stand alone, but ID symbols must be
+	associated with Guids, and are hence wrapped in Guids. This way VS can
+	tell the difference between symbols that have identical values, because they
+	are contained within different Guids.
+
+	There should be one package Guid, and at least one Guid for IDs, if there
+	are any IDs. (You would not be using a VSCT file, if you did not need ID
+	symbols.) ID symbols can represent command values, menu values, group values
+	and image values.
+
+	Image values are special. An image will have its own Guid, and the IDs are
+	1-based index values into the image.
+-->
 	<Symbols>
-		<!-- This is the package guid. It should have the same value as that given
-			 in Guid.cs and source.extension.vsixmanifest' Product Id field. -->
-		<GuidSymbol name="guidXamlHelpmeetPkg"      value="{62b1166f-4c11-48f9-a092-9537de7c4cb7}" />
+		<!-- This is the package guid. Only one package Guid exists per package.
+		It should have the same value as that given in Guid.cs and source
+		.extension.vsixmanifest's Product Id field. -->
+		<GuidSymbol name="guidXamlHelpmeetPkg"        value="{37b68c5c-8ac0-436c-8483-0947379cffe9}" />
 
-		<GuidSymbol name="guidXamlHelpmeetCodeMenu" value="{13c17015-82a3-4310-b912-6ed7f6d6f19f}" />
-		<GuidSymbol name="guidXamlHelpmeetXamlMenu" value="{6720b59d-1e17-41c0-aa57-ed761e00301a}" />
-		<GuidSymbol name="guidGroupIntoMenu"        value="{7c468f4f-1061-4e81-aead-41c48da74927}" />
-		<GuidSymbol name="guidGroupIntoBorderMenu"  value="{7ef51685-b558-4977-959c-4a58f15cee96}" />
-		<GuidSymbol name="guidToolsMenu"            value="{e50735e7-a179-46d1-864a-514c010e3d1c}" />
-
-		<GuidSymbol name="guidXamlEdGrp" value="{4c87b692-1202-46aa-b64c-ef01faec53da}">
-			<IDSymbol name="IDMX_XAML_SOURCE_XAML" value="0x103"/>
+		<!-- This is needed since the include files do not define this value. -->
+		<GuidSymbol name="guidXamlEdGrp"           value="{4c87b692-1202-46aa-b64c-ef01faec53da}">
+			<IDSymbol name="IDMX_XAML_SOURCE_XAML" value="0x103" />
 		</GuidSymbol>
 
-		<!-- This is the guid used to identify all of the commands defined in this
-			 file as belonging to this assembly. It matches a second guid in Guid.cs
-			 which is used to create a Guid object with the name given here. -->
-		<GuidSymbol name="guidXamlHelpmeetCmdSet" value="{578c01ed-6bd8-4bed-8e1c-1ff47f1347eb}">
+		<!-- This is the guid used to group the symbols together. It matches a
+		 second guid in Guid.cs which is used to create a Guid object with the
+		 name given here to link the commands given here with commands in the
+		 programs code. -->
+		<GuidSymbol name="guidXamlHelpmeetCmdSet"     value="{f3d73d49-82d2-49bf-a7e8-9edc050f70af}">
+
+			<!-- Commands are associated with menu items, and menu items go into
+			 groups which go into menus. For each menu then we need at least
+			 one group, and for each menu item, we need a command. Each group
+			 must be given a value, and each command must have a value-->
 			
-			<!-- MENUS -->
-			<IDSymbol name="XamlHelpmeetCodeMenu" value="0x3000" />
-			<IDSymbol name="XamlHelpmeetXamlMenu" value="0X4000" />
-			<IDSymbol name="GroupIntoMenu" value="0x4100" />
-			<IDSymbol name="GroupIntoBorderMenu" value="0x4110" />
-			<IDSymbol name="ToolsMenu" value="0x4200" />
+			<!--
+				 Number Scheme:
+				 
+				 The hex numbers given to the IDSymbols listed below have the
+				 following scheme for organizational purposes only.
+				 
+				 Numbers endeding in "00" are used to identify groups.
+				 
+				 Menu symbols are given a number based on the groups they are
+				 placed in. If a menu is in group represented with the number
+				 0x0100, the menu is given the same number plus 0x00A0, so in
+				 this case the number would be 0x01A0.
+				 
+				 Buttons are also given a number based on the group it is in.
+				 The number is the group number plus 0x00B0, plus an index
+				 number to distinguish it from other buttons in the same
+				 group. Thus the first button in group 0x0200 is given the
+				 hex number 0x02B1.
+				 
+				 The groups that are placed within menus should have numbers
+				 that are greater than their menus. In this case since only
+				 one group is created per menu, if a menu is in group 0x0100,
+				 the group that is placed in that menu will be 0x200.			
+			-->
+
+			<!-- GROUP SYMBOLS -->
+			<IDSymbol name="CodeWindowCtxMenuGroup"                             value="0x0100" />
+			<IDSymbol name="XamlHelpmeetCodeWindowMenuGroup"                    value="0x0200" />
+			<IDSymbol name="XamlWindowCtxMenuGroup"                             value="0x0300" />
+			<IDSymbol name="XamlHelpmeetXamlWindowMenuGroup"                    value="0x0400" />
+			<IDSymbol name="ToolsMenuGroup"                                     value="0x0500" />
+			<IDSymbol name="GroupIntoMenuGroup"                                 value="0x0600" />
+			<IDSymbol name="GroupIntoBorderMenuGroup"                           value="0x0700" />
 			
-			<!-- BUTTONS -->
-			<IDSymbol name="CreateViewModelBtn"                                    value="0x8001" />
-			<IDSymbol name="AboutCommandBtn"                                       value="0x8002" />
-			<IDSymbol name="GroupIntoBorderNoChildRootBtn"                         value="0x8003" />
-			<IDSymbol name="GroupIntoBorderWithGridRootBtn"                        value="0x8004" />
-			<IDSymbol name="GroupIntoBorderWithStackPanelVerticalRootBtn"          value="0x8005" />
-			<IDSymbol name="GroupIntoBorderWithStackPanelHorizontalRootBtn"        value="0x8006" />
-			<IDSymbol name="GroupIntoCanvasBtn"                                    value="0x8007" />
-			<IDSymbol name="GroupIntoDockPanelBtn"                                 value="0x8008" />
-			<IDSymbol name="GroupIntoGridBtn"                                      value="0x8009" />
-			<IDSymbol name="GroupIntoScrollViewerBtn"                              value="0x800a" />
-			<IDSymbol name="GroupIntoStackPanelVerticalBtn"                        value="0x800b" />
-			<IDSymbol name="GroupIntoStackPanelHorizontalBtn"                      value="0x800c" />
-			<IDSymbol name="GroupIntoUniformGridBtn"                               value="0x800d" />
-			<IDSymbol name="GroupIntoViewBoxBtn"                                   value="0x800e" />
-			<IDSymbol name="GroupIntoWrapPanelBtn"                                 value="0x800f" />
-			<IDSymbol name="GroupIntoGroupBoxBtn"                                  value="0x8010" />
-			<IDSymbol name="EditGridRowAndColumnsCommandBtn"                       value="0x8011" />
-			<IDSymbol name="ExtractSelectedPropertiesToStyleCommandBtn"            value="0x8012" />
-			<IDSymbol name="CreateBusinessFormCommandBtn"                          value="0x8013" />
-			<IDSymbol name="CreateFormListViewDataGridFromSelectedClassCommandBtn" value="0x8014" />
-			<IDSymbol name="FieldsListFromSelectedClassCommandBtn"                 value="0x8015" />
-			<IDSymbol name="RemoveMarginsCommandBtn"                               value="0x8016" />
-			<IDSymbol name="ChangeGridToFlowLayoutBtn"                             value="0x8017" />
-			<IDSymbol name="ChainsawDesignerExtraPropertiesBtn"                    value="0x8018" />
-			<IDSymbol name="ControlDefaultsCommandBtn"                             value="0x8019" />
-			
-			<!-- GROUPS -->
-			<IDSymbol name="CodeWindowCtxMenuGroup" value="0x1500" />
-			<IDSymbol name="XamlHelpmeetCodeMenuGroup" value="0x3500" />
+			<!-- MENU SYMBOLS -->
+			<!-- -->
+			<IDSymbol name="XamlHelpmeetCodeWindowMenu"                         value="0x01A0" />
+			<IDSymbol name="XamlHelpmeetXamlWindowMenu"                         value="0x03A0" />
+			<IDSymbol name="ToolsMenu"                                          value="0x04A0" />
+			<IDSymbol name="GroupIntoMenu"                                      value="0x05A0" />
+			<IDSymbol name="GroupIntoBorderMenu"                                value="0x06A0" />
 
-			<IDSymbol name="XamlWindowCtxMenuGroup" value="0x2500" />
-			<IDSymbol name="XamlHelpmeetXamlMenuGroup" value="0x4500" />
-			<IDSymbol name="GroupIntoMenuGroup" value="0x4600" />
-			<IDSymbol name="GroupIntoBorderMenuGroup" value="0x4610" />
-			<IDSymbol name="ToolsMenuGroup" value="0x4700" />
-			
-			<!-- COMMANDS -->
+			<!-- BUTTON SYMBOLS -->
+			<!-- XamlHelpmeetCodeWindowMenu in XamlHelpmeetCodeWindowMenuGroup -->
+			<IDSymbol name="CreateViewModelFromSelectedClassCommand"            value="0x02B1" />
+			<IDSymbol name="AboutCommand"                                       value="0x02B2" />
 
-			<!-- CODEWINDOW_CONTEXTMENU -->
-			<IDSymbol name ="CreateViewModelCommandFromSelectedClassCommand"	      value="0x0101" />
-			<IDSymbol name ="AboutCommand"	                                          value="0x0102" />
+			<!-- XamlHelpmeetXamlWindowMenu in XamlHelpmeetXamlWindowMenuGroup -->
+			<IDSymbol name="EditGridRowAndColumnsCommand"                       value="0x04B1" />
+			<IDSymbol name="ExtractSelectedPropertiesToStyleCommand"            value="0x04B2" />
+			<IDSymbol name="CreateBusinessFormCommand"                          value="0x04B3" />
+			<IDSymbol name="CreateFormListViewDataGridFromSelectedClassCommand" value="0x04B4" />
+			<IDSymbol name="FieldsListFromSelectedClassCommand"                 value="0x04B5" />
+			<IDSymbol name="RemoveMarginsCommand"                               value="0x04B6" />
+			<IDSymbol name="ChangeGridToFlowLayoutCommand"                      value="0x04B7" />
+			<IDSymbol name="ChainsawDesignerExtraPropertiesCommand"             value="0x04B8" />
 
-			<!-- XAMLEDITOR_CONTEXTMENU -->
-			<!-- XAMLEDITOR_CONTEXTMENU_GROUPINTO_CONTEXTMENU -->
-			<!-- XAMLEDITOR_CONTEXTMENU_GROUPINTO_CONTEXTMENU_BORDER_CONTEXTMENU -->
-			<IDSymbol name ="GroupIntoBorderNoChildRoot"	                          value="0x0201" />
-			<IDSymbol name ="GroupIntoBorderWithGridRoot"	                          value="0x0202" />
-			<IDSymbol name ="GroupIntoBorderWithStackPanelVerticalRoot"	              value="0x0203" />
-			<IDSymbol name ="GroupIntoBorderWithStackPanelHorizontalRoot"	          value="0x0204" />
+			<!-- ToolsMenu in ToolsMenuGroup -->
+			<IDSymbol name="ControlDefaultsCommand"                             value="0x05B1" />
+			<!--             AboutCommand (duplicate in this menu)                        -->
 
-			<!-- XAMLEDITOR_CONTEXTMENU_GROUPINTO_CONTEXTMENU (continued) -->
-			<IDSymbol name ="GroupIntoCanvas"	                                      value="0x0301" />
-			<IDSymbol name ="GroupIntoDockPanel"	                                  value="0x0302" />
-			<IDSymbol name ="GroupIntoGrid"	                                          value="0x0303" />
-			<IDSymbol name ="GroupIntoScrollViewer"	                                  value="0x0304" />
-			<IDSymbol name ="GroupIntoStackPanelVertical"	                          value="0x0305" />
-			<IDSymbol name ="GroupIntoStackPanelHorizontal"	                          value="0x0306" />
-			<IDSymbol name ="GroupIntoUniformGrid"	                                  value="0x0307" />
-			<IDSymbol name ="GroupIntoViewBox"	                                      value="0x0308" />
-			<IDSymbol name ="GroupIntoWrapPanel"	                                  value="0x0309" />
-			<IDSymbol name ="GroupIntoGroupBox"	                                      value="0x030a" />
+			<!-- GroupIntoMenu in GroupIntoMenuGroup -->
+			<IDSymbol name="GroupIntoCanvasCommand"                             value="0x06B1" />
+			<IDSymbol name="GroupIntoDockPanelCommand"                          value="0x06B2" />
+			<IDSymbol name="GroupIntoGridCommand"                               value="0x06B3" />
+			<IDSymbol name="GroupIntoScrollViewerCommand"                       value="0x06B4" />
+			<IDSymbol name="GroupIntoStackPanelVerticalCommand"                 value="0x06B5" />
+			<IDSymbol name="GroupIntoStackPanelHorizontalCommand"               value="0x06B6" />
+			<IDSymbol name="GroupIntoUniformGridCommand"                        value="0x06B7" />
+			<IDSymbol name="GroupIntoViewBoxCommand"                            value="0x06B8" />
+			<IDSymbol name="GroupIntoWrapPanelCommand"                          value="0x06B9" />
+			<IDSymbol name="GroupIntoGroupBoxCommand"                           value="0x06BA" />
 
-			<!-- XAMLEDITOR_CONTEXTMENU (continued) -->
-			<IDSymbol name ="EditGridRowAndColumnsCommand"	                          value="0x0401" />
-			<IDSymbol name ="ExtractSelectedPropertiesToStyleCommand"	              value="0x0402" />
-			<IDSymbol name ="CreateBusinessFormCommand"	                              value="0x0403" />
-			<IDSymbol name ="CreateFormListViewDataGridFromSelectedClassCommand"      value="0x0404" />
-			<IDSymbol name ="FieldsListFromSelectedClassCommand"	                  value="0x0405" />
-			<IDSymbol name ="RemoveMarginsCommand"	                                  value="0x0406" />
-			<IDSymbol name ="ChangeGridToFlowLayout"	                              value="0x0407" />
-			<IDSymbol name ="ChainsawDesignerExtraProperties"	                      value="0x0408" />
 
-			<!-- XAMLEDITOR_CONTEXTMENU_TOOLS_CONTEXTMENU -->
-			<IDSymbol name ="ControlDefaultsCommand"	                              value="0x0501" />
+			<!-- GroupIntoBorderMenu in GroupIntoBorderMenuGroup -->
+			<IDSymbol name="GroupIntoBorderNoChildRootCommand"                  value="0x07B1" />
+			<IDSymbol name="GroupIntoBorderWithGridRootCommand"                 value="0x07B2" />
+			<IDSymbol name="GroupIntoBorderWithStackPanelVerticalRootCommand"   value="0x07B3" />
+			<IDSymbol name="GroupIntoBorderWithStackPanelHorizontalRootCommand" value="0x07B4" />
 		</GuidSymbol>
+
+		<!-- This is an example to show how images are set up. If your menu
+			 items don't use images, this is not needed. -->
+		<!--<GuidSymbol name="guidImages" value="{34a45b9d-d467-438d-b69a-01a968c76d5e}">
+			<IDSymbol name="bmpPic1" value="1" />
+			<IDSymbol name="bmpPic2" value="2" />
+			<IDSymbol name="bmpPicSearch" value="3" />
+			<IDSymbol name="bmpPicX" value="4" />
+			<IDSymbol name="bmpPicArrows" value="5" />
+			<IDSymbol name="bmpPicStrikethrough" value="6" />
+		</GuidSymbol>-->
 	</Symbols>
 </CommandTable>
