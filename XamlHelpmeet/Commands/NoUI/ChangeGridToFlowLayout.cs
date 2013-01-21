@@ -10,6 +10,7 @@ using EnvDTE80;
 using EnvDTE;
 using System.Windows;
 using XamlHelpmeet.UI.Utilities;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
@@ -23,13 +24,12 @@ namespace XamlHelpmeet.Commands.NoUI
 		#region Constructors
 
 		/// <summary>
-		/// 	Initializes a new instance of the ChangeGridToFlowLayout class.
+		/// Initializes a new instance of the ChangeGridToFlowLayout class.
 		/// </summary>
-		/// <param name="application">
-		/// 	The application.
-		/// </param>
-		public ChangeGridToFlowLayout(DTE2 application)
-			: base(application)
+		/// <param name="application">The application.</param>
+		/// <param name="id">The id.</param>
+		public ChangeGridToFlowLayout(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Change Grid To Flow Layout";
 			CommandName = "ChangeGridToFlowLayoutCommand";

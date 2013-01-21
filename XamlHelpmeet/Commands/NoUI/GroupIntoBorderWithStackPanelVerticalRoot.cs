@@ -3,6 +3,7 @@
 // summary:	Implements the group into border with stack panel vertical root class
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,8 +27,9 @@ namespace XamlHelpmeet.Commands.NoUI
 		/// class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public GroupIntoBorderWithStackPanelVerticalRoot(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public GroupIntoBorderWithStackPanelVerticalRoot(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Border With Root StackPanel - Vertical";
 			CommandName = "GroupIntoBorderWithStackPanelVerticalRoot";

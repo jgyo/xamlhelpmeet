@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Forms;
 using XamlHelpmeet.UI.Utilities;
 using XamlHelpmeet.UI.DynamicForm;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.UI
 {
@@ -28,8 +29,9 @@ namespace XamlHelpmeet.Commands.UI
 		/// CreateFormListViewDataGridFromSelectedClassCommand class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public CreateFormListViewDataGridFromSelectedClassCommand(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public CreateFormListViewDataGridFromSelectedClassCommand(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Create Form, ListView or DataGrid From Selected Class";
 			CommandName = "CreateFormListViewDataGridFromSelectedClassCommand";

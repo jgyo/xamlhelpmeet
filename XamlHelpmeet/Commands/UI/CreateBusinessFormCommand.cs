@@ -11,6 +11,7 @@ using XamlHelpmeet.Model;
 using XamlHelpmeet.Utility;
 using XamlHelpmeet.UI.Utilities;
 using XamlHelpmeet.UI.CreateBusinessForm;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.UI
 {
@@ -27,8 +28,9 @@ namespace XamlHelpmeet.Commands.UI
 		/// Initializes a new instance of the CreateBusinessFormCommand class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public CreateBusinessFormCommand(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public CreateBusinessFormCommand(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Create Business Form";
 			CommandName = "CreateBusinessFormCommand";

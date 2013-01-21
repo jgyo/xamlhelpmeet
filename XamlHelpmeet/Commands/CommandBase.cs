@@ -12,6 +12,7 @@ using System.Xml;
 using System.Globalization;
 using System.Diagnostics;
 using Microsoft.VisualStudio.Shell;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands
 {
@@ -19,7 +20,7 @@ namespace XamlHelpmeet.Commands
 	/// 	Command base.
 	/// </summary>
 	/// <seealso cref="T:System.IDisposable"/>
-	public abstract class CommandBase : IDisposable
+	public abstract class CommandBase : OleMenuCommand, IDisposable
 	{
 
 		#region Fields
@@ -34,16 +35,25 @@ namespace XamlHelpmeet.Commands
 		#region Constructors and Distructors
 
 		/// <summary>
-		/// 	Initializes a new instance of the CommandBase class.
+		/// Initializes a new instance of the CommandBase class.
 		/// </summary>
-		/// <param name="application">
-		/// 	The application.
-		/// </param>
-		public CommandBase(DTE2 application)
+		/// <param name="application">The application.</param>
+		/// <param name="id">The id.</param>
+		public CommandBase(DTE2 application, CommandID id)
+			: base(Execute, id)
 		{
-			//<CSCustomCode> 1
-			Trace.Write("CommandBase - enter");
-			//</CSCustomCode> 1
+			this.Application = application;
+			this.BeforeQueryStatus += OnBeforeQueryStatus;
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CommandBase" /> class.
+		/// </summary>
+		/// <param name="application">The application.</param>
+		/// <param name="id">The id.</param>
+		/// <param name="Text">The text.</param>
+		public CommandBase(DTE2 application, CommandID id, string Text)
+			: base(Execute, id, Text)
+		{
 			this.Application = application;
 		}
 
@@ -59,22 +69,26 @@ namespace XamlHelpmeet.Commands
 		}
 
 		#endregion
+
+		
+
 		/// <summary>
 		/// Executes before the query status is read.
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
 		/// <exception cref="System.ArgumentNullException">sender</exception>
-		public virtual void BeforeQueryStatus(object sender, EventArgs e)
+		protected virtual void OnBeforeQueryStatus(object sender, EventArgs e)
 		{
-			var menuCommand = sender as OleMenuCommand;
-			if (menuCommand == null)
-				throw new ArgumentNullException("sender");
+			if (sender != this)
+			{
+				throw new ArgumentException("On this should send calls to this.");
+			}
 
 			var status = GetStatus();
-			menuCommand.Enabled = status.HasFlag(vsCommandStatus.vsCommandStatusEnabled);
-			menuCommand.Supported = status.HasFlag(vsCommandStatus.vsCommandStatusSupported);
-			menuCommand.Visible = !status.HasFlag(vsCommandStatus.vsCommandStatusInvisible);
+			this.Enabled = status.HasFlag(vsCommandStatus.vsCommandStatusEnabled);
+			this.Supported = status.HasFlag(vsCommandStatus.vsCommandStatusSupported);
+			this.Visible = !status.HasFlag(vsCommandStatus.vsCommandStatusInvisible);
 		}
 		#region Properties
 
@@ -214,10 +228,19 @@ namespace XamlHelpmeet.Commands
 		/// </returns>
 		public virtual bool CanExecute(vsCommandExecOption executeOption)
 		{
-			//<CSCustomCode> 1
-			Trace.Write("CanExecute - enter");
-			//</CSCustomCode> 1
 			return executeOption == vsCommandExecOption.vsCommandExecOptionDoDefault;
+		}
+
+		/// <summary>
+		/// 	Executes this CommandBase.
+		/// </summary>
+		private static void Execute(object sender, EventArgs e)
+		{
+			if (!(sender is CommandBase))
+			{
+				throw new ArgumentException("The sender object is not of Type CommandBase.");
+			}
+			(sender as CommandBase).Execute();
 		}
 
 		/// <summary>

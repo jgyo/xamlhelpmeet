@@ -13,6 +13,7 @@ using System.IO;
 using XamlHelpmeet.UI;
 using System.Xml.Schema;
 using XamlHelpmeet.UI.GridColumnAndRowEditor;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.UI
 {
@@ -35,8 +36,9 @@ namespace XamlHelpmeet.Commands.UI
 		/// Initializes a new instance of the EditGridRowAndColumnsCommand class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public EditGridRowAndColumnsCommand(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public EditGridRowAndColumnsCommand(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Edit Grid Columns and Rows";
 			CommandName = "EditGridRowAndColumnsCommand";

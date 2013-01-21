@@ -9,6 +9,7 @@ using EnvDTE80;
 using EnvDTE;
 using System.Windows;
 using XamlHelpmeet.UI.Utilities;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
@@ -22,13 +23,12 @@ namespace XamlHelpmeet.Commands.NoUI
 		#region Constructors
 
 		/// <summary>
-		/// 	Initializes a new instance of the ChainsawDesignerExtraProperties class.
+		/// Initializes a new instance of the ChainsawDesignerExtraProperties class.
 		/// </summary>
-		/// <param name="application">
-		/// 	The application.
-		/// </param>
-		public ChainsawDesignerExtraProperties(DTE2 application)
-			: base(application)
+		/// <param name="application">The application.</param>
+		/// <param name="id">The id.</param>
+		public ChainsawDesignerExtraProperties(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Chainsaw - Minimize Designer XAML";
 			CommandName = "ChainsawDesignerExtraPropertiesCommand";

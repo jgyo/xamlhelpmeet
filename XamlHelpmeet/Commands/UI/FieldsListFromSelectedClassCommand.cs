@@ -11,6 +11,7 @@ using EnvDTE;
 using XamlHelpmeet.Utility;
 using XamlHelpmeet.UI;
 using XamlHelpmeet.UI.Utilities;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.UI
 {
@@ -27,8 +28,9 @@ namespace XamlHelpmeet.Commands.UI
 		/// Initializes a new instance of the FieldsListFromSelectedClassCommand class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public FieldsListFromSelectedClassCommand(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public FieldsListFromSelectedClassCommand(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Fields List For Selected Class";
 			CommandName = "FieldsListFromSelectedClassCommand";

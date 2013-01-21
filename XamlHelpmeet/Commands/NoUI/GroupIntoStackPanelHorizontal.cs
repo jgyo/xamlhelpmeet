@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using EnvDTE;
 using EnvDTE80;
 using XamlHelpmeet.UI.Utilities;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
@@ -25,8 +26,9 @@ namespace XamlHelpmeet.Commands.NoUI
 		/// Initializes a new instance of the GroupIntoStackPanelHorizontal class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public GroupIntoStackPanelHorizontal(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public GroupIntoStackPanelHorizontal(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "StackPanel - Horizontal";
 			CommandName = "GroupIntoStackPanelHorizontal";

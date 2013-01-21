@@ -7,6 +7,7 @@ using System.Linq;
 using EnvDTE80;
 using EnvDTE;
 using XamlHelpmeet.UI;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.UI
 {
@@ -23,8 +24,9 @@ namespace XamlHelpmeet.Commands.UI
 		/// Initializes a new instance of the ControlDefaultsCommand class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public ControlDefaultsCommand(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public ControlDefaultsCommand(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Set Control Defaults";
 			CommandName = "SetControlDefaultsCommand";

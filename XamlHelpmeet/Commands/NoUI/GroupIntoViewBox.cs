@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using EnvDTE80;
 using EnvDTE;
 using XamlHelpmeet.UI.Utilities;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
@@ -25,8 +26,9 @@ namespace XamlHelpmeet.Commands.NoUI
 		/// Initializes a new instance of the GroupIntoViewBox class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public GroupIntoViewBox(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public GroupIntoViewBox(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Viewbox";
 			CommandName = "GroupIntoViewBox";

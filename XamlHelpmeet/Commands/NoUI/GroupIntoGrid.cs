@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using EnvDTE;
 using EnvDTE80;
 using XamlHelpmeet.UI.Utilities;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
@@ -25,8 +26,9 @@ namespace XamlHelpmeet.Commands.NoUI
 		/// Initializes a new instance of the GroupIntoGrid class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public GroupIntoGrid(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public GroupIntoGrid(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Group into Grid";
 			CommandName = "GroupIntoGrid";

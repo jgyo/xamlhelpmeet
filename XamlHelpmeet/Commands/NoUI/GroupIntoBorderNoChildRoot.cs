@@ -8,6 +8,7 @@ using EnvDTE80;
 using EnvDTE;
 using XamlHelpmeet.UI.Utilities;
 using System.Globalization;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
@@ -24,8 +25,9 @@ namespace XamlHelpmeet.Commands.NoUI
 		/// Initializes a new instance of the GroupIntoBorderNoChildRoot class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public GroupIntoBorderNoChildRoot(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public GroupIntoBorderNoChildRoot(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Border without Child Root";
 			CommandName = "GroupIntoBorderNoChildRoot";

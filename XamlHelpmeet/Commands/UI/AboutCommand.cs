@@ -10,6 +10,7 @@ using XamlHelpmeet.Commands;
 using XamlHelpmeet.UI;
 using EnvDTE80;
 using EnvDTE;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.UI
 {
@@ -23,8 +24,9 @@ namespace XamlHelpmeet.Commands.UI
 		/// Initializes a new instance of the AboutCommand class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public AboutCommand(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public AboutCommand(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "About Xaml Helpmeet";
 			CommandName = String.Format("AboutCommand");

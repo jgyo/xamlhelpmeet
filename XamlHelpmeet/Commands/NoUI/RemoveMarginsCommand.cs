@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using EnvDTE;
@@ -21,8 +22,9 @@ namespace XamlHelpmeet.Commands.NoUI
 		/// Initializes a new instance of the RemoveMarginsCommand class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public RemoveMarginsCommand(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public RemoveMarginsCommand(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Remove Margins";
 			CommandName = "RemoveMarginsCommand";

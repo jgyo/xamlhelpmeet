@@ -14,6 +14,7 @@ using XamlHelpmeet.UI.ExtractPropertiesToStyle;
 using XamlHelpmeet.UI.Utilities;
 using XamlHelpmeet.Utility;
 using XamlHelpmeet.Extentions;
+using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.UI
 {
@@ -36,8 +37,9 @@ namespace XamlHelpmeet.Commands.UI
 		/// class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public ExtractSelectedPropertiesToStyleCommand(DTE2 application)
-			: base(application)
+		/// <param name="id">The id.</param>
+		public ExtractSelectedPropertiesToStyleCommand(DTE2 application, CommandID id)
+			: base(application, id)
 		{
 			Caption = "Extract Properties to Style";
 			CommandName = "ExtractSelectedPropertiesToStyleCommand";
