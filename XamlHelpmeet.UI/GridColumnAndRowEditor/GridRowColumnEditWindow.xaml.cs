@@ -33,7 +33,7 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 		public GridRowColumnEditWindow(XmlDocument Document)
 		{
 			InitializeComponent();
-			this.Document = Document;
+			this.UsersXamlDocument = Document;
 		}
 
 		public GridRowColumnEditWindow()
@@ -45,7 +45,7 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 
 		#region Properties
 
-		public XmlDocument Document
+		public XmlDocument UsersXamlDocument
 		{
 			get;
 			set;
@@ -175,7 +175,7 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 
 			var spanName = IsRowDeleteRequested ? "Grid.RowDefinitions" : "Grid.ColumnDefinitions";
 
-			var gridDotDefinitions = (from XmlNode x in Document.ChildNodes[0].ChildNodes
+			var gridDotDefinitions = (from XmlNode x in UsersXamlDocument.ChildNodes[0].ChildNodes
 									  where x.Name == spanName
 									  select x).FirstOrDefault();
 
@@ -215,8 +215,8 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 		{
 			var spanName = spanType == SpanType.Column ? "Grid.Column" : "Grid.Row";
 
-			foreach (var xmlNode in (from XmlNode x in Document.ChildNodes[0].ChildNodes
-									 where x.Name.StartsWith("Grid.") == false
+			foreach (var xmlNode in (from XmlNode x in UsersXamlDocument.ChildNodes[0].ChildNodes
+									 where x.Name.StartsWith("Grid.") == false && x.Name != "#whitespace"
 									 select x))
 			{
 				var attribute = (from XmlAttribute a in xmlNode.Attributes
@@ -235,7 +235,7 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 			string orientationSizeName;
 			string orientationSpanName;
 
-			if (spanType == SpanType.Column)
+			if (spanType == SpanType.Row)
 			{
 				orientationSizeName = "Height";
 				orientationSpanName = "Row";
@@ -249,7 +249,7 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 			var orientationDefinition = String.Format("{0}Definition", orientationSpanName);
 			var orientationDefinitions = String.Format("Grid.{0}s", orientationDefinition);
 
-			var definitionNodeCollection = (from XmlNode x in Document.ChildNodes[0].ChildNodes
+			var definitionNodeCollection = (from XmlNode x in UsersXamlDocument.ChildNodes[0].ChildNodes
 											where x.Name == orientationDefinitions
 											select x).First();
 
@@ -271,13 +271,13 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 			if (spanType == SpanType.Row)
 			{
 				GetSpanDefinitions(out rowDefinitions);
-				newSpanElement = Document.CreateNode(XmlNodeType.Element, "", orientationDefinition, string.Empty) as XmlElement;
+				newSpanElement = UsersXamlDocument.CreateNode(XmlNodeType.Element, "", orientationDefinition, string.Empty) as XmlElement;
 				newSpanElement.SetAttribute(orientationSizeName, ParseGridDefinitionLength(rowDefinitions[spanIndex].Height));
 			}
 			else
 			{
 				GetSpanDefinitions(out columnDefintions);
-				newSpanElement = Document.CreateNode(XmlNodeType.Element, "", orientationDefinition, string.Empty) as XmlElement;
+				newSpanElement = UsersXamlDocument.CreateNode(XmlNodeType.Element, "", orientationDefinition, string.Empty) as XmlElement;
 				newSpanElement.SetAttribute(orientationSizeName, ParseGridDefinitionLength(columnDefintions[spanIndex].Width));
 			}
 			newSpanElement.SetAttribute("Tag", "New");
@@ -308,6 +308,8 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 			{
 				throw new ArgumentOutOfRangeException("loc", loc, "The value passed in was not programmed.");
 			}
+
+			BuildGrid();
 		}
 
 
@@ -339,7 +341,7 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 		// Grid.Column element.
 		private void AddMissingGridElementAttributes()
 		{
-			foreach (var xmlNode in (from XmlNode x in Document.ChildNodes[0].ChildNodes
+			foreach (var xmlNode in (from XmlNode x in UsersXamlDocument.ChildNodes[0].ChildNodes
 									 where x.Name.StartsWith("Grid.") == false && x.NodeType != XmlNodeType.Whitespace && x.NodeType != XmlNodeType.Comment
 									 select x))
 			{
@@ -469,20 +471,20 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 
 			for (var x=0; x < 2; x++)
 			{
-				var definitionElement = from XmlNode e in Document.ChildNodes[0].ChildNodes
+				var definitionElement = from XmlNode e in UsersXamlDocument.ChildNodes[0].ChildNodes
 										where e.Name == mainElementname
 										select e;
 
 				if (definitionElement == null || definitionElement.Count() == 0)
 				{
-					var newDefinitionsElement = Document.CreateElement(mainElementname);
-					var newDefinitionAttribute = Document.CreateAttribute(orientation);
+					var newDefinitionsElement = UsersXamlDocument.CreateElement(mainElementname);
+					var newDefinitionAttribute = UsersXamlDocument.CreateAttribute(orientation);
 					newDefinitionAttribute.Value = "*";
 
-					var newDefinitionElement = Document.CreateElement(subElementName);
+					var newDefinitionElement = UsersXamlDocument.CreateElement(subElementName);
 					newDefinitionElement.Attributes.Prepend(newDefinitionAttribute);
 					newDefinitionsElement.PrependChild(newDefinitionElement);
-					Document.ChildNodes[0].PrependChild(newDefinitionsElement);
+					UsersXamlDocument.ChildNodes[0].PrependChild(newDefinitionsElement);
 				}
 
 				mainElementname = "Grid.ColumnDefinitions";
@@ -499,7 +501,7 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 
 			if (attribute == null)
 			{
-				var newAttribute = Document.CreateAttribute(AttributeName);
+				var newAttribute = UsersXamlDocument.CreateAttribute(AttributeName);
 				newAttribute.Value = "0";
 				xmlNode.Attributes.Prepend(newAttribute);
 			}
@@ -567,15 +569,15 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 			definitions = null;
 			var spanName = IsRowRequested ? "Grid.RowDefinitions" : "Grid.ColumnDefinitions";
 
-			var spanDefinitions = new List<TDefinition>();
-			var definitionNode = (from XmlNode x in Document.ChildNodes[0].ChildNodes
+			definitions = new List<TDefinition>();
+			var definitionNode = (from XmlNode x in UsersXamlDocument.ChildNodes[0].ChildNodes
 								  where x.Name == spanName
 								  select x).First();
 
 			// If there are no children, create a default span, and return it.
 			if (definitionNode == null)
 			{
-				AddNewSpanDefinition(spanDefinitions, 1, GridUnitType.Star, false);
+				AddNewSpanDefinition(definitions, 1, GridUnitType.Star, false);
 				return;
 			}
 
@@ -592,14 +594,14 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 				// If there is no height attribute
 				if (heightAttribute == null)
 				{
-					AddNewSpanDefinition(spanDefinitions, 1, GridUnitType.Star, addTag);
+					AddNewSpanDefinition(definitions, 1, GridUnitType.Star, addTag);
 					continue;
 				}
 
 				// if the height attribute is "Auto" (case insignificant comparison)
 				if (string.Compare(heightAttribute.Value, "Auto", true) == 0)
 				{
-					AddNewSpanDefinition(spanDefinitions, 0, GridUnitType.Auto, addTag);
+					AddNewSpanDefinition(definitions, 0, GridUnitType.Auto, addTag);
 					continue;
 				}
 
@@ -607,7 +609,7 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 				if (heightAttribute.Value.Contains("*") == false)
 				{
 					// Assume that the Value string is numeric
-					AddNewSpanDefinition(spanDefinitions, int.Parse(heightAttribute.Value), addTag);
+					AddNewSpanDefinition(definitions, int.Parse(heightAttribute.Value), addTag);
 					continue;
 				}
 
@@ -617,7 +619,7 @@ namespace XamlHelpmeet.UI.GridColumnAndRowEditor
 
 				if (!int.TryParse(heightAttribute.Value.Replace("*", string.Empty), out starHeight))
 					starHeight = 1;
-				AddNewSpanDefinition(spanDefinitions, starHeight, GridUnitType.Star, addTag);
+				AddNewSpanDefinition(definitions, starHeight, GridUnitType.Star, addTag);
 			}
 			return;
 		}

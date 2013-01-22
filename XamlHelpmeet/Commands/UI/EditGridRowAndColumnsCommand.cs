@@ -116,7 +116,7 @@ namespace XamlHelpmeet.Commands.UI
 					var writerSettings = new XmlWriterSettings() { Indent = true, NewLineOnAttributes = false, OmitXmlDeclaration = true };
 					using (var writer = XmlWriter.Create(sb, writerSettings))
 					{
-						gridRowColumnEditForm.Document.Save(writer);
+						gridRowColumnEditForm.UsersXamlDocument.Save(writer);
 					}
 					foreach (string item in _addedNamespaces)
 					{
