@@ -3,7 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files %28x86%29\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>
-    <StartArguments>/rootsuffix Exp /resetaddin XamlHelpmeet.Connect</StartArguments>
+    <StartArguments>/rootsuffix Exp /log C:\Users\Yoder\Desktop\explog.xml</StartArguments>
     <StartWorkingDirectory>C:\Program Files %28x86%29\Microsoft Visual Studio 11.0\Common7\IDE\</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
@@ -12,6 +12,17 @@
     <StartArguments>/rootsuffix Exp</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <StartProgram>C:\Program Files %28x86%29\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartWorkingDirectory>C:\Program Files %28x86%29\Microsoft Visual Studio 11.0\Common7\IDE\</StartWorkingDirectory>
+    <StartArguments>/rootsuffix Exp /log C:\Users\Yoder\Desktop\explog.xml</StartArguments>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <StartProgram>C:\Program Files %28x86%29\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
+    <StartAction>Program</StartAction>
   </PropertyGroup>
 </Project>
