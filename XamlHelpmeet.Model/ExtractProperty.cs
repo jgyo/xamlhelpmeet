@@ -5,6 +5,7 @@ using System.Xml;
 
 namespace XamlHelpmeet.Model
 {
+	[Serializable]
 	public class ExtractProperty
 	{
 		public XmlAttribute XmlAttribute { get; private set; }

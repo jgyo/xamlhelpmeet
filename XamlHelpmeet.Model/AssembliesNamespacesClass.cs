@@ -7,6 +7,7 @@ namespace XamlHelpmeet.Model
 	/// <summary>
 	/// 	Assemblies namespaces class.
 	/// </summary>
+	[Serializable]
 	public class AssembliesNamespacesClass
 	{
 		/// <summary>

@@ -6,6 +6,7 @@ using XamlHelpmeet.Extentions;
 
 namespace XamlHelpmeet.Model
 {
+	[Serializable]
 	public class RemoteResponse<T>
 	{
 		private readonly ResponseStatus _responseStatus = ResponseStatus.Success;

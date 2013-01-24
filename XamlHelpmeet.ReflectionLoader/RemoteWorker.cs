@@ -19,7 +19,7 @@ namespace XamlHelpmeet.ReflectionLoader
 	/// 	to appear in the error list. Visual Studio will use the Microsoft
 	/// 	class definition, so the warning can be ignored.
 	/// </remarks>
-	public class RemoteWorker
+	public class RemoteWorker : MarshalByRefObject
 	{
 		public string GetAssemblyFullPath(string TargetProjectPath, string AssemblyName)
 		{
@@ -59,9 +59,15 @@ namespace XamlHelpmeet.ReflectionLoader
 
 			// Load up all assemblies referenced in the project, but that are not
 			// loaded yet.
-			foreach (var item in references)
+			foreach (var name in references)
 			{
-				targetAssemblyDefinition = AssemblyDefinition.ReadAssembly(item);
+				if (!assembliesToLoad.ContainsKey(Path.GetFileName(name.ToLower())))
+					assembliesToLoad.Add(name.ToLower(), null);
+			}
+
+			foreach (string assemblyPath in assembliesToLoad.Keys)
+			{
+				targetAssemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath);
 
 				LoadAssemblyClasses(targetAssemblyDefinition, IsSilverlight, data, out ex, assembliesToLoad);
 
@@ -207,7 +213,7 @@ namespace XamlHelpmeet.ReflectionLoader
 					if (type.IsPublic &&
 						type.IsClass &&
 						!type.IsAbstract &&
-						type.Name.Contains("<Module>") &&
+						!type.Name.Contains("<Module>") &&
 						!type.Name.Contains("AnonymousType") &&
 						!type.Name.StartsWith("_") &&
 						!type.Name.EndsWith("AssemblyInfo"))

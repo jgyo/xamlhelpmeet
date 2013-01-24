@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace XamlHelpmeet.Model
 {
-
+	[Serializable]
 	public class SampleFormat
 	{
 		public string DataType { get; set; }

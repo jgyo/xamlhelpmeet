@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace XamlHelpmeet.Model
 {
+	[Serializable]
 	public class AssembliesNamespacesClasses : List<AssembliesNamespacesClass>
 	{
 		public AssembliesNamespacesClasses()

@@ -115,8 +115,10 @@ namespace XamlHelpmeet.Utility
 				_secondaryAppDomain = null;
 			}
 
-			if (remoteResponse != null || remoteResponse.ResponseStatus != ResponseStatus.Success)
+			if (remoteResponse == null || remoteResponse.ResponseStatus != ResponseStatus.Success || remoteResponse.Result == null || remoteResponse.Result.Count == 0)
 			{
+				if (remoteResponse.ResponseStatus == ResponseStatus.Success)
+					UIUtilities.ShowInformationMessage("No Model", "Unable to find a class suitable for this command.");
 				return null;
 			}
 
