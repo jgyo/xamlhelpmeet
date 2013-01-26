@@ -64,6 +64,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -97,7 +98,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DynamicForm\CreateBusinessFromFromClassWindow.xaml">
+    <Page Include="DynamicForm\CreateBusinessFormFromClassWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -209,8 +210,8 @@
     <Compile Include="Editors\CheckBoxEditor.xaml.cs">
       <DependentUpon>CheckBoxEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DynamicForm\CreateBusinessFromFromClassWindow.xaml.cs">
-      <DependentUpon>CreateBusinessFromFromClassWindow.xaml</DependentUpon>
+    <Compile Include="DynamicForm\CreateBusinessFormFromClassWindow.xaml.cs">
+      <DependentUpon>CreateBusinessFormFromClassWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\ComboBoxEditor.xaml.cs">
       <DependentUpon>ComboBoxEditor.xaml</DependentUpon>
@@ -318,9 +319,14 @@
       <Name>XamlHelpmeet.Extentions</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Resource Include="Snapshot_20121225_1.PNG" />
+    <Resource Include="Resources\postcard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Class58X58.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\application16x16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

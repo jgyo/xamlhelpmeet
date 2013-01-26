@@ -50,7 +50,13 @@ namespace XamlHelpmeet.UI.UIControlFactory
 		{
 			get
 			{
-				return _instance ?? (_instance = new UIControlFactory());
+				if (_instance == null)
+				{
+					_instance = new UIControlFactory();
+					_instance.UIControls = _instance.Load();
+				}
+				return _instance;
+				
 			}
 		}
 
@@ -301,6 +307,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
 			return UIControls.GetUIControlsForPlatform(Platform);
 		}
 
+		//!+ Routine to instantiate UIControls.
 		public UIControls Load()
 		{
 			if (!Directory.Exists(_saveSettingsFolderName))
@@ -310,6 +317,8 @@ namespace XamlHelpmeet.UI.UIControlFactory
 
 			if (!File.Exists(_saveSettingsFilename))
 			{
+				//+ If a file exits, create the defaults to
+				//+ create the UIControls.
 				CreateDefaults();
 				Save(false);
 				UIUtilities.ShowExceptionMessage("Settings File Created", "Your settings file has been created for you.  You can configure your settings using the Set Control Defaults command.");
@@ -318,12 +327,14 @@ namespace XamlHelpmeet.UI.UIControlFactory
 			{
 				try
 				{
+					//+ Otherwise start with an empty UIControls
 					if (UIControls != null)
 					{
 						UIControls.Clear();
 						UIControls = null;
 					}
 
+					//+ And deserialize the stream into UIControls.
 					using (var fs = new FileStream(_saveSettingsFilename, FileMode.Open))
 					{
 						UIControls = Deserialize(fs) as UIControls;
@@ -331,6 +342,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
 				}
 				catch (Exception ex)
 				{
+					//+ If that doesn't work, just use defaults.
 					UIUtilities.ShowExceptionMessage("Settings File", "Unable to load previous settings file.  Creating new settings file.",
 						string.Empty, ex.ToString());
 					CreateDefaults();

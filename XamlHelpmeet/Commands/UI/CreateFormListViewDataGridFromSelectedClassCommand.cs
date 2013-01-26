@@ -3,18 +3,18 @@
 // summary:	Implements the create form list view data grid from selected class command class
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EnvDTE80;
-using EnvDTE;
-using XamlHelpmeet.Utility;
-using XamlHelpmeet.UI;
 using System.Windows;
 using System.Windows.Forms;
-using XamlHelpmeet.UI.Utilities;
+using EnvDTE;
+using EnvDTE80;
+using XamlHelpmeet.UI;
 using XamlHelpmeet.UI.DynamicForm;
-using System.ComponentModel.Design;
+using XamlHelpmeet.UI.Utilities;
+using XamlHelpmeet.Utility;
 
 namespace XamlHelpmeet.Commands.UI
 {
@@ -51,7 +51,7 @@ namespace XamlHelpmeet.Commands.UI
 		/// </returns>
 		public override bool CanExecute(vsCommandExecOption ExecuteOption)
 		{
-			return base.CanExecute(ExecuteOption) && ! IsTextSelected();
+			return base.CanExecute(ExecuteOption) && !IsTextSelected();
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace XamlHelpmeet.Commands.UI
 					GetClassEntityFromSelectedClass(Application.
 					SelectedItems.
 					Item(1).ProjectItem.
-					ContainingProject, 
+					ContainingProject,
 					Caption);
 
 				if (classEntity == null)
@@ -117,7 +117,7 @@ namespace XamlHelpmeet.Commands.UI
 			return vsCommandStatus.vsCommandStatusEnabled |
 				vsCommandStatus.vsCommandStatusSupported;
 		}
-		
-		#endregion
+
+		#endregion Methods
 	}
 }

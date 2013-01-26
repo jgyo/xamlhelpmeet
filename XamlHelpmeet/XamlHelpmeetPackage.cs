@@ -44,7 +44,6 @@ namespace XamlHelpmeet
 
 		private DTE _dte;
 		private Events _events;
-		// TODO: Complete XamlHelpmeetPackage class
 		private CommandEvents _fileSaveAll;
 		private CommandEvents _fileSaveSelectedItems;
 		private IVsUIShell _uiShell;

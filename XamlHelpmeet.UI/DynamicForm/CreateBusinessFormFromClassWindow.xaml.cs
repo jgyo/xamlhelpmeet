@@ -773,7 +773,7 @@ namespace XamlHelpmeet.UI.DynamicForm
 
 			var sb2 = GetDataFormTemplate(columnGroupListBox, numberOfRows);
 
-			// --------------------------------------------------------------------------------------------------------------------------------------------------
+			// --------------------------------------------------------
 			if (chkRenderEditTemplate.IsChecked == true)
 			{
 				sb.Append(sb2.ToString());

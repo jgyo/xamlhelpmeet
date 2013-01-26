@@ -12,6 +12,7 @@ namespace XamlHelpmeet.Model
 	[Serializable]
 	public class ClassEntity : INotifyPropertyChanged
 	{
+		private ObservableCollection<PropertyInformation> _propertyInformation;
 		private string _className = string.Empty;
 		private Exception _exception;
 		private bool _isSilverlight;
@@ -104,13 +105,20 @@ namespace XamlHelpmeet.Model
 		}
 
 		/// <summary>
-		/// 	Gets or sets the information describing the property.
+		/// Gets or sets the information describing the property.
 		/// </summary>
 		/// <value>
-		/// 	Information describing the property.
+		/// Information describing the property.
 		/// </value>
-
-		public ObservableCollection<PropertyInformation> PropertyInformation { get; set; }
+		public ObservableCollection<PropertyInformation> PropertyInformation
+		{
+			get
+			{
+				if (_propertyInformation == null)
+					_propertyInformation = new ObservableCollection<PropertyInformation>();
+				return _propertyInformation;
+			}
+		}
 	
 		/// <summary>
 		/// 	Gets or sets the silverlight version.

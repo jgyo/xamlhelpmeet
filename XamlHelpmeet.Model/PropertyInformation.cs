@@ -13,20 +13,20 @@ namespace XamlHelpmeet.Model
 	public class PropertyInformation : INotifyPropertyChanged
 	{
 		private string _stringFormat;
-		private bool m_canWrite;
-		private string m_descriptionViewerPosition;
-		private string m_fieldDescription;
-		private ControlType m_fieldListControlType;
-		private bool m_fieldListIncludGridAttachedProperties;
-		private string m_fullName;
-		private List<string> m_genericArguments;
-		private bool m_hasBeenUsed;
-		private bool m_isSelected;
-		private string m_labelPosition;
-		private string m_name;
-		private List<PropertyParameter> m_propertyParameters;
-		private string m_typeName;
-		private string m_typeNamespace;
+		private bool _canWrite;
+		private string _descriptionViewerPosition;
+		private string _fieldDescription;
+		private ControlType _fieldListControlType;
+		private bool _fieldListIncludGridAttachedProperties;
+		private string _fullName;
+		private List<string> _genericArguments;
+		private bool _hasBeenUsed;
+		private bool _isSelected;
+		private string _labelPosition;
+		private string _name;
+		private List<PropertyParameter> _propertyParameters;
+		private string _typeName;
+		private string _typeNamespace;
 
 		/// <summary>
 		/// 	Gets or sets a value indicating whether we can write.
@@ -57,11 +57,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_canWrite;
+				return _canWrite;
 			}
 			set
 			{
-				m_canWrite = value;
+				_canWrite = value;
 				OnPropertyChanged("CanWrite");
 			}
 		}
@@ -85,12 +85,12 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				if (m_propertyParameters.Count == 0)
+				if (_propertyParameters.Count == 0)
 					return string.Empty;
 
 				var result = string.Empty;
 
-				foreach (var obj in m_propertyParameters)
+				foreach (var obj in _propertyParameters)
 				{
 					result = String.Format("{0}{1} {2}, ", result, obj.ParameterTypeName, obj.ParameterName);
 				}
@@ -109,11 +109,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_descriptionViewerPosition;
+				return _descriptionViewerPosition;
 			}
 			set
 			{
-				m_descriptionViewerPosition = value;
+				_descriptionViewerPosition = value;
 				OnPropertyChanged("DescriptionViewerPosition");
 			}
 		}
@@ -129,11 +129,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_fieldDescription;
+				return _fieldDescription;
 			}
 			set
 			{
-				m_fieldDescription = value;
+				_fieldDescription = value;
 				OnPropertyChanged("FieldDescription");
 			}
 		}
@@ -149,11 +149,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_fieldListControlType;
+				return _fieldListControlType;
 			}
 			set
 			{
-				m_fieldListControlType = value;
+				_fieldListControlType = value;
 				OnPropertyChanged("FieldListControlType");
 			}
 		}
@@ -170,11 +170,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_fieldListIncludGridAttachedProperties;
+				return _fieldListIncludGridAttachedProperties;
 			}
 			set
 			{
-				m_fieldListIncludGridAttachedProperties = value;
+				_fieldListIncludGridAttachedProperties = value;
 				OnPropertyChanged("FieldListIncludGridAttachedProperties");
 			}
 		}
@@ -190,11 +190,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_fullName;
+				return _fullName;
 			}
 			set
 			{
-				m_fullName = value;
+				_fullName = value;
 				OnPropertyChanged("FullName");
 			}
 		}
@@ -210,11 +210,13 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_genericArguments;
+				if (_genericArguments == null)
+					_genericArguments = new List<string>();
+				return _genericArguments;
 			}
 			set
 			{
-				m_genericArguments = value;
+				_genericArguments = value;
 				OnPropertyChanged("GenericArguments");
 			}
 		}
@@ -231,11 +233,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_hasBeenUsed;
+				return _hasBeenUsed;
 			}
 			set
 			{
-				m_hasBeenUsed = value;
+				_hasBeenUsed = value;
 				OnPropertyChanged("HasBeenUsed");
 			}
 		}
@@ -251,11 +253,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_isSelected;
+				return _isSelected;
 			}
 			set
 			{
-				m_isSelected = value;
+				_isSelected = value;
 				OnPropertyChanged("IsSelected");
 			}
 		}
@@ -271,11 +273,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_labelPosition;
+				return _labelPosition;
 			}
 			set
 			{
-				m_labelPosition = value;
+				_labelPosition = value;
 				OnPropertyChanged("LabelPosition");
 			}
 		}
@@ -343,11 +345,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_name;
+				return _name;
 			}
 			set
 			{
-				m_name = value;
+				_name = value;
 				OnPropertyChanged("Name");
 			}
 		}
@@ -365,7 +367,7 @@ namespace XamlHelpmeet.Model
 			{
 				if (CanWrite)
 				{
-					return NameAndWriteable;
+					return Name;
 				}
 				return String.Format("{0}  (r)", Name);
 			}
@@ -412,11 +414,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_propertyParameters;
+				return _propertyParameters;
 			}
 			set
 			{
-				m_propertyParameters = value;
+				_propertyParameters = value;
 				OnPropertyChanged("PropertyParameters");
 			}
 		}
@@ -445,11 +447,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_typeName;
+				return _typeName;
 			}
 			set
 			{
-				m_typeName = value;
+				_typeName = value;
 				OnPropertyChanged("TypeName");
 			}
 		}
@@ -465,11 +467,11 @@ namespace XamlHelpmeet.Model
 		{
 			get
 			{
-				return m_typeNamespace;
+				return _typeNamespace;
 			}
 			set
 			{
-				m_typeNamespace = value;
+				_typeNamespace = value;
 				OnPropertyChanged("TypeNamespace");
 			}
 		}
