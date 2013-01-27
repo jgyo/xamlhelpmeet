@@ -46,7 +46,7 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 				var itemContainerVerify = ItemsControl.ItemContainerGenerator.ContainerFromItem(itemContainer.
 				DataContext) as FrameworkElement;
 
-				if (itemContainer == itemContainerVerify)
+				if (itemContainer != itemContainerVerify)
 				{
 					return null;
 				}
@@ -91,6 +91,7 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 
 			if (itemsSource != null && ItemToInsert is DynamicFormEditor)
 			{
+				// TODO: Complete InsertItemInItemsControl method in DynamicFormUtilities
 			}
 			else if (itemsSource == null && ItemToInsert is PropertyInformation)
 			{
