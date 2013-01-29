@@ -13,27 +13,27 @@ namespace XamlHelpmeet.Model
 		/// <summary>
 		/// 	Initializes a new instance of the AssembliesNamespacesClass class.
 		/// </summary>
-		/// <param name="AssemblyName">
+		/// <param name="assemblyName">
 		/// 	Name of the assembly.
 		/// </param>
-		/// <param name="Namespac">
+		/// <param name="nameSpace">
 		/// 	The namespac.
 		/// </param>
-		/// <param name="TypeName">
+		/// <param name="typeName">
 		/// 	Name of the type.
 		/// </param>
-		/// <param name="ClassEntity">
+		/// <param name="classEntity">
 		/// 	The class entity.
 		/// </param>
-		public AssembliesNamespacesClass(string AssemblyName, 
-			string Namespac,
-			string TypeName, 
-			ClassEntity ClassEntity)
+		public AssembliesNamespacesClass(string assemblyName, 
+			string nameSpace,
+			string typeName, 
+			ClassEntity classEntity)
 		{
-			this.ClassEntity = ClassEntity;
-			Namespace = Namespac;
-			this.TypeName = TypeName;
-			this.AssemblyName = AssemblyName;
+			this.ClassEntity = classEntity;
+			this.Namespace = nameSpace;
+			this.TypeName = typeName;
+			this.AssemblyName = assemblyName;
 		}
 
 		/// <summary>

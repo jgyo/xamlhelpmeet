@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -6,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using XamlHelpmeet.Model;
 using XamlHelpmeet.UI.Editors;
+using YoderTools;
 
 namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 {
@@ -161,70 +163,7 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 		{
 			obj.SetValue(DragDropHelper.IsDropTargetProperty,
 						 value);
-		}
 
-		public void DragSource_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-		{
-			DraggedData = null;
-		}
-
-		public void DropTarget_PreviewDragEnter(object sender, DragEventArgs e)
-		{
-			TargetItemsControl = sender as ItemsControl;
-			DecideDropTarget(e);
-
-			if (e.Data.GetData(Format.Name) == null)
-				return;
-
-			ShowDraggedAdorner(e.GetPosition(TopWindow));
-			CreateInsertionAdorner();
-
-			e.Handled = true;
-		}
-
-		public void DropTarget_PreviewDragLeave(object sender, DragEventArgs e)
-		{
-			if (e.Data.GetData(Format.Name) != null)
-			{
-				RemoveInsertionAdorner();
-			}
-			e.Handled = true;
-		}
-
-		public void DropTarget_PreviewDragOver(object sender, DragEventArgs e)
-		{
-			DecideDropTarget(e);
-
-			if (e.Data.GetData(Format.Name) != null)
-			{
-				ShowDraggedAdorner(e.GetPosition(TopWindow));
-				UpdateInsertionAdorner();
-			}
-			e.Handled = true;
-		}
-
-		public void DropTarget_PreviewDrop(object sender, DragEventArgs e)
-		{
-			var draggedItem = e.Data.GetData(Format.Name);
-			var indexRemoved = -1;
-
-			if (draggedItem != null)
-			{
-				if ((e.Effects & DragDropEffects.Move) != DragDropEffects.None)
-				{
-					indexRemoved = DynamicFormUtilities.RemoveItemFromItemsControl(SourceItemsControl, draggedItem);
-				}
-
-				if (indexRemoved != -1 && SourceItemsControl == TargetItemsControl && indexRemoved < InsertionIndex)
-				{
-					InsertionIndex--;
-				}
-
-				DynamicFormUtilities.InsertItemInItemsControl(TargetItemsControl, draggedItem, InsertionIndex);
-				RemoveDraggedAdorner();
-				RemoveInsertionAdorner();
-			}
-			e.Handled = true;
 		}
 
 		private static void IsDragSourceChanged(DependencyObject d,
@@ -256,7 +195,7 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 		{
 			var dropTarget = d as ItemsControl;
 
-			if (dropTarget != null)
+			if (dropTarget == null)
 			{
 				return;
 			}
@@ -365,10 +304,17 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 			}
 		}
 
+		private void DragSource_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			DraggedData = null;
+		}
+
 		private void DragSource_PreviewMouseMove(object sender, MouseEventArgs e)
 		{
 			if (DraggedData == null || !DynamicFormUtilities.IsMovementBigEnough(InitialMousePosition, e.GetPosition(TopWindow)))
+			{
 				return;
+			}
 
 			var data = new DataObject(Format.Name, DraggedData);
 			var previousAllowDrop = TopWindow.AllowDrop;
@@ -377,7 +323,6 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 			TopWindow.DragOver += TopWindow_DragOver;
 			TopWindow.DragLeave += TopWindow_DragLeave;
 
-			// effects is not used, and is not necessary
 			var effects = DragDrop.DoDragDrop(sender as DependencyObject, data, DragDropEffects.Move);
 
 			TopWindow.AllowDrop = previousAllowDrop;
@@ -387,10 +332,72 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 			DraggedData = null;
 		}
 
+		private void DropTarget_PreviewDragEnter(object sender, DragEventArgs e)
+		{
+			TargetItemsControl = sender as ItemsControl;
+			DecideDropTarget(e);
+
+			if (e.Data.GetData(Format.Name) == null)
+			{
+				return;
+			}
+
+			ShowDraggedAdorner(e.GetPosition(TopWindow));
+			CreateInsertionAdorner();
+
+			e.Handled = true;
+		}
+
+		private void DropTarget_PreviewDragLeave(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetData(Format.Name) != null)
+			{
+				RemoveInsertionAdorner();
+			}
+			e.Handled = true;
+		}
+
+		private void DropTarget_PreviewDragOver(object sender, DragEventArgs e)
+		{
+			DecideDropTarget(e);
+
+			if (e.Data.GetData(Format.Name) != null)
+			{
+				ShowDraggedAdorner(e.GetPosition(TopWindow));
+				UpdateInsertionAdorner();
+			}
+			e.Handled = true;
+		}
+
+		private void DropTarget_PreviewDrop(object sender, DragEventArgs e)
+		{
+			var draggedItem = e.Data.GetData(Format.Name);
+			var indexRemoved = -1;
+
+			if (draggedItem != null)
+			{
+				if ((e.Effects & DragDropEffects.Move) != DragDropEffects.None)
+				{
+					indexRemoved = DynamicFormUtilities.RemoveItemFromItemsControl(SourceItemsControl, draggedItem);
+				}
+
+				if (indexRemoved != -1 && SourceItemsControl == TargetItemsControl && indexRemoved < InsertionIndex)
+				{
+					InsertionIndex--;
+				}
+
+				DynamicFormUtilities.InsertItemInItemsControl(TargetItemsControl, draggedItem, InsertionIndex);
+				RemoveDraggedAdorner();
+				RemoveInsertionAdorner();
+			}
+			e.Handled = true;
+		}
 		private bool IsDropDataTypeAllowed(object DraggedItem)
 		{
 			if (SourceItemsControl != TargetItemsControl)
+			{
 				return DraggedItem is DynamicFormEditor || DraggedItem is PropertyInformation;
+			}
 
 			// SourceItemsControl is the TargetItemsControl
 			return SourceItemsControl.ItemsSource is ListCollectionView || DraggedItem is PropertyInformation
@@ -406,6 +413,7 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 			DraggedAdorner.Detach();
 			DraggedAdorner = null;
 		}
+
 		private void RemoveInsertionAdorner()
 		{
 			if (InsertionAdorner == null)
@@ -434,6 +442,7 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 			e.Effects = DragDropEffects.None;
 			e.Handled = true;
 		}
+
 		private void TopWindow_DragLeave(object sender, DragEventArgs e)
 		{
 			RemoveDraggedAdorner();
@@ -456,6 +465,7 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 			InsertionAdorner.IsInFirstHalf = IsInFirstHalf;
 			InsertionAdorner.InvalidateVisual();
 		}
+
 		#endregion Methods
 	}
 }

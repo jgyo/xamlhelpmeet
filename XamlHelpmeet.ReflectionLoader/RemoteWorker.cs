@@ -35,16 +35,16 @@ namespace XamlHelpmeet.ReflectionLoader
 		}
 
 		// BMK Clean up parameters when finished
-		public RemoteResponse<XamlHelpmeet.Model.AssembliesNamespacesClasses> GetClassEntityFromUserSelectedClass(string AssemblyPath, bool IsSilverlight, string NameOfSourceCommand, List<string> references)
+		public RemoteResponse<AssembliesNamespacesClasses> GetClassEntityFromUserSelectedClass(string assemblyPath, bool isSilverlight, string NameOfSourceCommand, List<string> references)
 		{
-			var data = new AssembliesNamespacesClasses();
-			var targetProjectPath = Path.GetDirectoryName(AssemblyPath);
-			var targetAssemblyDefinition = AssemblyDefinition.ReadAssembly(AssemblyPath);
+			var ancs = new AssembliesNamespacesClasses();
+			var targetProjectPath = Path.GetDirectoryName(assemblyPath);
+			var targetAssemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath);
 			Exception ex = null;
 			var assembliesToLoad = new Hashtable();
 
 			// Load this assembly
-			assembliesToLoad.Add(AssemblyPath.ToLower(), null);
+			assembliesToLoad.Add(assemblyPath.ToLower(), null);
 			foreach (var item in targetAssemblyDefinition.MainModule.AssemblyReferences)
 			{
 				if (item.IsNotMicrosoftAssembly())
@@ -65,18 +65,18 @@ namespace XamlHelpmeet.ReflectionLoader
 					assembliesToLoad.Add(name.ToLower(), null);
 			}
 
-			foreach (string assemblyPath in assembliesToLoad.Keys)
+			foreach (string assemblyToLoadPath in assembliesToLoad.Keys)
 			{
-				targetAssemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath);
+				targetAssemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyToLoadPath);
 
-				LoadAssemblyClasses(targetAssemblyDefinition, IsSilverlight, data, out ex, assembliesToLoad);
+				LoadAssemblyClasses(targetAssemblyDefinition, isSilverlight, ancs, out ex, assembliesToLoad);
 
 				if (ex != null)
 				{
 					return new RemoteResponse<AssembliesNamespacesClasses>(null, ResponseStatus.Exception, ex, String.Format("Unable to load types from target assembly: {0}", targetAssemblyDefinition.Name));
 				}
 			}
-			return new RemoteResponse<AssembliesNamespacesClasses>(data, ResponseStatus.Success, null, null);
+			return new RemoteResponse<AssembliesNamespacesClasses>(ancs, ResponseStatus.Success, null, null);
 		}
 
 		private bool CanWrite(PropertyDefinition Property)
@@ -104,18 +104,17 @@ namespace XamlHelpmeet.ReflectionLoader
 		/// 	All properties for the TypedDefinition loaded in a List&lt;PropertyDefinition&gt;
 		/// </returns>
 
-		private string FormatPropertyTypeName(PropertyDefinition Property)
+		private string FormatPropertyTypeName(PropertyDefinition property)
 		{
-			var name = Property.Name;
-			var fullName = Property.PropertyType.FullName;
+			var name = property.PropertyType.Name;
+			var fullName = property.PropertyType.FullName;
 			if (name.Contains("`") == false)
 			{
 				return name;
 			}
 			name = name.Remove(name.IndexOf("`"));
 
-			// BMK check the Type logic of this line.
-			if (Property.PropertyType == null || Property.PropertyType.GetType() == typeof(GenericInstanceType) || fullName.IndexOf(">") == -1)
+			if (property.PropertyType == null || !(property.PropertyType is GenericInstanceType) || fullName.IndexOf(">") == -1)
 			{
 				return name;
 			}
@@ -123,12 +122,12 @@ namespace XamlHelpmeet.ReflectionLoader
 			var sb = new StringBuilder(512);
 			sb.AppendFormat("{0} (Of ", name);
 
-			var obj = Property.PropertyType as GenericInstanceType;
-			if (obj.HasGenericArguments)
+			var propertyInstanceType = property.PropertyType as GenericInstanceType;
+			if (propertyInstanceType.HasGenericArguments)
 			{
-				foreach (var tr in obj.GenericArguments)
+				foreach (var typeReference in propertyInstanceType.GenericArguments)
 				{
-					sb.Append(tr.Name);
+					sb.Append(typeReference.Name);
 					sb.Append(", ");
 				}
 			}
@@ -142,36 +141,36 @@ namespace XamlHelpmeet.ReflectionLoader
 			return sb.ToString();
 		}
 
-		private List<PropertyDefinition> GetAllPropertiesForType(AssemblyDefinition asy, TypeDefinition AssemblyType, Hashtable AssembliesToLoad)
+		private List<PropertyDefinition> GetAllPropertiesForType(AssemblyDefinition assemblyDefinition, TypeDefinition assemblyType, Hashtable assembliesToLoad)
 		{
 			var returnValue = new List<PropertyDefinition>();
-			foreach (var item in AssemblyType.Properties)
+			foreach (var item in assemblyType.Properties)
 			{
 				returnValue.Add(item);
 			}
 
-			if (AssemblyType != null && AssemblyType.BaseType == AssemblyType.Module.Import(typeof(object)) && AssemblyType.BaseType.Scope != null)
+			if (assemblyType != null && assemblyType.BaseType == assemblyType.Module.Import(typeof(object)) && assemblyType.BaseType.Scope != null)
 			{
 				var baseTypeAssemblyName = string.Empty;
-				var td = AssemblyType.BaseType as TypeDefinition;
+				var typeDef = assemblyType.BaseType as TypeDefinition;
 
-				if (td != null)
+				if (typeDef != null)
 				{
-					var md = td.Scope as ModuleDefinition;
+					var moduleDef = typeDef.Scope as ModuleDefinition;
 
-					if (md != null)
+					if (moduleDef != null)
 					{
-						baseTypeAssemblyName = md.Name.ToLower();
+						baseTypeAssemblyName = moduleDef.Name.ToLower();
 					}
 				}
 
 				if (baseTypeAssemblyName.IsNull())
 				{
-					var anr = AssemblyType.BaseType.Scope as AssemblyNameReference;
+					var assemblyNameReference = assemblyType.BaseType.Scope as AssemblyNameReference;
 
-					if (anr != null)
+					if (assemblyNameReference != null)
 					{
-						baseTypeAssemblyName = anr.Name.ToLower();
+						baseTypeAssemblyName = assemblyNameReference.Name.ToLower();
 					}
 				}
 
@@ -179,7 +178,7 @@ namespace XamlHelpmeet.ReflectionLoader
 				{
 					AssemblyDefinition targetAssemblyDefinition = null;
 
-					foreach (string assemblyName in AssembliesToLoad.Keys)
+					foreach (string assemblyName in assembliesToLoad.Keys)
 					{
 						if (!assemblyName.EndsWith(baseTypeAssemblyName) && assemblyName.IndexOf(baseTypeAssemblyName) <= -1)
 							continue;
@@ -191,9 +190,9 @@ namespace XamlHelpmeet.ReflectionLoader
 					{
 						foreach (var baseTypeDefinition in targetAssemblyDefinition.MainModule.Types)
 						{
-							if (!baseTypeDefinition.IsClass || baseTypeDefinition.Name != AssemblyType.BaseType.Name)
+							if (!baseTypeDefinition.IsClass || baseTypeDefinition.Name != assemblyType.BaseType.Name)
 								continue;
-							returnValue.AddRange(GetAllPropertiesForType(asy, baseTypeDefinition, AssembliesToLoad));
+							returnValue.AddRange(GetAllPropertiesForType(assemblyDefinition, baseTypeDefinition, assembliesToLoad));
 							break;
 						}
 					}
@@ -202,13 +201,13 @@ namespace XamlHelpmeet.ReflectionLoader
 			return returnValue;
 		}
 
-		private void LoadAssemblyClasses(AssemblyDefinition asy, bool IsSilverlight, AssembliesNamespacesClasses Data, out Exception exOut, Hashtable AssembliesToLoad)
+		private void LoadAssemblyClasses(AssemblyDefinition assemblyDefinition, bool isSilverlight, AssembliesNamespacesClasses ancs, out Exception exOut, Hashtable assembliesToLoad)
 		{
 			exOut = null;
 
 			try
 			{
-				foreach (var type in asy.MainModule.Types)
+				foreach (var type in assemblyDefinition.MainModule.Types)
 				{
 					if (type.IsPublic &&
 						type.IsClass &&
@@ -220,11 +219,11 @@ namespace XamlHelpmeet.ReflectionLoader
 					{
 						var previouslyLoaded = false;
 
-						foreach (var anc in Data)
+						foreach (var anc in ancs)
 						{
 							if (type.Name != anc.TypeName ||
 								type.Namespace != anc.Namespace ||
-								asy.Name.Name != anc.AssemblyName)
+								assemblyDefinition.Name.Name != anc.AssemblyName)
 								continue;
 							previouslyLoaded = true;
 							break;
@@ -232,43 +231,43 @@ namespace XamlHelpmeet.ReflectionLoader
 
 						if (!previouslyLoaded)
 						{
-							if (type.BaseType != null || type.BaseType.Name != "MulticastDelegate")
+							if (type.BaseType == null || type.BaseType.Name != "MulticastDelegate")
 							{
-								var classEntity = new ClassEntity(type.Name, IsSilverlight);
+								var classEntity = new ClassEntity(type.Name, isSilverlight);
 
-								// Original code, now been replaced by following
-								// line
-								// For Each objProperty As PropertyDefinition In objType.Properties
-								foreach (var property in GetAllPropertiesForType(asy, type, AssembliesToLoad))
+								foreach (var property in GetAllPropertiesForType(assemblyDefinition, type, assembliesToLoad))
 								{
 									if (property.GetMethod != null && property.GetMethod.IsPublic)
 									{
-										var pi = new PropertyInformation(CanWrite(property), property.Name, FormatPropertyTypeName(property), property.PropertyType.Namespace);
+										var propertyInfo = new PropertyInformation(CanWrite(property), property.Name, FormatPropertyTypeName(property), property.PropertyType.Namespace);
 
 										// BMK Test the logic of this line.
 										// I'm not sure about the Type handling here. JGYO
-										if (property.PropertyType != null && property.PropertyType.GetType() == typeof(GenericInstanceType))
+										// var result1 = property.PropertyType is GenericInstanceType;
+										// var result2 = property.PropertyType.GetType() == typeof(GenericInstanceType);
+										var git = property.PropertyType as GenericInstanceType;
+
+										if (git != null)
 										{
-											var obj = property.PropertyType as GenericInstanceType;
-											if (obj.HasGenericArguments)
+											if (git.HasGenericArguments)
 											{
-												foreach (var tr in obj.GenericArguments)
+												foreach (var typeRef in git.GenericArguments)
 												{
-													pi.GenericArguments.Add(tr.Name);
+													propertyInfo.GenericArguments.Add(typeRef.Name);
 												}
 											}
 										}
 										if (property.HasParameters)
 										{
-											foreach (var pd in property.Parameters)
+											foreach (var parameter in property.Parameters)
 											{
-												pi.PropertyParameters.Add(new PropertyParameter(pd.Name, pd.ParameterType.Name));
+												propertyInfo.PropertyParameters.Add(new PropertyParameter(parameter.Name, parameter.ParameterType.Name));
 											}
 										}
-										classEntity.PropertyInformation.Add(pi);
+										classEntity.PropertyInformation.Add(propertyInfo);
 									}
 								}
-								Data.Add(new AssembliesNamespacesClass(asy.Name.Name, type.Namespace, type.Name, classEntity));
+								ancs.Add(new AssembliesNamespacesClass(assemblyDefinition.Name.Name, type.Namespace, type.Name, classEntity));
 							}
 						}
 					}

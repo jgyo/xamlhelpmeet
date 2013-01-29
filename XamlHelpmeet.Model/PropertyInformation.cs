@@ -36,18 +36,18 @@ namespace XamlHelpmeet.Model
 		/// </value>
 
 		// BMK Complete Constructor
-		public PropertyInformation(bool CanWrite, string Name, string TypeName, string TypeNamespace)
+		public PropertyInformation(bool canWrite, string name, string typeName, string typeNamespace)
 		{
-			this.CanWrite = CanWrite;
-			this.Name = Name;
-			this.TypeName = TypeName;
-			this.TypeNamespace = TypeNamespace;
+			this.CanWrite = canWrite;
+			this.Name = name;
+			this.TypeName = typeName;
+			this.TypeNamespace = typeNamespace;
 
-			if (TypeNamespace.Contains("Decimal"))
+			if (typeNamespace.Contains("Decimal"))
 			{
 				StringFormat = "{0:c}";
 			}
-			else if (TypeName.Contains("Date"))
+			else if (typeName.Contains("Date"))
 			{
 				StringFormat = "{0:d}";
 			}

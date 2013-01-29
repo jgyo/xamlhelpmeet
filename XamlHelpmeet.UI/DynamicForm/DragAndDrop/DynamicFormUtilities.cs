@@ -78,30 +78,48 @@ namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 			return true;
 		}
 
-		public static void InsertItemInItemsControl(ItemsControl ItemsControl,
-													object ItemToInsert,
-													int InsertionIndex)
+		public static void InsertItemInItemsControl(ItemsControl itemsControl,
+													object itemToInsert,
+													int insertionIndex)
 		{
-			if (ItemToInsert == null)
+			if (itemToInsert == null)
 			{
 				return;
 			}
 
-			var itemsSource = ItemsControl.ItemsSource;
+			var itemsSource = itemsControl.ItemsSource;
 
-			if (itemsSource != null && ItemToInsert is DynamicFormEditor)
+			if (itemsSource != null && itemToInsert is DynamicFormEditor)
 			{
-				// TODO: Complete InsertItemInItemsControl method in DynamicFormUtilities
+				var propertyName = ((itemToInsert as DynamicFormEditor).DataContext
+					as DynamicFormListBoxContent).BindingPath;
+				var collectionView = itemsControl.ItemsSource as CollectionView;
+
+				if (collectionView != null)
+				{
+					foreach (PropertyInformation item in collectionView)
+					{
+						if (item.Name == propertyName)
+						{
+							item.HasBeenUsed = true;
+							break;
+						}
+						collectionView.Refresh();
+					}
+				}
 			}
-			else if (itemsSource == null && ItemToInsert is PropertyInformation)
+			else if (itemsSource == null && itemToInsert is PropertyInformation)
 			{
-				ItemsControl.Items.Insert(InsertionIndex, UIHelpers.DynamicFormEditorFactory(ItemToInsert as
+				// this occurs when dragging from the left side field list
+				// to the form fields listings
+				itemsControl.Items.Insert(insertionIndex,
+					UIHelpers.DynamicFormEditorFactory(itemToInsert as
 				PropertyInformation));
 			}
-			else if (itemsSource == null && ItemToInsert is DynamicFormEditor)
+			else if (itemsSource == null && itemToInsert is DynamicFormEditor)
 			{
-				ItemsControl.Items.Insert(InsertionIndex,
-										  ItemToInsert);
+				itemsControl.Items.Insert(insertionIndex,
+										  itemToInsert);
 			}
 		}
 

@@ -262,6 +262,7 @@
     <Compile Include="Utilities\ObservableCollectionSerializationSurrogate.cs" />
     <Compile Include="Utilities\UIHelpers.cs" />
     <Compile Include="ValidationRules\PositiveIntegerValidationRule.cs" />
+    <Compile Include="ValidationRules\RequiredEntryValidationRule.cs" />
     <Compile Include="ViewModelCreation\CreateCommandSource.cs" />
     <Compile Include="ViewModelCreation\CreateCommandWindow.xaml.cs">
       <DependentUpon>CreateCommandWindow.xaml</DependentUpon>
@@ -310,6 +311,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Recorder\Recorder.csproj">
+      <Project>{86cdf6aa-c283-4d84-a321-aabd171ae0d2}</Project>
+      <Name>Recorder</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XamlHelpmeet.Model\XamlHelpmeet.Model.csproj">
       <Project>{C6EB8699-E5BC-4575-AC9A-E712AE58AAAC}</Project>
       <Name>XamlHelpmeet.Model</Name>

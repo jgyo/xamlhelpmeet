@@ -14,6 +14,11 @@ namespace XamlHelpmeet.UI.Editors
 	/// </summary>
 	public partial class DynamicFormEditor : UserControl
 	{
+		public DynamicFormEditor()
+		{
+			InitializeComponent();
+		}
+
 		private void cboControlType_Loaded(object sender,
 		                                   RoutedEventArgs e)
 		{

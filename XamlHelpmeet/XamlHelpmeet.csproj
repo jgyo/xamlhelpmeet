@@ -68,6 +68,10 @@
     <Reference Include="extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="logger, Version=2.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resources\logger.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.Debugger.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
@@ -251,6 +255,10 @@
     <Content Include="GAC Hack\Microsoft.VisualStudio.Shell.Interop.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Recorder\Recorder.csproj">
+      <Project>{86cdf6aa-c283-4d84-a321-aabd171ae0d2}</Project>
+      <Name>Recorder</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XamlHelpmeet.Model\XamlHelpmeet.Model.csproj">
       <Project>{c6eb8699-e5bc-4575-ac9a-e712ae58aaac}</Project>
       <Name>XamlHelpmeet.Model</Name>

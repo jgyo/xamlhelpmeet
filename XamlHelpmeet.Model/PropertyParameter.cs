@@ -5,10 +5,10 @@ namespace XamlHelpmeet.Model
 	[Serializable]
 	public class PropertyParameter
 	{
-		public PropertyParameter(string ParameterName, string ParameterTypeName)
+		public PropertyParameter(string parameterName, string parameterTypeName)
 		{
-			this.ParameterName = ParameterName;
-			this.ParameterTypeName = ParameterTypeName;
+			this.ParameterName = parameterName;
+			this.ParameterTypeName = parameterTypeName;
 		}
 
 		public string ParameterName { get; set; }

@@ -21,7 +21,7 @@ namespace XamlHelpmeet.UI.DynamicForm
 	/// Interaction logic for CreateBusinessFromFromClassWindow.xaml
 	/// </summary>
 	public partial class CreateBusinessFormFromClassWindow : Window
-	{		
+	{
 		#region Constants
 
 		private const string STR_BUSINESSFORM                                     = "Business Form";
@@ -445,7 +445,7 @@ namespace XamlHelpmeet.UI.DynamicForm
 
 			for (var intX=0; intX < columnGroupListBox.Count; intX++)
 			{
-				sb.AppendFormat(STR_ColumnDefinitionWidth, 100, 
+				sb.AppendFormat(STR_ColumnDefinitionWidth, 100,
 					Environment.NewLine);
 				sb.AppendLine(STR_ColumnDefinitionWidthAuto);
 
@@ -453,7 +453,7 @@ namespace XamlHelpmeet.UI.DynamicForm
 					continue;
 
 				// this inserts the spacer column between the groups of columns
-				sb.AppendFormat(STR_ColumnDefinitionWidth, 10, 
+				sb.AppendFormat(STR_ColumnDefinitionWidth, 10,
 					Environment.NewLine);
 			}
 
@@ -634,7 +634,8 @@ namespace XamlHelpmeet.UI.DynamicForm
 		}
 
 		private void CreateBusinessFormFromClass_Loaded(object sender, RoutedEventArgs e)
-		{ // Handles Loaded
+		{
+			// Handles Loaded
 			InitialLayoutOfDynamicForms();
 			ShowFullDynamicFormContent = true;
 			Title = string.Concat("Create Business Form For Class: ",
@@ -960,7 +961,7 @@ namespace XamlHelpmeet.UI.DynamicForm
 			// Check that the user has given us what we need to create the form
 			if (numberOfColumns == 0 || numberOfRows == 0)
 			{
-				MessageBox.Show("You do not have any properties added to the layout.", 
+				MessageBox.Show("You do not have any properties added to the layout.",
 					"Invalid Layout", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 				return;
 			}

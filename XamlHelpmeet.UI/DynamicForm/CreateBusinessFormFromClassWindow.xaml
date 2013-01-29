@@ -288,13 +288,13 @@
             <TextBlock Margin="20,0,0,0"
                        VerticalAlignment="Center"
                        Text="Binding Property Prefix"
-                       ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding properyt names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
+                       ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding property names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
             <TextBox x:Name="txtBindingPropertyPrefix"
                      Width="150"
                      Margin="7,0,0,0"
                      VerticalAlignment="Center"
                      MaxLength="50"
-                     ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding properyt names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
+                     ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding property names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
         </StackPanel>
 
         <Grid Grid.Row="1"

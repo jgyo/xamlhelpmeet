@@ -5,6 +5,7 @@
     xmlns:local="clr-namespace:XamlHelpmeet.UI.Editors"
     xmlns:cvtrs="clr-namespace:XamlHelpmeet.UI.Converters"
     xmlns:enums="clr-namespace:XamlHelpmeet.UI.Enums"
+	Loaded="DynamicFormEditor_Loaded"
     MinWidth="400">
     <UserControl.Resources>
         <cvtrs:DynamicFormControlTypeEnumConverter x:Key="dynamicFormControlTypeEnumConverter" />

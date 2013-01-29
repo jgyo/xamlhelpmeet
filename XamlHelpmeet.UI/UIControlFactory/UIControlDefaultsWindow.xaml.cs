@@ -19,6 +19,7 @@ namespace XamlHelpmeet.UI
 	/// </summary>
 	public partial class UIControlDefaultsWindow : Window
 	{
+		// TODO: Complete UIControlDefaultsWindow class
 		public UIControlDefaultsWindow()
 		{
 			InitializeComponent();

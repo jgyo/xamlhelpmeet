@@ -61,6 +61,9 @@ namespace XamlHelpmeet
 		/// </summary>
 		public XamlHelpmeetPackage()
 		{
+#if debug
+			YoderTools.Recorder.Instance.SetPath(@"C:\Users\Yoder\Desktop");
+#endif
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this));
 			_commandsList = new List<CommandBase>();
 		}
@@ -107,7 +110,7 @@ namespace XamlHelpmeet
 				throw new NullReferenceException("DTE not available as DTE2.");
 			}
 
-			var _addInInstance = base.GetService(typeof(AddIn)) as AddIn;
+			//var _addInInstance = base.GetService(typeof(AddIn)) as AddIn;
 
 			_uiShell = base.GetService(typeof(IVsUIShell)) as IVsUIShell;
 			_events = _dte.Events;
@@ -128,8 +131,17 @@ namespace XamlHelpmeet
 			CommandID menuCommandID;
 
 			_mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+
 			if (_mcs == null)
-				throw new InvalidOperationException("No menu command service found.");
+				return;
+
+			// The impelementations I've seen in samples all simply skip the
+			// menu implementation if the menu command service returns as
+			// null rather than throwing an error. There may be circumstances
+			// where BuildMenu might run where an error like this would prevent
+			// otherwise acceptible use.
+			// 
+			//	throw new InvalidOperationException("No menu command service found.");
 
 			try
 			{
