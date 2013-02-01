@@ -5,6 +5,7 @@
         Title="UI Control Default Settings"
         Width="650"
         Height="550"
+        Loaded="UIControlDefaultsWindow_Loaded"
         ShowInTaskbar="True">
 	<Window.Resources>
 
@@ -29,7 +30,8 @@
 			           Text="Platform Controls" />
 			<ListBox x:Name="lbControls"
 			         Width="Auto"
-			         Background="AliceBlue">
+			         Background="AliceBlue"
+			         SelectionChanged="lbControls_SelectionChanged">
 				<ListBox.GroupStyle>
 					<GroupStyle>
 						<GroupStyle.HeaderTemplate>

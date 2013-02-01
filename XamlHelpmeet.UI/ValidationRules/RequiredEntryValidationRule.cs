@@ -1,13 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows.Controls;
+using XamlHelpmeet.Extentions;
 
 namespace XamlHelpmeet.UI.ValidationRules
 {
-	public class RequiredEntryValidationRule
+	public class RequiredEntryValidationRule : ValidationRule
 	{
-		// TODO: Complete RequiredEntryValidationRule class
+		public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+		{
+			if (value == null || value.ToString().IsNullOrEmpty())
+			{
+				return new ValidationResult(false, "This is a required entry field.");
+			}
+
+			return ValidationResult.ValidResult;
+		}
 	}
 }

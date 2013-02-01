@@ -8,7 +8,8 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Xaml Helpmeet")]
-[assembly: AssemblyDescription("Helpful tools for working with Xaml files.")]
+//[assembly: AssemblyDescription("Helpful tools for working with Xaml files.")]
+[assembly: AssemblyDescription("This is a very early alpha version. You will find many bugs. Please report them.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Yoder Tools")]
 [assembly: AssemblyProduct("XamlHelpmeet")]
@@ -29,6 +30,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("0.1.*")]
 //[assembly: AssemblyFileVersion("1.0.*")]
 [assembly: GuidAttribute("86321992-D1FB-4338-8C97-A8C686BF4FCA")]

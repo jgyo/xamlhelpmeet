@@ -2,6 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="About Xaml Helpmeet"
+        Width="616"
+        Height="320"
         Background="Black"
         BorderBrush="#FFEDB343"
         BorderThickness="10"
@@ -12,7 +14,7 @@
         ShowInTaskbar="False"
         Topmost="True"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None" Width="616" Height="320">
+        WindowStyle="None">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -22,11 +24,12 @@
                Margin="10"
                HorizontalAlignment="Left"
                VerticalAlignment="Top"
-               Source="/XamlHelpmeet.UI;component/Snapshot_20121225_1.PNG" />
+               Source="/XamlHelpmeet.UI;component/Resources/postcard.png" />
         <StackPanel Grid.Column="1">
-            <TextBlock FontSize="24"
+            <TextBlock Margin="0,0,10,0"
+                       FontSize="24"
                        FontWeight="Bold"
-                       Text="Xaml Helpmeet for Visual Studio 2012" Margin="0,0,10,0" />
+                       Text="Xaml Helpmeet for Visual Studio 2012" />
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="0,5,5,0" FontSize="14">Version:</TextBlock>
                 <TextBlock Margin="0,5,0,0" FontSize="14">
@@ -36,22 +39,31 @@
             <TextBlock Margin="0,12,5,0"
                        FontSize="14"
                        TextWrapping="Wrap">
-                Xaml Helpmeet is derived from XAML Power Toys by Karl Shifflett. The original
-                VisualBasic has been rewritten in CSharp. This version is designed as an add-in for
-                Visual Studio 2012. The purpose of the program is to help programmers work with
-                WPF and Silverlight Xaml code.
+                Xaml Helpmeet is a Visual Studio 2012
+                extension designed to help programmers write and manage xaml files.
+                It is a translation and update of XAML Power Tools, written by
+                Karl Shifflett in Visual Basic. You can find the C# source code
+                for Xaml Helpmeet on
+                <Hyperlink Click="Hyperlink_Click_1"
+                           Foreground="#FFFDFDFD"
+                           ToolTip="http://xamlhelpmeet.codeplex.com/">
+                    CodePlex
+                </Hyperlink>
+                and install the binary
+                in Visual Studio 2012 from the Visual Studio Galary.
             </TextBlock>
             <TextBlock Margin="0,6,5,0"
                        FontSize="14"
                        TextWrapping="Wrap">
-                In accord with the original license this software is licensed under
+                This software is licensed under
                 the terms of the MIT X11 license and is free for all uses. You may
                 see the terms of the license here:
             </TextBlock>
             <TextBlock Margin="0,6,0,0">
-                <Hyperlink FontSize="14"
+                <Hyperlink Click="Hyperlink_Click_1"
+                           FontSize="14"
                            Foreground="#FFFDFDFD"
-                           ToolTip="http://www.opensource.org/licenses/mit-license.html" Click="Hyperlink_Click_1"><Run FontSize="14" Text="http://www.opensource.org/licenses/mit-license.html" />
+                           ToolTip="http://www.opensource.org/licenses/mit-license.html"><Run FontSize="14" Text="http://www.opensource.org/licenses/mit-license.html" />
                 </Hyperlink>
             </TextBlock>
             <TextBlock Margin="0,12,5,0"
