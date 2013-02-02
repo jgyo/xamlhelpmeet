@@ -195,6 +195,7 @@
     <Compile Include="CheckListBox\CheckListBoxIndicatorItem.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converters\BindingModeEnumConverter.cs" />
+    <Compile Include="Converters\ControlTypeEnumConverter.cs" />
     <Compile Include="Converters\DynamicFormControlTypeEnumConverter.cs" />
     <Compile Include="Converters\FieldListForegroundConverter.cs" />
     <Compile Include="Converters\FieldsGroupingConverter.cs" />

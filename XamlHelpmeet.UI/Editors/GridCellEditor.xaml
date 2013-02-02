@@ -1,10 +1,15 @@
 ﻿<UserControl x:Class="XamlHelpmeet.UI.Editors.GridCellEditor"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Converters="clr-namespace:XamlHelpmeet.UI.Converters"
              xmlns:local="clr-namespace:XamlHelpmeet.UI.Editors"
              xmlns:model="clr-namespace:XamlHelpmeet.Model;assembly=XamlHelpmeet.Model"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              Loaded="GridCellEditor_Loaded">
+
+    <UserControl.Resources>
+        <Converters:ControlTypeEnumConverter x:Key="ControlTypeEnumConverter" />
+    </UserControl.Resources>
 
     <Border Margin="5"
             BorderBrush="LightGray"
@@ -22,7 +27,9 @@
                       Focusable="False"
                       FontSize="10"
                       IsSynchronizedWithCurrentItem="True"
-                      SelectedItem="{Binding ControlType}"
+                      SelectedItem="{Binding ControlType,
+                                             Converter={StaticResource ControlTypeEnumConverter},
+                                             Mode=TwoWay}"
                       SelectionChanged="ComboBox_SelectionChanged" />
 
             <Grid x:Name="gridCellEditor" Grid.Row="1" />

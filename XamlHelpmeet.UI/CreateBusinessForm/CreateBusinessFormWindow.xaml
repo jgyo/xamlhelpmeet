@@ -6,281 +6,286 @@
         Title="Create Business Form"
         SizeToContent="WidthAndHeight"
         WindowStyle="ToolWindow">
-	<Window.Resources>
-		<prim:Popup x:Key="columnPopUp">
-			<Grid>
-				<Rectangle HorizontalAlignment="Stretch"
-				           VerticalAlignment="Stretch"
-				           Fill="WhiteSmoke"
-				           Stroke="Black"
-				           StrokeThickness="1" />
-				<Border Margin="10"
-				        VerticalAlignment="Top"
-				        Background="White"
-				        BorderBrush="LightGray"
-				        BorderThickness="1"
-				        CornerRadius="10"
-				        Padding="5">
-					<StackPanel>
-						<TextBlock HorizontalAlignment="Center"
-						           VerticalAlignment="Top"
-						           FontSize="11"
-						           Foreground="Gray">
-							Set Column Size
-						</TextBlock>
-						<StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-							<Button HorizontalAlignment="Left"
-							        VerticalAlignment="Top"
-							        Click="btnPopupColumnAutoSize_Click"
-							        Content="Auto"
-							        FontSize="8" />
-							<Button Margin="5,0,0,0"
-							        HorizontalAlignment="Left"
-							        VerticalAlignment="Top"
-							        Click="btnPopupColumnStarSize_Click"
-							        Content="Star"
-							        FontSize="8" />
-							<TextBox Width="45"
-							         Margin="5,0,0,0"
-							         VerticalAlignment="Top"
-							         FontSize="10"
-							         KeyDown="txtPopupColumnWidth_KeyPress"
-							         ToolTip="Set column width and press ENTER." />
-						</StackPanel>
-					</StackPanel>
-				</Border>
-			</Grid>
-		</prim:Popup>
+    <Window.Resources>
+        <prim:Popup x:Key="columnPopUp">
+            <Grid>
+                <Rectangle HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch"
+                           Fill="WhiteSmoke"
+                           Stroke="Black"
+                           StrokeThickness="1" />
+                <Border Margin="10"
+                        VerticalAlignment="Top"
+                        Background="White"
+                        BorderBrush="LightGray"
+                        BorderThickness="1"
+                        CornerRadius="10"
+                        Padding="5">
+                    <StackPanel>
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   FontSize="11"
+                                   Foreground="Gray">
+                            Set Column Size
+                        </TextBlock>
+                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <Button HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Click="btnPopupColumnAutoSize_Click"
+                                    Content="Auto"
+                                    FontSize="8" />
+                            <Button Margin="5,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Click="btnPopupColumnStarSize_Click"
+                                    Content="Star"
+                                    FontSize="8" />
+                            <TextBox Width="45"
+                                     Margin="5,0,0,0"
+                                     VerticalAlignment="Top"
+                                     FontSize="10"
+                                     KeyDown="txtPopupColumnWidth_KeyPress"
+                                     Tag="{Binding Tag,
+                                                   RelativeSource={RelativeSource FindAncestor,
+                                                                                  AncestorType={x:Type Popup}}}"
+                                     ToolTip="Set column width and press ENTER." />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </prim:Popup>
 
-		<prim:Popup x:Key="rowPopUp">
+        <prim:Popup x:Key="rowPopUp">
 
-			<Grid>
+            <Grid>
 
-				<Rectangle HorizontalAlignment="Stretch"
-				           VerticalAlignment="Stretch"
-				           Fill="WhiteSmoke"
-				           Stroke="Black"
-				           StrokeThickness="1" />
+                <Rectangle HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch"
+                           Fill="WhiteSmoke"
+                           Stroke="Black"
+                           StrokeThickness="1" />
 
-				<Border Margin="10"
-				        VerticalAlignment="Top"
-				        Background="White"
-				        BorderBrush="LightGray"
-				        BorderThickness="1"
-				        CornerRadius="10"
-				        Padding="5">
-					<StackPanel>
-						<TextBlock HorizontalAlignment="Center"
-						           VerticalAlignment="Top"
-						           FontSize="11"
-						           Foreground="Gray">
-							Set Row Size
-						</TextBlock>
-						<StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-							<Button HorizontalAlignment="Left"
-							        VerticalAlignment="Top"
-							        Click="btnPopupRowAutoSize_Click"
-							        Content="Auto"
-							        FontSize="8" />
-							<Button Margin="5,0,0,0"
-							        HorizontalAlignment="Left"
-							        VerticalAlignment="Top"
-							        Click="btnPopupRowStarSize_Click"
-							        Content="Star"
-							        FontSize="8" />
-							<TextBox Width="45"
-							         Margin="5,0,0,0"
-							         VerticalAlignment="Top"
-							         FontSize="10"
-							         KeyDown="txtPopupRowHeight_KeyPress"
-							         ToolTip="Set row height and press ENTER." />
-						</StackPanel>
-					</StackPanel>
-				</Border>
-			</Grid>
-		</prim:Popup>
-	</Window.Resources>
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto" />
-			<ColumnDefinition Width="*" />
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
+                <Border Margin="10"
+                        VerticalAlignment="Top"
+                        Background="White"
+                        BorderBrush="LightGray"
+                        BorderThickness="1"
+                        CornerRadius="10"
+                        Padding="5">
+                    <StackPanel>
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   FontSize="11"
+                                   Foreground="Gray">
+                            Set Row Size
+                        </TextBlock>
+                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <Button HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Click="btnPopupRowAutoSize_Click"
+                                    Content="Auto"
+                                    FontSize="8" />
+                            <Button Margin="5,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Click="btnPopupRowStarSize_Click"
+                                    Content="Star"
+                                    FontSize="8" />
+                            <TextBox Width="45"
+                                     Margin="5,0,0,0"
+                                     VerticalAlignment="Top"
+                                     FontSize="10"
+                                     KeyDown="txtPopupRowHeight_KeyPress"
+                                     Tag="{Binding Tag,
+                                                   RelativeSource={RelativeSource FindAncestor,
+                                                                                  AncestorType={x:Type Popup}}}"
+                                     ToolTip="Set row height and press ENTER." />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </prim:Popup>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-		<TextBlock x:Name="tbBusinessClassTitle"
-		           Grid.ColumnSpan="2"
-		           Margin="10"
-		           HorizontalAlignment="Center"
-		           FontSize="16"
-		           Text="Create Form" />
+        <TextBlock x:Name="tbBusinessClassTitle"
+                   Grid.ColumnSpan="2"
+                   Margin="10"
+                   HorizontalAlignment="Center"
+                   FontSize="16"
+                   Text="Create Form" />
 
-		<StackPanel Grid.Row="1"
-		            Grid.Column="1"
-		            Margin="10"
-		            HorizontalAlignment="Left"
-		            Orientation="Horizontal">
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="10"
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
 
-			<Border VerticalAlignment="Top"
-			        BorderBrush="LightGray"
-			        BorderThickness="1"
-			        CornerRadius="10"
-			        Padding="5">
-				<StackPanel>
-					<TextBlock HorizontalAlignment="Left"
-					           VerticalAlignment="Top"
-					           FontSize="11"
-					           Foreground="Gray">
-						<Run FontWeight="Bold">1.</Run>
-						Set Number of Columns
-					</TextBlock>
-					<TextBox x:Name="txtNumberOfColumns"
-					         Width="40"
-					         Margin="0,8,0,0"
-					         VerticalAlignment="Top"
-					         FontSize="10"
-					         KeyDown="txtNumberOfRowsOrColumns_KeyPress"
-					         LostFocus="TextBox_LostFocus"
-					         Text="2"
-					         ToolTip="Set number of columns and press ENTER." />
-				</StackPanel>
-			</Border>
+            <Border VerticalAlignment="Top"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="5">
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               FontSize="11"
+                               Foreground="Gray">
+                        <Run FontWeight="Bold">1.</Run>
+                        Set Number of Columns
+                    </TextBlock>
+                    <TextBox x:Name="txtNumberOfColumns"
+                             Width="40"
+                             Margin="0,8,0,0"
+                             VerticalAlignment="Top"
+                             FontSize="10"
+                             KeyDown="txtNumberOfRowsOrColumns_KeyPress"
+                             Text="2"
+                             ToolTip="Set number of columns and press ENTER." />
+                </StackPanel>
+            </Border>
 
-			<Border VerticalAlignment="Top"
-			        BorderBrush="LightGray"
-			        BorderThickness="1"
-			        CornerRadius="10"
-			        Padding="5">
-				<StackPanel>
-					<TextBlock HorizontalAlignment="Left"
-					           VerticalAlignment="Top"
-					           FontSize="11"
-					           Foreground="Gray">
-						<Run FontWeight="Bold">2.</Run>
-						Set All Column Sizing
-					</TextBlock>
-					<StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-						<Button HorizontalAlignment="Left"
-						        VerticalAlignment="Top"
-						        Click="btnAllColumnsAuto_Click"
-						        Content="Auto"
-						        FontSize="8" />
-						<Button Margin="5,0,0,0"
-						        HorizontalAlignment="Left"
-						        VerticalAlignment="Top"
-						        Click="btnAllColumnsStar_Click"
-						        Content="Star"
-						        FontSize="8" />
-						<TextBox x:Name="txtColumnSize"
-						         Width="45"
-						         Margin="5,0,0,0"
-						         VerticalAlignment="Top"
-						         FontSize="10"
-						         KeyDown="txtAllColumnsWidth_KeyPress"
-						         ToolTip="Set column width and press ENTER." />
-					</StackPanel>
-				</StackPanel>
-			</Border>
-		</StackPanel>
+            <Border VerticalAlignment="Top"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="5">
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               FontSize="11"
+                               Foreground="Gray">
+                        <Run FontWeight="Bold">2.</Run>
+                        Set All Column Sizing
+                    </TextBlock>
+                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                        <Button HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Click="btnAllColumnsAuto_Click"
+                                Content="Auto"
+                                FontSize="8" />
+                        <Button Margin="5,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Click="btnAllColumnsStar_Click"
+                                Content="Star"
+                                FontSize="8" />
+                        <TextBox x:Name="txtColumnSize"
+                                 Width="45"
+                                 Margin="5,0,0,0"
+                                 VerticalAlignment="Top"
+                                 FontSize="10"
+                                 KeyDown="txtAllColumnsWidth_KeyPress"
+                                 ToolTip="Set column width and press ENTER." />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
 
-		<StackPanel Grid.Row="2"
-		            Margin="10"
-		            VerticalAlignment="Top">
+        <StackPanel Grid.Row="2"
+                    Margin="10"
+                    VerticalAlignment="Top">
 
-			<Border VerticalAlignment="Top"
-			        BorderBrush="LightGray"
-			        BorderThickness="1"
-			        CornerRadius="10"
-			        Padding="5">
-				<StackPanel>
-					<TextBlock HorizontalAlignment="Left"
-					           VerticalAlignment="Top"
-					           FontSize="11"
-					           Foreground="Gray">
-						<Run FontWeight="Bold">3.</Run>
-						Set Number of Rows
-					</TextBlock>
-					<TextBox x:Name="txtNumberOfRows"
-					         Width="40"
-					         Margin="0,8,0,0"
-					         VerticalAlignment="Top"
-					         FontSize="10"
-					         KeyDown="txtNumberOfRowsOrColumns_KeyPress"
-					         Text="4"
-					         ToolTip="Set number of columns and press ENTER." />
-				</StackPanel>
-			</Border>
+            <Border VerticalAlignment="Top"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="5">
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               FontSize="11"
+                               Foreground="Gray">
+                        <Run FontWeight="Bold">3.</Run>
+                        Set Number of Rows
+                    </TextBlock>
+                    <TextBox x:Name="txtNumberOfRows"
+                             Width="40"
+                             Margin="0,8,0,0"
+                             VerticalAlignment="Top"
+                             FontSize="10"
+                             KeyDown="txtNumberOfRowsOrColumns_KeyPress"
+                             Text="4"
+                             ToolTip="Set number of columns and press ENTER." />
+                </StackPanel>
+            </Border>
 
-			<Border Margin="0,10,0,0"
-			        VerticalAlignment="Top"
-			        BorderBrush="LightGray"
-			        BorderThickness="1"
-			        CornerRadius="10"
-			        Padding="5">
-				<StackPanel>
-					<TextBlock HorizontalAlignment="Left"
-					           VerticalAlignment="Top"
-					           FontSize="11"
-					           Foreground="Gray">
-						<Run FontWeight="Bold">4.</Run>
-						Set All Row Sizing
-					</TextBlock>
-					<StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-						<Button HorizontalAlignment="Left"
-						        VerticalAlignment="Top"
-						        Click="btnAllRowsAuto_Click"
-						        Content="Auto"
-						        FontSize="8" />
-						<Button Margin="5,0,0,0"
-						        HorizontalAlignment="Left"
-						        VerticalAlignment="Top"
-						        Click="btnAllRowsStar_Click"
-						        Content="Star"
-						        FontSize="8" />
-						<TextBox Name="txtRowSize"
-						         Width="45"
-						         Margin="5,0,0,0"
-						         VerticalAlignment="Top"
-						         FontSize="10"
-						         KeyDown="txtAllRowsHeight_KeyPress"
-						         ToolTip="Set row height and press ENTER." />
-					</StackPanel>
-				</StackPanel>
-			</Border>
-		</StackPanel>
+            <Border Margin="0,10,0,0"
+                    VerticalAlignment="Top"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="5">
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               FontSize="11"
+                               Foreground="Gray">
+                        <Run FontWeight="Bold">4.</Run>
+                        Set All Row Sizing
+                    </TextBlock>
+                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                        <Button HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Click="btnAllRowsAuto_Click"
+                                Content="Auto"
+                                FontSize="8" />
+                        <Button Margin="5,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Click="btnAllRowsStar_Click"
+                                Content="Star"
+                                FontSize="8" />
+                        <TextBox Name="txtRowSize"
+                                 Width="45"
+                                 Margin="5,0,0,0"
+                                 VerticalAlignment="Top"
+                                 FontSize="10"
+                                 KeyDown="txtAllRowsHeight_KeyPress"
+                                 ToolTip="Set row height and press ENTER." />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
 
-		<ScrollViewer Grid.Row="2"
-		              Grid.Column="1"
-		              Margin="10,10,0,0">
+        <ScrollViewer Grid.Row="2"
+                      Grid.Column="1"
+                      Margin="10,10,0,0">
 
-			<Border Margin="10"
-			        HorizontalAlignment="Left"
-			        VerticalAlignment="Top"
-			        BorderBrush="LightGray"
-			        BorderThickness="1">
+            <Border Margin="10"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    BorderBrush="LightGray"
+                    BorderThickness="1">
 
-				<Grid x:Name="gridLayout"
-				      HorizontalAlignment="Left"
-				      VerticalAlignment="Top"
-				      ShowGridLines="True" />
-			</Border>
-		</ScrollViewer>
-		<StackPanel Grid.Row="3"
-		            Grid.Column="1"
-		            Margin="10"
-		            HorizontalAlignment="Right"
-		            Orientation="Horizontal">
-			<Button Margin="0,0,10,0"
-			        Click="btnCreate_Click"
-			        Content="Create"
-			        FontSize="10" />
-			<Button Click="btnCancel_Click"
-			        Content="Cancel"
-			        FontSize="10" />
-		</StackPanel>
-	</Grid>
+                <Grid x:Name="gridLayout"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      ShowGridLines="True" />
+            </Border>
+        </ScrollViewer>
+        <StackPanel Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="10"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button Margin="0,0,10,0"
+                    Click="btnCreate_Click"
+                    Content="Create"
+                    FontSize="10" />
+            <Button Click="btnCancel_Click"
+                    Content="Cancel"
+                    FontSize="10" />
+        </StackPanel>
+    </Grid>
 </Window>

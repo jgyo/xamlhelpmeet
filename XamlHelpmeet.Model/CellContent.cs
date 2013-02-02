@@ -11,14 +11,14 @@ namespace XamlHelpmeet.Model
 
 		private int? _width;
 		private int? _maximumLength;
-		private string _controlLabel;
+        private string _controlLabel = string.Empty;
 		private readonly int _column;
 		private readonly int _row;
 		private BindingMode _bindingMode;
-		private string _bindingPath;
+		private string _bindingPath = string.Empty;
 		private ControlType _controlType;
-		private string _dataType;
-		private string _stringFormat;
+		private string _dataType = string.Empty;
+		private string _stringFormat = string.Empty;
 
 		#endregion Fields
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Controls;
 using XamlHelpmeet.Model;
+using System.Windows;
 
 namespace XamlHelpmeet.UI.Editors
 {
@@ -67,9 +68,12 @@ namespace XamlHelpmeet.UI.Editors
             }
         }
 
-        private void GridCellEditor_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void GridCellEditor_Loaded(object sender, RoutedEventArgs e)
         {
-            cboControlType.ItemsSource = (from d in Enum.GetNames(typeof(ControlType)) where d != "None" orderby d select d).ToArray();
+            cboControlType.ItemsSource = (from d in Enum.GetNames(typeof(ControlType))
+                                          where d != "None"
+                                          orderby d
+                                          select d).ToArray();
         }
     }
 }

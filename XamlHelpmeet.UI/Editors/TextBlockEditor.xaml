@@ -36,9 +36,14 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
 
-            <TextBlock HorizontalAlignment="Left" Text="Format" />
+            <TextBlock Margin="0,0,4,0"
+                       HorizontalAlignment="Left"
+                       Text="Format" />
             <Grid>
                 <ComboBox x:Name="cboStringFormat"
+                          Height="{Binding ActualHeight,
+                                           ElementName=txtStringFormat,
+                                           Mode=OneWay}"
                           MaxWidth="117"
                           Focusable="False"
                           SelectedValuePath="StringFormatParsedValue">

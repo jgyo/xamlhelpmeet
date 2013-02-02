@@ -62,14 +62,14 @@ namespace XamlHelpmeet.Commands.UI
 		{
 			try
 			{
-				ClassEntity classEntity;
+				ClassEntity classEntity = null;
 				var Guids = PtHelpers.GetProjectTypeGuids(Application.ActiveDocument.ProjectItem.ContainingProject).Split(';');
 				if (PtHelpers.IsProjectSilverlight(Guids))
 				{
 					classEntity = new ClassEntity(string.Empty, true);
 					classEntity.SilverlightVersion = Application.ActiveDocument.ProjectItem.ContainingProject.Properties.Item("TargetFrameworkMoniker").Value.ToString().Replace("Silverlight,Version=v", string.Empty);
 				}
-				var createBusinessFormWindow = new CreateBusinessFormWindow();
+				var createBusinessFormWindow = new CreateBusinessFormWindow(classEntity);
 				var result = createBusinessFormWindow.ShowDialog();
 				if (result ?? false)
 				{

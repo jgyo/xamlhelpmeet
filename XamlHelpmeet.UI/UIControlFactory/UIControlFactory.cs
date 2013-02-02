@@ -198,7 +198,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
             }
             if (UIPlatform == UIPlatform.Silverlight && SilverlightVersion.StartsWith("3"))
             {
-                SilverlightVersion = string.Empty;
+                StringFormat = string.Empty;
             }
 
             var ctrl = GetUIControl(ControlType.TextBlock, UIPlatform);
