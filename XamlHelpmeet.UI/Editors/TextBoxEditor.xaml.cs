@@ -1,58 +1,96 @@
-﻿using System;
+﻿// file:	Editors\TextBoxEditor.xaml.cs
+//
+// summary:	Implements the text box editor.xaml class
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using XamlHelpmeet.Model;
 using XamlHelpmeet.UI.CreateBusinessForm;
+using XamlHelpmeet.UI.Utilities;
 
 namespace XamlHelpmeet.UI.Editors
 {
-	/// <summary>
-	/// Interaction logic for TextBoxEditor.xaml
-	/// </summary>
+    /// <summary>
+    ///     Interaction logic for TextBoxEditor.xaml.
+    /// </summary>
+    /// <seealso cref="T:System.Windows.Controls.UserControl"/>
 	public partial class TextBoxEditor : UserControl
 	{
+        /// <summary>
+        ///     Initializes a new instance of the TextBoxEditor class.
+        /// </summary>
 		public TextBoxEditor()
 		{
 			InitializeComponent();
+
+            DataContextChanged += TextBlockEditor_DataContextChanged;
 		}
 
-		// This method should not be necessary. With binding this can be accomplished automatically.
-		//private void cboStringFormats_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		//{
-		//	txtStringFormat.Text = cboStringFormat.SelectedValue.ToString();
-		//}
+        private void InitCBOFormat()
+        {
+            var cellContent = DataContext as CellContent;
+            if (cellContent == null)
+                return;
+            if (cboStringFormat.ItemsSource == null)
+                return;
+            cboStringFormat.SelectedItem = cellContent.StringFormat;
+        }
 
-		private void TextBlockEditor_Loaded(object sender, RoutedEventArgs e)
+        private void TextBlockEditor_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            InitCBOFormat();
+        }
+
+        private void TextBlockEditor_Loaded(object sender, RoutedEventArgs e)
 		{
-			var binding = new Binding()
-			{
-				Path = new PropertyPath("BindingPath"),
-				Mode = BindingMode.TwoWay,
-				UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-			};
+			//var binding = new Binding()
+			//{
+			//	Path = new PropertyPath("BindingPath"),
+			//	Mode = BindingMode.TwoWay,
+			//	UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+   //         };
+
+            //cboStringFormat.ItemsSource = UIHelpers.GetSampleFormats();
+            //cboStringFormat.SelectedIndex = -1;
+
+            InitCBOFormat();
 
 			if (CreateBusinessFormWindow.ClassEntity == null || CreateBusinessFormWindow.ClassEntity.PropertyInformation.Count == 0)
 			{
 				txtBindingPath.Visibility = System.Windows.Visibility.Visible;
 				cboBindingPath.Visibility = System.Windows.Visibility.Collapsed;
-				txtBindingPath.SetBinding(TextBox.TextProperty, binding);
+				//txtBindingPath.SetBinding(TextBox.TextProperty, binding);
 			}
 			else
 			{
 				txtBindingPath.Visibility = System.Windows.Visibility.Collapsed;
 				cboBindingPath.Visibility = System.Windows.Visibility.Visible;
-				cboBindingPath.SetBinding(ComboBox.SelectedValueProperty, binding);
+				//cboBindingPath.SetBinding(ComboBox.SelectedValueProperty, binding);
 				cboBindingPath.ItemsSource = CreateBusinessFormWindow.ClassEntity.PropertyInformation;
 			}
-
-			//cboStringFormat.AddHandler(ComboBox.SelectionChangedEvent, new SelectionChangedEventHandler(cboStringFormat_SelectionChanged));
 		}
 
-		//private void TextBlockEditor_Unloaded(object sender, RoutedEventArgs e)
-		//{
-		//	cboStringFormat.RemoveHandler(ComboBox.SelectionChangedEvent, new SelectionChangedEventHandler(cboStringFormat_SelectionChanged));
-		//}
+        private void cboStringFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cboStringFormat.SelectedValue == null)
+            {
+                txtStringFormat.Text = string.Empty;
+                return;
+            }
+            if (txtStringFormat == null)
+                return;
+            txtStringFormat.Text = cboStringFormat.SelectedValue.ToString();
+        }
+
+        private void FormatChanged(object sender, TextChangedEventArgs e)
+        {
+            var cellContent = DataContext as CellContent;
+            if (cellContent == null)
+                return;
+            cellContent.StringFormat = txtStringFormat.Text;
+        }
 	}
 }

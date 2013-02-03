@@ -26,9 +26,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
     {
         #region Constants
 
-        private const int COLUMNOFFSET = 1;
         private const char ROW_COLUMN_KEY_SEPARATOR = ':';
-        private const int ROWOFFSET = 1;
 
         #endregion
 
@@ -326,10 +324,15 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             sb.AppendLine("<Grid>");
             sb.AppendLine("\t<Grid.RowDefinitions>");
 
-            //var skipFirst = true;	// looks like a kludge
+            var skipFirst = true;
 
             foreach (var obj in RowHeightsCollection)
             {
+                if(skipFirst)
+                {
+                    skipFirst = false;
+                    continue;
+                }
                 var height = obj.IsStar ? "*" : obj.IsAuto ? "Auto" : obj.Value.ToString();
                 sb.AppendFormat("\t\t<RowDefinition Height=\"{0}\" />\r\n", height);
             }
@@ -337,8 +340,14 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             sb.AppendLine("\t</Grid.RowDefinitions>");
             sb.AppendLine("\t<Grid.ColumnDefinitions>");
 
+            skipFirst = true;
             foreach (var obj in ColumnWidthsCollection)
             {
+                if (skipFirst)
+                {
+                    skipFirst = false;
+                    continue;
+                }
                 var width = obj.IsStar ? "*" : obj.IsAuto ? "Auto" : obj.Value.ToString();
                 sb.AppendFormat("\t\t<ColumnDefinition Width=\"{0}\" />\r\n", width);
             }
@@ -717,9 +726,8 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 uiPlatform = UIPlatform.Silverlight;
             }
 
-            // CHECK: See if the offset can be purged
-            var columnIndex = obj.Column; // -COLUMNOFFSET;	// Here is more of the column kludge
-            var rowIndex = obj.Row; // -ROWOFFSET;
+            var columnIndex = obj.Column - 1;
+            var rowIndex = obj.Row - 1;
 
             if (obj.BindingPath.IsNullOrEmpty())
             {

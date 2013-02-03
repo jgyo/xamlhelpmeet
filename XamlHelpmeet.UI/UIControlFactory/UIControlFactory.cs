@@ -212,66 +212,66 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return ctrl.MakeControlFromDefaults(sb.ToString(), true, Path);
         }
 
-        public string MakeTextBox(UIPlatform UIPlatform, int? Column, int? Row, string Path,
-            BindingMode BindingMode, int? Width, int? MaximumLength, string StringFormat, bool IsSourceNullable,
+        public string MakeTextBox(UIPlatform uiPlatform, int? column, int? row, string path,
+            BindingMode bindingMode, int? width, int? maximumLength, string stringFormat, bool isSourceNullable,
             string SilverlightVersion)
         {
-            if (StringFormat.IsNotNullOrEmpty())
+            if (stringFormat.IsNotNullOrEmpty())
             {
-                StringFormat = string.Format(STR_StringFormatFormat, StringFormat
+                stringFormat = string.Format(STR_StringFormatFormat, stringFormat
                     .Replace(STR_BRACEOPEN, STR_BRACEOPENESCAPED)
                     .Replace(STR_BRACECLOSE, STR_BRACECLOSEESCAPED));
             }
-            if (UIPlatform == UIPlatform.Silverlight && SilverlightVersion.StartsWith("3"))
+            if (uiPlatform == UIPlatform.Silverlight && SilverlightVersion.StartsWith("3"))
             {
                 SilverlightVersion = string.Empty;
             }
 
-            var ctrl = GetUIControl(ControlType.TextBox, UIPlatform);
+            var ctrl = GetUIControl(ControlType.TextBox, uiPlatform);
             var sb = new StringBuilder(1024);
 
-            AppendFormat(sb, STR_GridColumnFormat, Column);
-            AppendFormat(sb, STR_GridRowFormat, Row);
+            AppendFormat(sb, STR_GridColumnFormat, column);
+            AppendFormat(sb, STR_GridRowFormat, row);
 
-            if (UIPlatform == UIPlatform.WPF)
+            if (uiPlatform == UIPlatform.WPF)
             {
-                AppendFormat(sb, STR_TextBindingPathMode123Format, Path, BindingMode,
-                    BindingMode == BindingMode.TwoWay ? string.Concat(STR_UpdateSourceTriggerLostFocus,
-                        ctrl.BindingPropertyString, StringFormat) : string.Empty, IsSourceNullable &&
+                AppendFormat(sb, STR_TextBindingPathMode123Format, path, bindingMode,
+                    bindingMode == BindingMode.TwoWay ? string.Concat(STR_UpdateSourceTriggerLostFocus,
+                        ctrl.BindingPropertyString, stringFormat) : string.Empty, isSourceNullable &&
                         ctrl.IncludeTargetNullValueForNullableBindings ? STR_TargetNullValue : string.Empty);
             }
             else
             {
                 if (SilverlightVersion.StartsWith("3"))
                 {
-                    AppendFormat(sb, STR_TextBindingPathMode12Format, Path, BindingMode,
-                        BindingMode == BindingMode.TwoWay ? ctrl.BindingPropertyString : string.Empty);
+                    AppendFormat(sb, STR_TextBindingPathMode12Format, path, bindingMode,
+                        bindingMode == BindingMode.TwoWay ? ctrl.BindingPropertyString : string.Empty);
                 }
-                else if (StringFormat.IsNullOrWhiteSpace())
+                else if (stringFormat.IsNullOrWhiteSpace())
                 {
-                    AppendFormat(sb, STR_TextBindingPathMode123Format, Path, BindingMode,
-                        BindingMode == BindingMode.TwoWay ? ctrl.BindingPropertyString : string.Empty,
+                    AppendFormat(sb, STR_TextBindingPathMode123Format, path, bindingMode,
+                        bindingMode == BindingMode.TwoWay ? ctrl.BindingPropertyString : string.Empty,
                         ctrl.IncludeTargetNullValueForNullableBindings ? STR_TargetNullValue : string.Empty);
                 }
                 else
                 {
-                    AppendFormat(sb, STR_TextBindingPathMode123Format, Path, BindingMode,
-                        BindingMode == BindingMode.TwoWay ? string.Concat(ctrl.BindingPropertyString, StringFormat) :
-                        string.Empty, IsSourceNullable && ctrl.IncludeTargetNullValueForNullableBindings ?
+                    AppendFormat(sb, STR_TextBindingPathMode123Format, path, bindingMode,
+                        bindingMode == BindingMode.TwoWay ? string.Concat(ctrl.BindingPropertyString, stringFormat) :
+                        string.Empty, isSourceNullable && ctrl.IncludeTargetNullValueForNullableBindings ?
                         STR_TargetNullValue : string.Empty);
                 }
-
-                AppendFormat(sb, STR_WidthFormat, Width);
-
-                if (Width == null && UIPlatform == UIPlatform.Silverlight)
-                {
-                    AppendFormat(sb, STR_HorizontalAlignmentStretch);
-                }
-
-                AppendFormat(sb, STR_MaxLengthFormat, MaximumLength);
             }
 
-            return ctrl.MakeControlFromDefaults(sb.ToString(), true, Path);
+            AppendFormat(sb, STR_WidthFormat, width);
+
+            if (width == null && uiPlatform == UIPlatform.Silverlight)
+            {
+                AppendFormat(sb, STR_HorizontalAlignmentStretch);
+            }
+
+            AppendFormat(sb, STR_MaxLengthFormat, maximumLength);
+
+            return ctrl.MakeControlFromDefaults(sb.ToString(), true, path);
         }
 
         private void AppendFormat(StringBuilder sb, string Format, params object[] Args)
