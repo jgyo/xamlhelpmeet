@@ -3,6 +3,7 @@
 // summary:	Implements the create business form window.xaml class
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +23,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
     ///     Interaction logic for CreateBusinessFormWindow.xaml.
     /// </summary>
     /// <seealso cref="T:System.Windows.Window"/>
-    public partial class CreateBusinessFormWindow : Window
+    public partial class CreateBusinessFormWindow : Window, INotifyPropertyChanged
     {
         #region Constants
 
@@ -38,6 +39,14 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         private readonly Dictionary<String, CellContent> _gridCellCollection;
         private readonly List<TextBlock> _rowHeaderTextBlockCollection;
         private readonly List<GridLength> _rowHeightsCollection;
+        private string _allColumnSize;
+        private string _allRowSize;
+        private GridLength _columnDefaultSize;
+        private string _definedColumns = string.Empty;
+        private string _definedRows = string.Empty;
+        private int _numberOfColumns;
+        private int _numberOfRows;
+        private GridLength _rowDefaultSize;
 
         #endregion
 
@@ -57,9 +66,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         ///     The class entity.
         /// </param>
         public CreateBusinessFormWindow(ClassEntity ClassEntity)
-           // : this()
         {
-
             // Here's the call that the form designer forces us to call.
             InitializeComponent();
 
@@ -74,8 +81,6 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             _rowHeightsCollection = new List<GridLength>();
 
             BusinessForm = string.Empty;
-            RightSizeRowsOrColumns(2, false);
-            RightSizeRowsOrColumns(4, true);
             CreateBusinessFormWindow.ClassEntity = ClassEntity;
         }
 
@@ -95,6 +100,30 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             private set;
         }
 
+        public string AllColumnSize
+        {
+            get { return _allColumnSize; }
+            set
+            {
+                if (_allColumnSize == value)
+                    return;
+                _allColumnSize = value;
+                OnPropertyChanged("AllColumnSize");
+            }
+        }
+
+        public string AllRowSize
+        {
+            get { return _allRowSize; }
+            set
+            {
+                if (_allRowSize == value)
+                    return;
+                _allRowSize = value;
+                OnPropertyChanged("AllRowSize");
+            }
+        }
+
         /// <summary>
         ///     Gets the business form.
         /// </summary>
@@ -108,15 +137,30 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         }
 
         /// <summary>
-        ///     Gets or sets the size of the column default.
+        /// Gets or sets the size of the column default.
         /// </summary>
         /// <value>
-        ///     The size of the column default.
+        /// The size of the column default.
         /// </value>
         public GridLength ColumnDefaultSize
         {
-            get;
-            set;
+            get
+            {
+                return _columnDefaultSize;
+            }
+            set
+            {
+                if (_columnDefaultSize == value)
+                    return;
+                _columnDefaultSize = value;
+                OnPropertyChanged("ColumnDefaultSize");
+                if (value.IsAuto)
+                    AllColumnSize = "Auto";
+                else if (value.IsStar)
+                    AllColumnSize = "*";
+                else
+                    AllColumnSize = value.Value.ToString();
+            }
         }
 
         /// <summary>
@@ -185,6 +229,33 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             }
         }
 
+        public string DefinedColumns
+        {
+            get { return _definedColumns; }
+            set
+            {
+                if (_definedColumns == value)
+                    return;
+                _definedColumns = value;
+                OnPropertyChanged("DefinedColumns");
+            }
+        }
+
+        public string DefinedRows
+        {
+            get
+            {
+                return _definedRows;
+            }
+            set
+            {
+                if (_definedRows == value)
+                    return;
+                _definedRows = value;
+                OnPropertyChanged("DefinedRows");
+            }
+        }
+
         /// <summary>
         ///     Gets a collection of grid cells.
         /// </summary>
@@ -200,39 +271,74 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         }
 
         /// <summary>
-        ///     Gets or sets the number of columns.
+        /// Gets or sets the number of columns.
         /// </summary>
         /// <value>
-        ///     The total number of columns.
+        /// The total number of columns.
         /// </value>
         public int NumberOfColumns
         {
-            get;
-            set;
+            get
+            {
+                return _numberOfColumns;
+            }
+            set
+            {
+                if (_numberOfColumns == value)
+                    return;
+                _numberOfColumns = value;
+                OnPropertyChanged("NumberOfColumns");
+                DefinedColumns = (value - 1).ToString();
+            }
         }
 
         /// <summary>
-        ///     Gets or sets the number of rows.
+        /// Gets or sets the number of rows.
         /// </summary>
         /// <value>
-        ///     The total number of rows.
+        /// The total number of rows.
         /// </value>
         public int NumberOfRows
         {
-            get;
-            set;
+            get
+            {
+                return _numberOfRows;
+            }
+            set
+            {
+                if (_numberOfRows == value)
+                    return;
+                _numberOfRows = value;
+                OnPropertyChanged("NumberOfRows");
+                DefinedRows = (value - 1).ToString();
+            }
         }
 
         /// <summary>
-        ///     Gets or sets the size of the row default.
+        /// Gets or sets the size of the row default.
         /// </summary>
         /// <value>
-        ///     The size of the row default.
+        /// The size of the row default.
         /// </value>
         public GridLength RowDefaultSize
         {
-            get;
-            set;
+            get
+            {
+                return _rowDefaultSize;
+            }
+            set
+            {
+                if (_rowDefaultSize == value)
+                    return;
+                _rowDefaultSize = value;
+                OnPropertyChanged("RowDefaultSize");
+                if (value.IsAuto)
+                    AllRowSize = "Auto";
+                else if (value.IsStar)
+                    AllRowSize = "*";
+                else
+                    AllRowSize = value.Value.ToString();
+            }
         }
 
         /// <summary>
@@ -328,7 +434,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
 
             foreach (var obj in RowHeightsCollection)
             {
-                if(skipFirst)
+                if (skipFirst)
                 {
                     skipFirst = false;
                     continue;
@@ -456,6 +562,14 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             ColumnSizePopupTimer.Start();
         }
 
+        private void OnPropertyChanged(string propertyName)
+        {
+            var h = PropertyChanged;
+            if (h == null)
+                return;
+            h(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private void RowTextBlock_MouseRightButtonDownEvent(object sender, MouseButtonEventArgs e)
         {
             var tb = sender as TextBlock;
@@ -477,15 +591,14 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         private void txtAllColumnsWidth_KeyPress(object sender,
             KeyEventArgs e)
         {
-            UpdateAllRowsOrColumns(sender, e.Key, false);
+            UpdateAllRowsOrColumns(sender, e, false);
         }
 
         private void txtAllRowsHeight_KeyPress(object sender,
             KeyEventArgs e)
         {
-            UpdateAllRowsOrColumns(sender, e.Key, true);
+            UpdateAllRowsOrColumns(sender, e, true);
         }
-
 
         private void txtNumberOfRowsOrColumns_KeyPress(object sender,
             KeyEventArgs e)
@@ -515,17 +628,18 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             {
                 return;
             }
-
+            e.Handled = true;
             SetDimention(sender as TextBox, true);
             RowSizePopUp.IsOpen = false;
         }
 
-        private void UpdateAllRowsOrColumns(object sender, Key Key, bool RowUpdate)
+        private void UpdateAllRowsOrColumns(object sender, KeyEventArgs e, bool RowUpdate)
         {
-            if (Key != Key.Enter)
+            if (e.Key != Key.Enter)
             {
                 return;
             }
+            e.Handled = true;
 
             List<GridLength> gridLengthCollection;
             List<TextBlock> textBlockCollection;
@@ -738,8 +852,8 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             {
                 case ControlType.CheckBox:
                     return UIControlFactory.UIControlFactory.Instance
-                        .MakeDatePicker(uiPlatform, columnIndex, rowIndex,
-                        obj.BindingPath, obj.Width);
+                        .MakeCheckBox(uiPlatform, columnIndex, rowIndex,
+                        obj.ControlLabel, obj.BindingPath, obj.BindingMode);
                 case ControlType.ComboBox:
                     return UIControlFactory.UIControlFactory.Instance
                         .MakeComboBox(uiPlatform, columnIndex, rowIndex,
@@ -783,8 +897,6 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
 
         private void LayoutGrid()
         {
-            // NOTE: This method is buggy and needs review.
-
             ResetLayout();
 
             MakeColumnsAndRows();
@@ -996,14 +1108,6 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
 
         private bool SetRowOrColumnNumber(TextBox tb)
         {
-            var index = -1;
-            if (int.TryParse(tb.Text, out index) == false || index < 1 || index > 50)
-            {
-                MessageBox.Show("The number of rows or columns must be equal to or less than 50. Please reenter.",
-                    "Invalid Data", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                return false;
-            }
-
             bool? DoRows = tb.Name.Contains("Rows") ? true :
                 tb.Name.Contains("Columns") ? false : (bool?)null;
 
@@ -1012,8 +1116,28 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 return false;
             }
 
-            return RightSizeRowsOrColumns(index, (bool)DoRows);
+            var index = -1;
+            if (int.TryParse(tb.Text, out index) == false || index < 1 || index > 50)
+            {
+                MessageBox.Show("Row count and column count must be entered between 1 and 50. Please reenter and try again.",
+                    "Invalid Data", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return true;
+            }
+
+            if (!((bool)DoRows && NumberOfColumns < 2))
+                return RightSizeRowsOrColumns(index, (bool)DoRows);
+
+            tb.Text = string.Empty;
+            MessageBox.Show("Column count must be configured before rows. Please enter a column count between 1 and 50 first, and press ENTER. A row count may then be specified.",
+                "Workflow Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            return true;
         }
+
+        #endregion
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
     }

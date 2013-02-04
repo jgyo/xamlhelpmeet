@@ -12,13 +12,15 @@ namespace XamlHelpmeet.UI.Converters
     /// </summary>
     /// <seealso cref="T:System.Windows.Data.IValueConverter"/>
     [ValueConversion(typeof(ControlType), typeof(string))]
-    public class ControlTypeEnumConverter : IValueConverter
+    public class ControlTypeEnumConverterWithSelect : IValueConverter
     {
         #region IValueConverter Members
 
         /// <summary>
         ///     Converts a ControlType value into a string.
         /// </summary>
+        /// <remarks>Converts the ControlType enumeration into strings matching
+        ///          the enumeration names, except for None which returns Select.</remarks>
         /// <seealso cref="M:System.Windows.Data.IValueConverter.Convert(object,Type,object,System.Globalization.CultureInfo)"/>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

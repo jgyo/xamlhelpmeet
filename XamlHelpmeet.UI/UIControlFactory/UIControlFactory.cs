@@ -1,4 +1,7 @@
-﻿using System;
+﻿// file:	UIControlFactory\UIControlFactory.cs
+//
+// summary:	Implements the control factory class
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -11,8 +14,13 @@ using XamlHelpmeet.UI.Utilities;
 
 namespace XamlHelpmeet.UI.UIControlFactory
 {
+    /// <summary>
+    ///     Control factory.
+    /// </summary>
     public class UIControlFactory
     {
+        #region Constants
+
         private const string STR_BRACECLOSE = "}";
         private const string STR_BRACECLOSEESCAPED = @"\}";
         private const string STR_BRACEOPEN = "{";
@@ -38,35 +46,77 @@ namespace XamlHelpmeet.UI.UIControlFactory
         private const string STR_UpdateSourceTriggerLostFocus = ", UpdateSourceTrigger=LostFocus";
         private const string STR_WidthFormat = " Width=\"{0}\"";
 
+        #endregion
+
         #region Declarations
 
-        private static readonly string _saveSettingsFilename = Path.Combine(Environment.GetEnvironmentVariable("APPDATA"), @"YoderTools\Xaml Helpmeet\XPTV11.Settings");
+        private static readonly string _saveSettingsFilename = Path.Combine(Environment.GetEnvironmentVariable("APPDATA"), @"YoderTools\Xaml Helpmeet\xhmDefault.Settings");
         private static readonly string _saveSettingsFolderName = Path.Combine(Environment.GetEnvironmentVariable("APPDATA"), @"YoderTools\Xaml Helpmeet\");
         private static UIControlFactory _instance;
 
         #endregion Declarations
 
+        #region Properties
+
+        /// <summary>
+        ///     Gets the instance.
+        /// </summary>
+        /// <value>
+        ///     The instance.
+        /// </value>
         public static UIControlFactory Instance
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new UIControlFactory();
-                    _instance.UIControls = _instance.Load();
-                }
+                if (_instance != null)
+                    return _instance;
+
+                _instance = new UIControlFactory();
+                _instance.UIControls = _instance.Load();
                 return _instance;
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the controls.
+        /// </summary>
+        /// <value>
+        ///     The user interface controls.
+        /// </value>
         public UIControls UIControls
         {
             get;
             set;
         }
 
+        #endregion
+
         #region UIControl Creators
 
+        /// <summary>
+        ///     Makes check box.
+        /// </summary>
+        /// <param name="UIPlatform">
+        ///     The platform.
+        /// </param>
+        /// <param name="Column">
+        ///     The column.
+        /// </param>
+        /// <param name="Row">
+        ///     The row.
+        /// </param>
+        /// <param name="Content">
+        ///     The content.
+        /// </param>
+        /// <param name="Path">
+        ///     Full pathname of the file.
+        /// </param>
+        /// <param name="BindingMode">
+        ///     The binding mode.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
         public string MakeCheckBox(UIPlatform UIPlatform, int? Column, int? Row,
             string Content, string Path, BindingMode BindingMode)
         {
@@ -92,6 +142,27 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return ctrl.MakeControlFromDefaults(sb.ToString(), true, Path);
         }
 
+        /// <summary>
+        ///     Makes combo box.
+        /// </summary>
+        /// <param name="UIPlatform">
+        ///     The platform.
+        /// </param>
+        /// <param name="Column">
+        ///     The column.
+        /// </param>
+        /// <param name="Row">
+        ///     The row.
+        /// </param>
+        /// <param name="Path">
+        ///     Full pathname of the file.
+        /// </param>
+        /// <param name="BindingMode">
+        ///     The binding mode.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
         public string MakeComboBox(UIPlatform UIPlatform, int? Column,
             int? Row, string Path, BindingMode BindingMode)
         {
@@ -115,6 +186,27 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return ctrl.MakeControlFromDefaults(sb.ToString(), true, Path);
         }
 
+        /// <summary>
+        ///     Makes date picker.
+        /// </summary>
+        /// <param name="UIPlatform">
+        ///     The platform.
+        /// </param>
+        /// <param name="Column">
+        ///     The column.
+        /// </param>
+        /// <param name="Row">
+        ///     The row.
+        /// </param>
+        /// <param name="Path">
+        ///     Full pathname of the file.
+        /// </param>
+        /// <param name="Width">
+        ///     The width.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
         public string MakeDatePicker(UIPlatform UIPlatform, int? Column,
             int? Row, string Path, int? Width)
         {
@@ -129,6 +221,24 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return ctrl.MakeControlFromDefaults(sb.ToString(), true, Path);
         }
 
+        /// <summary>
+        ///     Makes an image.
+        /// </summary>
+        /// <param name="UIPlatform">
+        ///     The platform.
+        /// </param>
+        /// <param name="Column">
+        ///     The column.
+        /// </param>
+        /// <param name="Row">
+        ///     The row.
+        /// </param>
+        /// <param name="Path">
+        ///     Full pathname of the file.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
         public string MakeImage(UIPlatform UIPlatform, int? Column, int? Row,
             string Path)
         {
@@ -142,6 +252,30 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return ctrl.MakeControlFromDefaults(sb.ToString(), true, Path);
         }
 
+        /// <summary>
+        ///     Makes a label.
+        /// </summary>
+        /// <param name="UIPlatform">
+        ///     The platform.
+        /// </param>
+        /// <param name="Column">
+        ///     The column.
+        /// </param>
+        /// <param name="Row">
+        ///     The row.
+        /// </param>
+        /// <param name="Content">
+        ///     The content.
+        /// </param>
+        /// <param name="StringFormat">
+        ///     The string format.
+        /// </param>
+        /// <param name="SilverlightVersion">
+        ///     The silverlight version.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
         public string MakeLabel(UIPlatform UIPlatform, int? Column, int? Row,
             string Content, string StringFormat, string SilverlightVersion)
         {
@@ -172,6 +306,24 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return ctrl.MakeControlFromDefaults(sb.ToString(), true, Content);
         }
 
+        /// <summary>
+        ///     Makes label without binding.
+        /// </summary>
+        /// <param name="UIPlatform">
+        ///     The platform.
+        /// </param>
+        /// <param name="Column">
+        ///     The column.
+        /// </param>
+        /// <param name="Row">
+        ///     The row.
+        /// </param>
+        /// <param name="Content">
+        ///     The content.
+        /// </param>
+        /// <returns>
+        ///     XAML for a label.
+        /// </returns>
         public string MakeLabelWithoutBinding(UIPlatform UIPlatform,
             int? Column, int? Row, string Content)
         {
@@ -187,6 +339,30 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return ctrl.MakeControlFromDefaults(sb.ToString(), true, string.Empty);
         }
 
+        /// <summary>
+        ///     Makes text block.
+        /// </summary>
+        /// <param name="UIPlatform">
+        ///     The platform.
+        /// </param>
+        /// <param name="Column">
+        ///     The column.
+        /// </param>
+        /// <param name="Row">
+        ///     The row.
+        /// </param>
+        /// <param name="Path">
+        ///     Full pathname of the file.
+        /// </param>
+        /// <param name="StringFormat">
+        ///     The string format.
+        /// </param>
+        /// <param name="SilverlightVersion">
+        ///     The silverlight version.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
         public string MakeTextBlock(UIPlatform UIPlatform, int? Column, int? Row,
             string Path, string StringFormat, string SilverlightVersion)
         {
@@ -212,6 +388,42 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return ctrl.MakeControlFromDefaults(sb.ToString(), true, Path);
         }
 
+        /// <summary>
+        ///     Makes text box.
+        /// </summary>
+        /// <param name="uiPlatform">
+        ///     The platform.
+        /// </param>
+        /// <param name="column">
+        ///     The column.
+        /// </param>
+        /// <param name="row">
+        ///     The row.
+        /// </param>
+        /// <param name="path">
+        ///     Full pathname of the file.
+        /// </param>
+        /// <param name="bindingMode">
+        ///     The binding mode.
+        /// </param>
+        /// <param name="width">
+        ///     The width.
+        /// </param>
+        /// <param name="maximumLength">
+        ///     Length of the maximum.
+        /// </param>
+        /// <param name="stringFormat">
+        ///     The string format.
+        /// </param>
+        /// <param name="isSourceNullable">
+        ///     true if this UIControlFactory is source nullable.
+        /// </param>
+        /// <param name="SilverlightVersion">
+        ///     The silverlight version.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
         public string MakeTextBox(UIPlatform uiPlatform, int? column, int? row, string path,
             BindingMode bindingMode, int? width, int? maximumLength, string stringFormat, bool isSourceNullable,
             string SilverlightVersion)
@@ -291,22 +503,62 @@ namespace XamlHelpmeet.UI.UIControlFactory
 
         #region Methods
 
+        /// <summary>
+        ///     Gets user interface control.
+        /// </summary>
+        /// <param name="ControlType">
+        ///     Type of the control.
+        /// </param>
+        /// <param name="UIPlatform">
+        ///     The platform.
+        /// </param>
+        /// <returns>
+        ///     The user interface control.
+        /// </returns>
         public UIControl GetUIControl(ControlType ControlType, UIPlatform UIPlatform)
         {
             return UIControls.GetUIControl(ControlType, UIPlatform);
         }
 
+        /// <summary>
+        ///     Gets user interface control.
+        /// </summary>
+        /// <param name="ControlRole">
+        ///     The control role.
+        /// </param>
+        /// <param name="UIPlatform">
+        ///     The platform.
+        /// </param>
+        /// <returns>
+        ///     The user interface control.
+        /// </returns>
         public UIControl GetUIControl(UIControlRole ControlRole, UIPlatform UIPlatform)
         {
             return UIControls.GetUIControl(ControlRole, UIPlatform);
         }
 
+        /// <summary>
+        ///     Gets user interface controls for platform.
+        /// </summary>
+        /// <param name="Platform">
+        ///     The platform.
+        /// </param>
+        /// <returns>
+        ///     The user interface controls for platform.
+        /// </returns>
         public List<UIControl> GetUIControlsForPlatform(UIPlatform Platform)
         {
             return UIControls.GetUIControlsForPlatform(Platform);
         }
 
-        //!+ Routine to instantiate UIControls.
+        //!+ Routine to load settings.
+
+        /// <summary>
+        ///     Gets the settings.
+        /// </summary>
+        /// <returns>
+        ///     .
+        /// </returns>
         public UIControls Load()
         {
             if (!Directory.Exists(_saveSettingsFolderName))
@@ -316,8 +568,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
 
             if (!File.Exists(_saveSettingsFilename))
             {
-                //+ If a file exits, create the defaults to
-                //+ create the UIControls.
+                //+ If the settings file does not exit, create it.
                 CreateDefaults();
                 Save(false);
                 UIUtilities.ShowExceptionMessage("Settings File Created", "Your settings file has been created for you.  You can configure your settings using the Set Control Defaults command.");
@@ -351,6 +602,12 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return UIControls;
         }
 
+        /// <summary>
+        ///     Saves settings file.
+        /// </summary>
+        /// <param name="ShowSaveMessage">
+        ///     The show save message to save.
+        /// </param>
         public void Save(bool ShowSaveMessage)
         {
             var listToRemove = new List<UIProperty>();

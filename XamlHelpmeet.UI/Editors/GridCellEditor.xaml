@@ -2,14 +2,25 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Converters="clr-namespace:XamlHelpmeet.UI.Converters"
+             xmlns:helps="clr-namespace:XamlHelpmeet.UI.Utilities"
              xmlns:local="clr-namespace:XamlHelpmeet.UI.Editors"
              xmlns:model="clr-namespace:XamlHelpmeet.Model;assembly=XamlHelpmeet.Model"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             Loaded="GridCellEditor_Loaded">
+             DataContextChanged="UserControl_DataContextChanged">
 
     <UserControl.Resources>
         <Converters:ControlTypeEnumConverter x:Key="ControlTypeEnumConverter" />
+        <ObjectDataProvider x:Key="ControlTypesDS"
+                            MethodName="GetSortedEnumNames"
+                            ObjectType="{x:Type helps:UIHelpers}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="model:ControlType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </UserControl.Resources>
+    <UserControl.DataContext>
+        <model:CellContent />
+    </UserControl.DataContext>
 
     <Border Margin="5"
             BorderBrush="LightGray"
@@ -27,12 +38,13 @@
                       Focusable="False"
                       FontSize="10"
                       IsSynchronizedWithCurrentItem="True"
+                      ItemsSource="{Binding Mode=OneWay,
+                                            Source={StaticResource ControlTypesDS}}"
                       SelectedItem="{Binding ControlType,
                                              Converter={StaticResource ControlTypeEnumConverter},
-                                             Mode=TwoWay}"
-                      SelectionChanged="ComboBox_SelectionChanged" />
+                                             Mode=TwoWay}" />
 
-            <Grid x:Name="gridCellEditor" Grid.Row="1" />
+            <Grid x:Name="editorContent" Grid.Row="1" />
 
         </Grid>
     </Border>

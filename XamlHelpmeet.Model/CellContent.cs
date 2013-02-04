@@ -1,9 +1,16 @@
-﻿using System;
+﻿// file:	CellContent.cs
+//
+// summary:	Implements the cell content class
+using System;
 using System.ComponentModel;
 using System.Windows.Data;
 
 namespace XamlHelpmeet.Model
 {
+    /// <summary>
+    ///     Cell content.
+    /// </summary>
+    /// <seealso cref="T:System.ComponentModel.INotifyPropertyChanged"/>
 	[Serializable]
 	public class CellContent : INotifyPropertyChanged
 	{
@@ -24,35 +31,40 @@ namespace XamlHelpmeet.Model
 
 		#region Constructors
 
-		/// <summary>
-		/// 	Initializes a new instance of the CellContent class.
-		/// </summary>
-		/// <param name="Row">
-		/// 	The row.
-		/// </param>
-		/// <param name="Column">
-		/// 	The column.
-		/// </param>
+        /// <summary>
+        ///     Default constructor is required to use as a new data context in XAML.
+        /// </summary>
+        public CellContent()
+        {
+        }
 
+        /// <summary>
+        ///     Initializes a new instance of the CellContent class.
+        /// </summary>
+        /// <param name="Row">
+        ///     The row.
+        /// </param>
+        /// <param name="Column">
+        ///     The column.
+        /// </param>
 		public CellContent(int Row, int Column)
 		{
 			_row = Row;
 			_column = Column;
 		}
 
-		/// <summary>
-		/// 	Initializes a new instance of the CellContent class.
-		/// </summary>
-		/// <param name="DataType">
-		/// 	Type of the data.
-		/// </param>
-		/// <param name="Row">
-		/// 	The row.
-		/// </param>
-		/// <param name="Column">
-		/// 	The column.
-		/// </param>
-
+        /// <summary>
+        ///     Initializes a new instance of the CellContent class.
+        /// </summary>
+        /// <param name="DataType">
+        ///     Type of the data.
+        /// </param>
+        /// <param name="Row">
+        ///     The row.
+        /// </param>
+        /// <param name="Column">
+        ///     The column.
+        /// </param>
 		public CellContent(string DataType, int Row, int Column)
 			: this(Row, Column)
 		{
@@ -63,6 +75,12 @@ namespace XamlHelpmeet.Model
 
 		#region Properties
 
+        /// <summary>
+        ///     Gets or sets the binding mode.
+        /// </summary>
+        /// <value>
+        ///     The binding mode.
+        /// </value>
 		public BindingMode BindingMode
 		{
 			get { return _bindingMode; }
@@ -73,6 +91,12 @@ namespace XamlHelpmeet.Model
 			}
 		}
 
+        /// <summary>
+        ///     Gets or sets the binding path.
+        /// </summary>
+        /// <value>
+        ///     The binding path.
+        /// </value>
 		public string BindingPath
 		{
 			get
@@ -86,6 +110,12 @@ namespace XamlHelpmeet.Model
 			}
 		}
 
+        /// <summary>
+        ///     Gets the column index.
+        /// </summary>
+        /// <value>
+        ///     The column index.
+        /// </value>
 		public int Column
 		{
 			get
@@ -94,7 +124,12 @@ namespace XamlHelpmeet.Model
 			}
 		}
 
-
+        /// <summary>
+        ///     Gets or sets the control label.
+        /// </summary>
+        /// <value>
+        ///     The control label.
+        /// </value>
 		public string ControlLabel
 		{
 			get { return _controlLabel; }
@@ -105,6 +140,12 @@ namespace XamlHelpmeet.Model
 			}
 		}
 
+        /// <summary>
+        ///     Gets or sets the type of the control.
+        /// </summary>
+        /// <value>
+        ///     The type of the control.
+        /// </value>
 		public ControlType ControlType
 		{
 			get { return _controlType; }
@@ -115,6 +156,12 @@ namespace XamlHelpmeet.Model
 			}
 		}
 
+        /// <summary>
+        ///     Gets or sets the type of the data.
+        /// </summary>
+        /// <value>
+        ///     The type of the data.
+        /// </value>
 		public string DataType
 		{
 			get { return _dataType; }
@@ -125,7 +172,12 @@ namespace XamlHelpmeet.Model
 			}
 		}
 
-
+        /// <summary>
+        ///     Gets or sets the maximum length
+        /// </summary>
+        /// <value>
+        ///     The maximum length.
+        /// </value>
 		public int? MaximumLength
 		{
 			get { return _maximumLength; }
@@ -136,6 +188,12 @@ namespace XamlHelpmeet.Model
 			}
 		}
 
+        /// <summary>
+        ///     Gets the row index.
+        /// </summary>
+        /// <value>
+        ///     The row.
+        /// </value>
 		public int Row
 		{
 			get
@@ -144,6 +202,12 @@ namespace XamlHelpmeet.Model
 			}
 		}
 
+        /// <summary>
+        ///     Gets or sets the string format.
+        /// </summary>
+        /// <value>
+        ///     The string format.
+        /// </value>
 		public string StringFormat
 		{
 			get { return _stringFormat; }
@@ -154,7 +218,12 @@ namespace XamlHelpmeet.Model
 			}
 		}
 
-
+        /// <summary>
+        ///     Gets or sets the width.
+        /// </summary>
+        /// <value>
+        ///     The width.
+        /// </value>
 		public int? Width
 		{
 			get { return _width; }
@@ -169,6 +238,9 @@ namespace XamlHelpmeet.Model
 
 		#region INotifyPropertyChanged Members
 
+        /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void OnPropertyChanged(string PropertyName)

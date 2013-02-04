@@ -1,65 +1,91 @@
-﻿using System;
-using System.Linq;
+﻿// file:	Editors\GridCellEditor.xaml.cs
+//
+// summary:	Implements the grid cell editor.xaml class
+using System;
+using System.Windows;
 using System.Windows.Controls;
 using XamlHelpmeet.Model;
-using System.Windows;
 
 namespace XamlHelpmeet.UI.Editors
 {
     /// <summary>
-    /// Interaction logic for GridCellEditor.xaml
+    ///     Interaction logic for GridCellEditor.xaml.
     /// </summary>
+    /// <seealso cref="T:System.Windows.Controls.UserControl"/>
     public partial class GridCellEditor : UserControl
     {
+        #region Fields
+
+        private CellContent _cellContentFromDataContext;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        ///     Initializes a new instance of the GridCellEditor class.
+        /// </summary>
         public GridCellEditor()
         {
             InitializeComponent();
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        #endregion
+
+        #region Methods
+
+        private void _cellContent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (gridCellEditor == null)
+            switch (e.PropertyName)
             {
-                // this happens on load because we are wired in XAML
+                case "ControlType":
+                    ControlTypeChanged();
+                    break;
+            }
+        }
+
+        private void ControlTypeChanged()
+        {
+            var controlType = _cellContentFromDataContext == null
+                ? ControlType.None
+                : _cellContentFromDataContext.ControlType;
+
+            if (editorContent == null)
                 return;
-            }
 
-            if (gridCellEditor.Children != null)
-            {
-                gridCellEditor.Children.Clear();
-            }
-
-            var controlType = (ControlType)Enum.Parse(typeof(ControlType),
-                (sender as ComboBox).SelectedValue.ToString());
+            editorContent.Children.Clear();
 
             switch (controlType)
             {
                 case ControlType.CheckBox:
-                    gridCellEditor.Children.Add(new CheckBoxEditor());
+                    editorContent.Children.Add(new CheckBoxEditor());
                     break;
 
                 case ControlType.ComboBox:
-                    gridCellEditor.Children.Add(new ComboBoxEditor());
+                    editorContent.Children.Add(new ComboBoxEditor());
                     break;
 
                 case ControlType.Image:
-                    gridCellEditor.Children.Add(new ImageEditor());
+                    editorContent.Children.Add(new ImageEditor());
                     break;
 
                 case ControlType.Label:
-                    gridCellEditor.Children.Add(new LabelEditor());
+                    editorContent.Children.Add(new LabelEditor());
                     break;
 
                 case ControlType.TextBlock:
-                    gridCellEditor.Children.Add(new TextBlockEditor());
+                    editorContent.Children.Add(new TextBlockEditor());
                     break;
 
                 case ControlType.TextBox:
-                    gridCellEditor.Children.Add(new TextBoxEditor());
+                    editorContent.Children.Add(new TextBoxEditor());
                     break;
 
                 case ControlType.DatePicker:
-                    gridCellEditor.Children.Add(new DatePickerEditor());
+                    editorContent.Children.Add(new DatePickerEditor());
+                    break;
+
+                case ControlType.None:
                     break;
 
                 default:
@@ -68,12 +94,19 @@ namespace XamlHelpmeet.UI.Editors
             }
         }
 
-        private void GridCellEditor_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            cboControlType.ItemsSource = (from d in Enum.GetNames(typeof(ControlType))
-                                          where d != "None"
-                                          orderby d
-                                          select d).ToArray();
+            if (_cellContentFromDataContext != null)
+            {
+                _cellContentFromDataContext.PropertyChanged -= _cellContent_PropertyChanged;
+            }
+
+            _cellContentFromDataContext = DataContext as CellContent;
+            if (_cellContentFromDataContext != null)
+                _cellContentFromDataContext.PropertyChanged += _cellContent_PropertyChanged;
+            ControlTypeChanged();
         }
+
+        #endregion
     }
 }
