@@ -12,24 +12,39 @@ namespace XamlHelpmeet.UI.UIControlFactory
 {
 	[Serializable]
 	public class UIControl : INotifyPropertyChanged, ISerializable
-	{
-		#region Constructors
+    {
+        #region Fields
 
-		/// <summary>
+        private SerializableObservableCollection<UIProperty> _controlProperties;
+        private string _controlType;
+
+        private bool _generateControlName;
+
+        private bool _includeNotifyOnValidationError;
+
+        private bool _includeTargetNullValueForNullableBindings;
+
+        private bool _includeValidatesOnDataErrors;
+
+        private bool _includeValidatesOnExceptions;
+        #endregion
+        #region Constructors
+
+        /// <summary>
 		/// 	Initializes a new instance of the UIControl class.
 		/// </summary>
 		public UIControl()
 		{
-			UIControlRole = UIControlRole.Label;
-			UIPlatform = UIPlatform.WPF;
-			ControlProperties = new ObservableCollection<UIProperty>();
-			ControlType = string.Empty;
+			ControlRole = UIControlRole.Label;
+            Platform = UIPlatform.WPF;
+            _controlProperties = new SerializableObservableCollection<UIProperty>();
+            ControlType = string.Empty;
 		}
 
 		/// <summary>
 		/// 	Initializes a new instance of the UIControl class.
 		/// </summary>
-		/// <param name="UIPlatform">
+		/// <param name="uiPlatform">
 		/// 	The platform.
 		/// </param>
 		/// <param name="UIControlRole">
@@ -38,11 +53,11 @@ namespace XamlHelpmeet.UI.UIControlFactory
 		/// <param name="ControlType">
 		/// 	Type of the control.
 		/// </param>
-		public UIControl(UIPlatform UIPlatform, UIControlRole UIControlRole, string ControlType)
+		public UIControl(UIPlatform uiPlatform, UIControlRole UIControlRole, string ControlType)
 			: this()
 		{
-			this.UIPlatform = UIPlatform;
-			this.UIControlRole = UIControlRole;
+			this.Platform = uiPlatform;
+			this.ControlRole = UIControlRole;
 			this.ControlType = ControlType;
 		}
 
@@ -50,9 +65,26 @@ namespace XamlHelpmeet.UI.UIControlFactory
 
 		#region Methods
 
-		private string GetControlHungarian()
+        public string MakeControlFromDefaults(string MainTags, bool AddClosingTag, string Path)
+        {
+            var sb = new StringBuilder(1024);
+
+            sb.AppendFormat("<{0}", ControlType);
+
+            if (GenerateControlName && Path.IsNotNullOrEmpty())
+            {
+                sb.AppendFormat(" x:Name=\"{0}{1}\"", GetControlHungarian(), Path);
+            }
+
+            sb.Append(MainTags);
+            sb.Append(AddClosingTag ? " />" : ">");
+
+            return sb.ToString().Replace("  ", " ");
+        }
+
+        private string GetControlHungarian()
 		{
-			switch (UIControlRole)
+			switch (ControlRole)
 			{
 				case UIControlRole.Border:
 					return "bdr";
@@ -78,39 +110,23 @@ namespace XamlHelpmeet.UI.UIControlFactory
 					return "NOTASSIGNED";
 			}
 		}
-
-		public string MakeControlFromDefaults(string MainTags, bool AddClosingTag, string Path)
-		{
-			var sb = new StringBuilder(1024);
-
-			sb.AppendFormat("<{0}", ControlType);
-
-			if (GenerateControlName && Path.IsNotNullOrEmpty())
-			{
-				sb.AppendFormat(" x:Name=\"{0}{1}\"", GetControlHungarian(), Path);
-			}
-
-			sb.Append(MainTags);
-			sb.Append(AddClosingTag ? " />" : ">");
-
-			return sb.ToString().Replace("  ", " ");
-		}
-
 		#endregion
 
 		#region Properties
 
-		public string BindingPropertyString
+        public string BindingPropertyString
 		{
 			get;
 			set;
 		}
 
-		public ObservableCollection<UIProperty> ControlProperties
-		{
-			get;
-			private set;
-		}
+        public SerializableObservableCollection<UIProperty> ControlProperties
+        {
+            get
+            {
+                return _controlProperties;
+            }
+        }
 		public string ControlType
 		{
 			get
@@ -124,12 +140,6 @@ namespace XamlHelpmeet.UI.UIControlFactory
 			}
 		}
 
-		private bool _includeValidatesOnExceptions;
-		private bool _includeValidatesOnDataErrors;
-		private bool _includeTargetNullValueForNullableBindings;
-		private bool _includeNotifyOnValidationError;
-		private string _controlType;
-		private bool _generateControlName;
 		public bool GenerateControlName
 		{
 			get
@@ -191,12 +201,20 @@ namespace XamlHelpmeet.UI.UIControlFactory
 				OnPropertyChanged("IncludeValidatesOnExceptions");
 			}
 		}
-		public UIControlRole UIControlRole
+
+        public string ControlRoleName
+        {
+            get
+            {
+                return ControlRole.ToString();
+            }
+        }
+		public UIControlRole ControlRole
 		{
 			get;
 			set;
 		}
-		public UIPlatform UIPlatform
+		public UIPlatform Platform
 		{
 			get;
 			set;
@@ -205,7 +223,33 @@ namespace XamlHelpmeet.UI.UIControlFactory
 
 		#region ISerializable Members
 
-		/// <summary>
+        /// <summary>
+        /// 	A specialized constructor for the UIControl class for serialization.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        /// 	Thrown when one or more required arguments are null.
+        /// </exception>
+        protected UIControl(SerializationInfo info, StreamingContext context)
+            : this()
+        {
+            if (info == null)
+            {
+                throw new ArgumentNullException("info");
+            }
+
+            GenerateControlName = (bool)info.GetValue("GenerateControlName", typeof(bool));
+
+            IncludeNotifyOnValidationError = (bool)info.GetValue("IncludeNotifyOnValidationError", typeof(bool));
+            IncludeTargetNullValueForNullableBindings = (bool)info.GetValue("IncludeTargetNullValueForNullableBindings", typeof(bool));
+            IncludeValidatesOnDataErrors = (bool)info.GetValue("IncludeValidatesOnDataErrors", typeof(bool));
+            IncludeValidatesOnExceptions = (bool)info.GetValue("IncludeValidatesOnExceptions", typeof(bool));
+            ControlRole = (UIControlRole)info.GetValue("UIControlRole", typeof(UIControlRole));
+            Platform = (UIPlatform)info.GetValue("Platform", typeof(UIPlatform));
+            ControlType = (string)info.GetValue("ControlType", typeof(string));
+            _controlProperties = (SerializableObservableCollection<UIProperty>)info.GetValue("ControlProperties", typeof(SerializableObservableCollection<UIProperty>));
+        }
+
+        /// <summary>
 		/// 	Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with
 		/// 	the data needed to serialize the target object.
 		/// </summary>
@@ -217,42 +261,11 @@ namespace XamlHelpmeet.UI.UIControlFactory
 			info.AddValue("IncludeTargetNullValueForNullableBindings", IncludeTargetNullValueForNullableBindings);
 			info.AddValue("IncludeValidatesOnDataErrors", IncludeValidatesOnDataErrors);
 			info.AddValue("IncludeValidatesOnExceptions", IncludeValidatesOnExceptions);
-			info.AddValue("UIControlRole", UIControlRole, typeof(UIControlRole));
-			info.AddValue("UIPlatform", UIPlatform, typeof(UIPlatform));
+			info.AddValue("UIControlRole", ControlRole, typeof(UIControlRole));
+			info.AddValue("Platform", Platform, typeof(UIPlatform));
 			info.AddValue("ControlType", ControlType, typeof(string));
-
-			var surrogate = new ObservableCollectionSerializationSurrogate<UIProperty>();
-			surrogate.GetObjectData(ControlProperties, info, context);
+            info.AddValue("ControlProperties", ControlProperties, typeof(SerializableObservableCollection<UIProperty>));
 		}
-
-		/// <summary>
-		/// 	A specialized constructor for the UIControl class for serialization.
-		/// </summary>
-		/// <exception cref="ArgumentNullException">
-		/// 	Thrown when one or more required arguments are null.
-		/// </exception>
-		protected UIControl(SerializationInfo info, StreamingContext context)
-			: this()
-		{
-			if (info == null)
-			{
-				throw new ArgumentNullException("info");
-			}
-
-			GenerateControlName = (bool)info.GetValue("GenerateControlName", typeof(bool));
-
-			IncludeNotifyOnValidationError = (bool)info.GetValue("IncludeNotifyOnValidationError", typeof(bool));
-			IncludeTargetNullValueForNullableBindings = (bool)info.GetValue("IncludeTargetNullValueForNullableBindings", typeof(bool));
-			IncludeValidatesOnDataErrors = (bool)info.GetValue("IncludeValidatesOnDataErrors", typeof(bool));
-			IncludeValidatesOnExceptions = (bool)info.GetValue("IncludeValidatesOnExceptions", typeof(bool));
-			UIControlRole = (UIControlRole)info.GetValue("UIControlRole", typeof(UIControlRole));
-			UIPlatform = (UIPlatform)info.GetValue("UIPlatform", typeof(UIPlatform));
-			ControlType = (string)info.GetValue("ControlType", typeof(string));
-
-			var surrogate = new ObservableCollectionSerializationSurrogate<UIProperty>();
-			ControlProperties = (ObservableCollection<UIProperty>)surrogate.SetObjectData(null, info, context, null);
-		}
-
 		#endregion
 
 		#region INotifyPropertyChanged Members

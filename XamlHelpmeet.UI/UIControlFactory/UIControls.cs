@@ -79,13 +79,13 @@ namespace XamlHelpmeet.UI.UIControlFactory
 		/// <param name="ControlType">
 		/// 	Type of the control.
 		/// </param>
-		/// <param name="UIPlatform">
+		/// <param name="uiPlatform">
 		/// 	The platform.
 		/// </param>
 		/// <returns>
 		/// 	The user interface control.
 		/// </returns>
-		public UIControl GetUIControl(ControlType ControlType, UIPlatform UIPlatform)
+		public UIControl GetUIControl(ControlType ControlType, UIPlatform uiPlatform)
 		{
 			UIControlRole uiControlRole;
 
@@ -123,7 +123,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
 					throw new ArgumentOutOfRangeException("ControlType");
 			}
 
-			return GetUIControl(uiControlRole, UIPlatform);
+			return GetUIControl(uiControlRole, uiPlatform);
 		}
 
 		/// <summary>
@@ -132,17 +132,17 @@ namespace XamlHelpmeet.UI.UIControlFactory
 		/// <param name="ControlRole">
 		/// 	The control role.
 		/// </param>
-		/// <param name="UIPlatform">
+		/// <param name="uiPlatform">
 		/// 	The platform.
 		/// </param>
 		/// <returns>
 		/// 	The user interface control.
 		/// </returns>
-		public UIControl GetUIControl(UIControlRole ControlRole, UIPlatform UIPlatform)
+		public UIControl GetUIControl(UIControlRole ControlRole, UIPlatform uiPlatform)
 		{
 			foreach (var ctrl in this)
 			{
-				if (ctrl.UIControlRole == ControlRole && ctrl.UIPlatform == UIPlatform)
+				if (ctrl.ControlRole == ControlRole && ctrl.Platform == uiPlatform)
 				{
 					return ctrl;
 				}
@@ -162,8 +162,8 @@ namespace XamlHelpmeet.UI.UIControlFactory
 		public List<UIControl> GetUIControlsForPlatform(UIPlatform Platform)
 		{
 			return (from d in this
-					where d.UIPlatform == Platform
-					orderby d.UIControlRole.ToString()
+					where d.Platform == Platform
+					orderby d.ControlRole.ToString()
 					select d).ToList();
 		}
 

@@ -255,13 +255,13 @@
       <DependentUpon>TextBoxEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Enums\DynamicFormControlType.cs" />
+    <Compile Include="UIControlFactory\SerializableObservableCollection.cs" />
     <Compile Include="UIControlFactory\UIControl.cs" />
     <Compile Include="UIControlFactory\UIControlFactory.cs" />
     <Compile Include="UIControlFactory\UIControlRole.cs" />
     <Compile Include="UIControlFactory\UIControls.cs" />
     <Compile Include="UIControlFactory\UIPlatform.cs" />
     <Compile Include="UIControlFactory\UIProperty.cs" />
-    <Compile Include="Utilities\ObservableCollectionSerializationSurrogate.cs" />
     <Compile Include="Utilities\UIHelpers.cs" />
     <Compile Include="ValidationRules\PositiveIntegerValidationRule.cs" />
     <Compile Include="ValidationRules\RequiredEntryValidationRule.cs" />

@@ -96,7 +96,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <summary>
         ///     Makes check box.
         /// </summary>
-        /// <param name="UIPlatform">
+        /// <param name="uiPlatform">
         ///     The platform.
         /// </param>
         /// <param name="Column">
@@ -117,15 +117,15 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <returns>
         ///     .
         /// </returns>
-        public string MakeCheckBox(UIPlatform UIPlatform, int? Column, int? Row,
+        public string MakeCheckBox(UIPlatform uiPlatform, int? Column, int? Row,
             string Content, string Path, BindingMode BindingMode)
         {
-            var ctrl = GetUIControl(ControlType.CheckBox, UIPlatform);
+            var ctrl = GetUIControl(ControlType.CheckBox, uiPlatform);
             var sb = new StringBuilder(1024);
 
             AppendFormat(sb, STR_GridColumnFormat, Column);
             AppendFormat(sb, STR_GridRowFormat, Row);
-            if (UIPlatform == UIPlatform.WPF)
+            if (uiPlatform == UIPlatform.WPF)
             {
                 AppendFormat(sb, STR_ContentIsCheckedBindingPathModeFormat, Content,
                     Path, BindingMode, BindingMode == BindingMode.TwoWay ?
@@ -145,7 +145,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <summary>
         ///     Makes combo box.
         /// </summary>
-        /// <param name="UIPlatform">
+        /// <param name="uiPlatform">
         ///     The platform.
         /// </param>
         /// <param name="Column">
@@ -163,16 +163,16 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <returns>
         ///     .
         /// </returns>
-        public string MakeComboBox(UIPlatform UIPlatform, int? Column,
+        public string MakeComboBox(UIPlatform uiPlatform, int? Column,
             int? Row, string Path, BindingMode BindingMode)
         {
-            var ctrl = GetUIControl(ControlType.ComboBox, UIPlatform);
+            var ctrl = GetUIControl(ControlType.ComboBox, uiPlatform);
             var sb = new StringBuilder(1024);
 
             AppendFormat(sb, STR_GridColumnFormat, Column);
             AppendFormat(sb, STR_GridRowFormat, Row);
 
-            if (UIPlatform == UIPlatform.WPF)
+            if (uiPlatform == UIPlatform.WPF)
             {
                 AppendFormat(sb, STR_SelectedValueBindingFormat, Path, BindingMode, BindingMode ==
                     BindingMode.TwoWay ? string.Concat(STR_UpdateSourceTrigger,
@@ -189,7 +189,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <summary>
         ///     Makes date picker.
         /// </summary>
-        /// <param name="UIPlatform">
+        /// <param name="uiPlatform">
         ///     The platform.
         /// </param>
         /// <param name="Column">
@@ -207,10 +207,10 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <returns>
         ///     .
         /// </returns>
-        public string MakeDatePicker(UIPlatform UIPlatform, int? Column,
+        public string MakeDatePicker(UIPlatform uiPlatform, int? Column,
             int? Row, string Path, int? Width)
         {
-            var ctrl = GetUIControl(ControlType.DatePicker, UIPlatform);
+            var ctrl = GetUIControl(ControlType.DatePicker, uiPlatform);
             var sb = new StringBuilder(1024);
 
             AppendFormat(sb, STR_GridColumnFormat, Column);
@@ -224,7 +224,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <summary>
         ///     Makes an image.
         /// </summary>
-        /// <param name="UIPlatform">
+        /// <param name="uiPlatform">
         ///     The platform.
         /// </param>
         /// <param name="Column">
@@ -239,10 +239,10 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <returns>
         ///     .
         /// </returns>
-        public string MakeImage(UIPlatform UIPlatform, int? Column, int? Row,
+        public string MakeImage(UIPlatform uiPlatform, int? Column, int? Row,
             string Path)
         {
-            var ctrl = GetUIControl(ControlType.Image, UIPlatform);
+            var ctrl = GetUIControl(ControlType.Image, uiPlatform);
             var sb = new StringBuilder(1024);
 
             AppendFormat(sb, STR_GridColumnFormat, Column);
@@ -255,7 +255,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <summary>
         ///     Makes a label.
         /// </summary>
-        /// <param name="UIPlatform">
+        /// <param name="uiPlatform">
         ///     The platform.
         /// </param>
         /// <param name="Column">
@@ -276,16 +276,16 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <returns>
         ///     .
         /// </returns>
-        public string MakeLabel(UIPlatform UIPlatform, int? Column, int? Row,
+        public string MakeLabel(UIPlatform uiPlatform, int? Column, int? Row,
             string Content, string StringFormat, string SilverlightVersion)
         {
-            var ctrl = GetUIControl(ControlType.Label, UIPlatform);
+            var ctrl = GetUIControl(ControlType.Label, uiPlatform);
             var sb = new StringBuilder(1024);
 
             AppendFormat(sb, STR_GridColumnFormat, Column);
             AppendFormat(sb, STR_GridRowFormat, Row);
 
-            if (UIPlatform == UIPlatform.WPF || SilverlightVersion.StartsWith("3"))
+            if (uiPlatform == UIPlatform.WPF || SilverlightVersion.StartsWith("3"))
             {
                 if (StringFormat.IsNullOrEmpty())
                 {
@@ -309,7 +309,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <summary>
         ///     Makes label without binding.
         /// </summary>
-        /// <param name="UIPlatform">
+        /// <param name="uiPlatform">
         ///     The platform.
         /// </param>
         /// <param name="Column">
@@ -324,10 +324,10 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <returns>
         ///     XAML for a label.
         /// </returns>
-        public string MakeLabelWithoutBinding(UIPlatform UIPlatform,
+        public string MakeLabelWithoutBinding(UIPlatform uiPlatform,
             int? Column, int? Row, string Content)
         {
-            var ctrl = GetUIControl(ControlType.Label, UIPlatform);
+            var ctrl = GetUIControl(ControlType.Label, uiPlatform);
             var sb = new StringBuilder(1024);
 
             AppendFormat(sb, STR_GridColumnFormat, Column);
@@ -342,7 +342,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <summary>
         ///     Makes text block.
         /// </summary>
-        /// <param name="UIPlatform">
+        /// <param name="uiPlatform">
         ///     The platform.
         /// </param>
         /// <param name="Column">
@@ -363,7 +363,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <returns>
         ///     .
         /// </returns>
-        public string MakeTextBlock(UIPlatform UIPlatform, int? Column, int? Row,
+        public string MakeTextBlock(UIPlatform uiPlatform, int? Column, int? Row,
             string Path, string StringFormat, string SilverlightVersion)
         {
             if (StringFormat.IsNotNullOrEmpty())
@@ -372,12 +372,12 @@ namespace XamlHelpmeet.UI.UIControlFactory
                     Replace(STR_BRACEOPEN, STR_BRACEOPENESCAPED).
                     Replace(STR_BRACECLOSE, STR_BRACECLOSEESCAPED));
             }
-            if (UIPlatform == UIPlatform.Silverlight && SilverlightVersion.StartsWith("3"))
+            if (uiPlatform == UIPlatform.Silverlight && SilverlightVersion.StartsWith("3"))
             {
                 StringFormat = string.Empty;
             }
 
-            var ctrl = GetUIControl(ControlType.TextBlock, UIPlatform);
+            var ctrl = GetUIControl(ControlType.TextBlock, uiPlatform);
             var sb = new StringBuilder(1024);
 
             AppendFormat(sb, STR_GridColumnFormat, Column);
@@ -509,15 +509,15 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <param name="ControlType">
         ///     Type of the control.
         /// </param>
-        /// <param name="UIPlatform">
+        /// <param name="uiPlatform">
         ///     The platform.
         /// </param>
         /// <returns>
         ///     The user interface control.
         /// </returns>
-        public UIControl GetUIControl(ControlType ControlType, UIPlatform UIPlatform)
+        public UIControl GetUIControl(ControlType ControlType, UIPlatform uiPlatform)
         {
-            return UIControls.GetUIControl(ControlType, UIPlatform);
+            return UIControls.GetUIControl(ControlType, uiPlatform);
         }
 
         /// <summary>
@@ -526,15 +526,15 @@ namespace XamlHelpmeet.UI.UIControlFactory
         /// <param name="ControlRole">
         ///     The control role.
         /// </param>
-        /// <param name="UIPlatform">
+        /// <param name="uiPlatform">
         ///     The platform.
         /// </param>
         /// <returns>
         ///     The user interface control.
         /// </returns>
-        public UIControl GetUIControl(UIControlRole ControlRole, UIPlatform UIPlatform)
+        public UIControl GetUIControl(UIControlRole ControlRole, UIPlatform uiPlatform)
         {
-            return UIControls.GetUIControl(ControlRole, UIPlatform);
+            return UIControls.GetUIControl(ControlRole, uiPlatform);
         }
 
         /// <summary>
@@ -660,9 +660,9 @@ namespace XamlHelpmeet.UI.UIControlFactory
             UIControls.Add(CreateMethod(UIPlatform.WPF));
         }
 
-        private UIControl CreateBorder(UIPlatform UIPlatform)
+        private UIControl CreateBorder(UIPlatform uiPlatform)
         {
-            var obj = new UIControl(UIPlatform, UIControlRole.Border, "Border");
+            var obj = new UIControl(uiPlatform, UIControlRole.Border, "Border");
             obj.ControlProperties.Add(new UIProperty("BorderBrush", "LightGray"));
             obj.ControlProperties.Add(new UIProperty("BorderThickness", "1"));
             obj.ControlProperties.Add(new UIProperty("CornerRadius", "10"));
@@ -670,9 +670,9 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return obj;
         }
 
-        private UIControl CreateCheckBox(UIPlatform UIPlatform)
+        private UIControl CreateCheckBox(UIPlatform uiPlatform)
         {
-            var obj = new UIControl(UIPlatform, UIControlRole.CheckBox, "CheckBox")
+            var obj = new UIControl(uiPlatform, UIControlRole.CheckBox, "CheckBox")
             {
                 IncludeNotifyOnValidationError = true,
                 IncludeValidatesOnDataErrors = true,
@@ -682,27 +682,27 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return obj;
         }
 
-        private UIControl CreateComboBox(UIPlatform UIPlatform)
+        private UIControl CreateComboBox(UIPlatform uiPlatform)
         {
-            var obj = new UIControl(UIPlatform, UIControlRole.ComboBox, "ComboBox")
+            var obj = new UIControl(uiPlatform, UIControlRole.ComboBox, "ComboBox")
             {
                 IncludeNotifyOnValidationError = true,
                 IncludeValidatesOnDataErrors = true,
                 IncludeValidatesOnExceptions = true
             };
 
-            if (UIPlatform == UIPlatform.WPF)
+            if (uiPlatform == UIPlatform.WPF)
             {
                 obj.ControlProperties.Add(new UIProperty("IsSynchronizedWithCurrentItem", "True"));
             }
             return obj;
         }
 
-        private UIControl CreateDataGrid(UIPlatform UIPlatform)
+        private UIControl CreateDataGrid(UIPlatform uiPlatform)
         {
-            var obj = new UIControl(UIPlatform, UIControlRole.DataGrid, "DataGrid");
+            var obj = new UIControl(uiPlatform, UIControlRole.DataGrid, "DataGrid");
 
-            if (UIPlatform == UIPlatform.WPF)
+            if (uiPlatform == UIPlatform.WPF)
             {
                 obj.ControlProperties.Add(new UIProperty("AlternationCount", "2"));
             }
@@ -716,11 +716,11 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return obj;
         }
 
-        private UIControl CreateDatePicker(UIPlatform UIPlatform)
+        private UIControl CreateDatePicker(UIPlatform uiPlatform)
         {
-            var obj = new UIControl(UIPlatform, UIControlRole.DatePicker, "DatePicker");
+            var obj = new UIControl(uiPlatform, UIControlRole.DatePicker, "DatePicker");
 
-            if (UIPlatform == UIPlatform.Silverlight)
+            if (uiPlatform == UIPlatform.Silverlight)
             {
                 obj.ControlType = "sdk:DatePicker";
             }
@@ -746,21 +746,21 @@ namespace XamlHelpmeet.UI.UIControlFactory
             AddPlatforms(CreateTextBox);
         }
 
-        private UIControl CreateGrid(UIPlatform UIPlatform)
+        private UIControl CreateGrid(UIPlatform uiPlatform)
         {
-            return new UIControl(UIPlatform, UIControlRole.Grid, "Grid");
+            return new UIControl(uiPlatform, UIControlRole.Grid, "Grid");
         }
 
-        private UIControl CreateImage(UIPlatform UIPlatform)
+        private UIControl CreateImage(UIPlatform uiPlatform)
         {
-            return new UIControl(UIPlatform, UIControlRole.Image, "Image");
+            return new UIControl(uiPlatform, UIControlRole.Image, "Image");
         }
 
-        private UIControl CreateLabel(UIPlatform UIPlatform)
+        private UIControl CreateLabel(UIPlatform uiPlatform)
         {
-            var obj = new UIControl(UIPlatform, UIControlRole.Label, "Label");
+            var obj = new UIControl(uiPlatform, UIControlRole.Label, "Label");
 
-            if (UIPlatform == UIPlatform.Silverlight)
+            if (uiPlatform == UIPlatform.Silverlight)
             {
                 obj.ControlType = "sdk:Label";
             }
@@ -768,14 +768,14 @@ namespace XamlHelpmeet.UI.UIControlFactory
             return obj;
         }
 
-        private UIControl CreateTextBlock(UIPlatform UIPlatform)
+        private UIControl CreateTextBlock(UIPlatform uiPlatform)
         {
-            return new UIControl(UIPlatform, UIControlRole.TextBlock, "TextBlock");
+            return new UIControl(uiPlatform, UIControlRole.TextBlock, "TextBlock");
         }
 
-        private UIControl CreateTextBox(UIPlatform UIPlatform)
+        private UIControl CreateTextBox(UIPlatform uiPlatform)
         {
-            var obj = new UIControl(UIPlatform, UIControlRole.TextBox, "TextBox")
+            var obj = new UIControl(uiPlatform, UIControlRole.TextBox, "TextBox")
             {
                 IncludeNotifyOnValidationError = true,
                 IncludeValidatesOnDataErrors = true,

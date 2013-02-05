@@ -57,7 +57,7 @@ namespace XamlHelpmeet.UI
 
             var uiControl = this.lbControls.SelectedItem as UIControl;
 
-            switch (uiControl.UIControlRole)
+            switch (uiControl.ControlRole)
             {
                 case UIControlRole.Border:
                 case UIControlRole.Grid:
@@ -69,7 +69,7 @@ namespace XamlHelpmeet.UI
                     break;
             }
 
-            switch (uiControl.UIControlRole)
+            switch (uiControl.ControlRole)
             {
                 case UIControlRole.TextBox:
                     this.chkIncludeTargetNullValueForNullableBindings.IsEnabled = true;
@@ -80,7 +80,7 @@ namespace XamlHelpmeet.UI
                     break;
             }
 
-            switch (uiControl.UIControlRole)
+            switch (uiControl.ControlRole)
             {
                 case UIControlRole.DataGrid:
                 case UIControlRole.Border:
@@ -103,7 +103,7 @@ namespace XamlHelpmeet.UI
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException("ControlRole", (this.lbControls.SelectedItem as UIControl).UIControlRole, "Programmer did not program this value.");
+                    throw new ArgumentOutOfRangeException("ControlRole", (this.lbControls.SelectedItem as UIControl).ControlRole, "Programmer did not program this value.");
             }
         }
 
@@ -113,8 +113,8 @@ namespace XamlHelpmeet.UI
             var collectionView = CollectionViewSource.GetDefaultView(uiControls) as CollectionView;
             collectionView.GroupDescriptions.Clear();
             collectionView.SortDescriptions.Clear();
-            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("UIPlatform"));
-            collectionView.SortDescriptions.Add(new SortDescription("UIPlatform", ListSortDirection.Ascending));
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Platform"));
+            collectionView.SortDescriptions.Add(new SortDescription("Platform", ListSortDirection.Ascending));
             collectionView.SortDescriptions.Add(new SortDescription("ControlRoleName", ListSortDirection.Ascending));
             this.lbControls.ItemsSource = uiControls;
             this.lbControls.SelectedIndex = 0;
