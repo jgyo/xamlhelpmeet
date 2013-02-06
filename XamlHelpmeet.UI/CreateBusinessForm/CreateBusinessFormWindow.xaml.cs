@@ -52,13 +52,6 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
 
         #region Constructors
 
-        ///// <summary>
-        /////     Initializes a new instance of the CreateBusinessFormWindow class.
-        ///// </summary>
-        //public CreateBusinessFormWindow()
-        //{
-        //}
-
         /// <summary>
         ///     Initializes a new instance of the CreateBusinessFormWindow class.
         /// </summary>

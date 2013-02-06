@@ -571,7 +571,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
                 //+ If the settings file does not exit, create it.
                 CreateDefaults();
                 Save(false);
-                UIUtilities.ShowExceptionMessage("Settings File Created", "Your settings file has been created for you.  You can configure your settings using the Set Control Defaults command.");
+                //UIUtilities.ShowExceptionMessage("Settings File Created", "Your settings file has been created for you.  You can configure your settings using the Set Control Defaults command.");
             }
             else
             {

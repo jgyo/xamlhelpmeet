@@ -34,6 +34,7 @@
                 <TextBlock Margin="0,5,5,0" FontSize="14">Version:</TextBlock>
                 <TextBlock Margin="0,5,0,0" FontSize="14">
                     <Run x:Name="VersionRun" Text="1.0.0.0" />
+                    <Run Text="Alpha - Check often for updates." />
                 </TextBlock>
             </StackPanel>
             <TextBlock Margin="0,12,5,0"
@@ -42,15 +43,17 @@
                 Xaml Helpmeet is a Visual Studio 2012
                 extension designed to help programmers write and manage xaml files.
                 It is a translation and update of XAML Power Tools, written by
-                Karl Shifflett in Visual Basic. You can find the C# source code
-                for Xaml Helpmeet on
+                Karl Shifflett in Visual Basic. You can find Xaml Helpmeet at
                 <Hyperlink Click="Hyperlink_Click_1"
                            Foreground="#FFFDFDFD"
                            ToolTip="http://xamlhelpmeet.codeplex.com/">
-                    CodePlex
+                    xamlhelpmeet.codeplex.com
                 </Hyperlink>
-                and install the binary
-                in Visual Studio 2012 from the Visual Studio Galary.
+                .
+                <!--
+                    and install the binary
+                    in Visual Studio 2012 from the Visual Studio Galary.
+                -->
             </TextBlock>
             <TextBlock Margin="0,6,5,0"
                        FontSize="14"
