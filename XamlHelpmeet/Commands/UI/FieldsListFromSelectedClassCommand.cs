@@ -52,7 +52,7 @@ namespace XamlHelpmeet.Commands.UI
 		/// </returns>
 		public override bool CanExecute(vsCommandExecOption ExecuteOption)
 		{
-			return base.CanExecute(ExecuteOption) && !IsTextSelected();
+			return base.CanExecute(ExecuteOption);
 		}
 
 		/// <summary>

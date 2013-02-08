@@ -140,11 +140,11 @@ namespace XamlHelpmeet.Commands.UI
 					sb.Length = 0;
 
 					sb.AppendFormat(
-						isSilverlight ? "<Style TargetType=|{0}|" : "<Style TargetType=|{{x:Type {0}}}|",
-						extractSelectedPropertiesToStyle.StyleName);
+						isSilverlight ? "<Style TargetType=\"{0}\"" : "<Style TargetType=\"{{x:Type {0}}}\"",
+						extractSelectedPropertiesToStyle.TypeName);
 
 					sb.AppendFormat(extractSelectedPropertiesToStyle.StyleName.IsNotNullOrEmpty() ?
-						" x:Key=|{0}|>" : ">",
+						" x:Key=\"{0}\">" : ">",
 						extractSelectedPropertiesToStyle.StyleName
 						);
 
@@ -154,13 +154,13 @@ namespace XamlHelpmeet.Commands.UI
 					{
 						if (item.IsSelected)
 						{
-							sb.AppendFormat("<Setter Property=|{0}| Value=|{1}| />{2}", item.PropertyName, item.PropertyValue, Environment.NewLine);
+							sb.AppendFormat("<Setter Property=\"{0}\" Value=\"{1}\" />{2}", item.PropertyName, item.PropertyValue, Environment.NewLine);
 						}
 					}
 
 					sb.AppendLine("</Style>");
 					Clipboard.Clear();
-					Clipboard.SetText(sb.Replace("|", "\"").ToString());
+					Clipboard.SetText(sb.ToString());
 					UIUtilities.ShowInformationMessage("Paste Style", "Place insertion point and paste created style into the resource section of a XAML document.");
 				}
 			}
