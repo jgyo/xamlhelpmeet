@@ -229,6 +229,7 @@
     </Content>
     <Content Include="Resources\Mono.Cecil.dll" />
     <Content Include="Resources\Mono.Cecil.pdb" />
+    <Resource Include="Versioning.txt" />
     <Content Include="XamlHelpmeet.rtf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

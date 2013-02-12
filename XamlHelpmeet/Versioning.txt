@@ -1,0 +1,7 @@
+﻿These locations contain version info and must be modified each time a new
+release of Xaml Helpmeet is released:
+
+1. ReleaseNotes.txt
+2. Properties\AssemblyInfo.cs in all XamlHelpmeet projects.
+3. source.extension.vsixmanifest
+4. AboutWindow.xaml

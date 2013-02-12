@@ -42,20 +42,6 @@ namespace XamlHelpmeet.Commands.UI
 		#region Methods
 
 		/// <summary>
-		/// 	Determine if we can execute.
-		/// </summary>
-		/// <param name="ExecuteOption">
-		/// 	The execute option.
-		/// </param>
-		/// <returns>
-		/// 	true if we can execute, otherwise false.
-		/// </returns>
-		public override bool CanExecute(vsCommandExecOption ExecuteOption)
-		{
-			return base.CanExecute(ExecuteOption) && !IsTextSelected();
-		}
-
-		/// <summary>
 		/// 	Executes this CreateViewModelCommandFromSelectedClassCommand.
 		/// </summary>
 		public override void Execute()

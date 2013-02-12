@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="37b68c5c-8ac0-436c-8483-0947379cffe9" Version="0.1" Language="en-US" Publisher="YoderTools" />
+    <Identity Id="37b68c5c-8ac0-436c-8483-0947379cffe9" Version="0.2" Language="en-US" Publisher="YoderTools" />
     <DisplayName>Xaml Helpmeet</DisplayName>
     <Description xml:space="preserve">Xaml Helpmeet is an extension to Visual Studio 2012 designed to help developers create and edit Xaml documents.</Description>
     <MoreInfo >http://xamlhelpmeet.codeplex.com/</MoreInfo>
     <License>XamlHelpmeet.rtf</License>
-    <GettingStartedGuide>http://visualstudiogalary.com/xxxxxxxxxx</GettingStartedGuide>
+    <GettingStartedGuide>http://xamlhelpmeet.codeplex.com/wikipage?title=Getting%20Started</GettingStartedGuide>
     <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
     <Icon>Resources\XamlPageControl.ico</Icon>
     <PreviewImage>1-22-2013 8-06-44 PM.png</PreviewImage>

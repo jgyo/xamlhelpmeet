@@ -120,7 +120,7 @@
 				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeWindowMenuGroup" />
 				<CommandFlag>TextOnly</CommandFlag>
 				<Strings>
-					<ButtonText>About Xamlhelpmeet</ButtonText>
+					<ButtonText>About Xaml Helpmeet</ButtonText>
 				</Strings>
 			</Button>
 			

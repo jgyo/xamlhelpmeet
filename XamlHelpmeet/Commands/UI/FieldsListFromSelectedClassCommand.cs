@@ -1,106 +1,86 @@
-﻿// file:	Commands\UI\FieldsListFromSelectedClassCommand.cs
-//
-// summary:	Implements the fields list from selected class command class
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EnvDTE;
 using EnvDTE80;
-using EnvDTE;
-using XamlHelpmeet.Utility;
+using System;
+using System.ComponentModel.Design;
 using XamlHelpmeet.UI;
 using XamlHelpmeet.UI.Utilities;
-using System.ComponentModel.Design;
+using XamlHelpmeet.Utility;
 
 namespace XamlHelpmeet.Commands.UI
 {
-	/// <summary>
-	/// 	Fields list from selected class command.
-	/// </summary>
-	/// <seealso cref="T:XamlHelpmeet.Commands.CommandBase"/>
-	public class FieldsListFromSelectedClassCommand : CommandBase
-	{
+    /// <summary>
+    ///     Fields list from selected class command.
+    /// </summary>
+    /// <seealso cref="T:XamlHelpmeet.Commands.CommandBase"/>
+    public class FieldsListFromSelectedClassCommand : CommandBase
+    {
+        #region Constructors
 
-		#region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the FieldsListFromSelectedClassCommand class.
+        /// </summary>
+        /// <param name="application">
+        ///     The application.
+        /// </param>
+        /// <param name="id">
+        ///     The id.
+        /// </param>
+        public FieldsListFromSelectedClassCommand(DTE2 application, CommandID id)
+            : base(application, id)
+        {
+            Caption = "Fields List For Selected Class";
+            CommandName = "FieldsListFromSelectedClassCommand";
+            ToolTip = "Show fields list for selected class";
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the FieldsListFromSelectedClassCommand class.
-		/// </summary>
-		/// <param name="application">The application.</param>
-		/// <param name="id">The id.</param>
-		public FieldsListFromSelectedClassCommand(DTE2 application, CommandID id)
-			: base(application, id)
-		{
-			Caption = "Fields List For Selected Class";
-			CommandName = "FieldsListFromSelectedClassCommand";
-			ToolTip = "Show fields list for selected class";
-		}
+        #endregion
 
-		#endregion
+        #region Methods
 
-		#region Methods
+        /// <summary>
+        ///     Executes this FieldsListFromSelectedClassCommand.
+        /// </summary>
+        /// <seealso cref="M:XamlHelpmeet.Commands.CommandBase.Execute()"/>
+        public override void Execute()
+        {
+            try
+            {
+                var remoteTypeReflector = new RemoteTypeReflector();
+                var classEntity = remoteTypeReflector.GetClassEntityFromSelectedClass(Application.SelectedItems.Item(1).ProjectItem.ContainingProject, Caption);
 
-		/// <summary>
-		/// 	Determine if the FieldsListFromSelectedClassCommand can be executed.
-		/// </summary>
-		/// <param name="ExecuteOption">
-		/// 	The execute option.
-		/// </param>
-		/// <returns>
-		/// 	true if we can execute, false if not.
-		/// </returns>
-		public override bool CanExecute(vsCommandExecOption ExecuteOption)
-		{
-			return base.CanExecute(ExecuteOption);
-		}
+                if (classEntity != null && classEntity.Success)
+                {
+                    var obj = new FieldsListWindow(classEntity);
+                    obj.Topmost = true;
+                    obj.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                UIUtilities.ShowExceptionMessage(Caption, ex.Message, String.Empty, ex.ToString());
+            }
+        }
 
-		/// <summary>
-		/// 	Executes this FieldsListFromSelectedClassCommand.
-		/// </summary>
-		public override void Execute()
-		{
-			try
-			{
-				var remoteTypeReflector = new RemoteTypeReflector();
-				var classEntity = remoteTypeReflector.GetClassEntityFromSelectedClass(Application.SelectedItems.Item(1).ProjectItem.ContainingProject, Caption);
+        /// <summary>
+        ///     Gets the status of the FieldsListFromSelectedClassCommand command.
+        /// </summary>
+        /// <remarks>
+        ///     FieldsListFromSelectedClassCommand is always supported. If text is selected, the
+        ///     command is enabled.
+        /// </remarks>
+        /// <seealso cref="M:XamlHelpmeet.Commands.CommandBase.GetStatus()"/>
+        public override vsCommandStatus GetStatus()
+        {
+            // This will add vsCommandStatusEnabled to vsCommandStatusSupported,
+            // if IsTextSelected() returns true. Otherwise or'ing with
+            // vsCommandStatusUnsupported leaves vsCommandStatusSupported
+            // unchanged.
+            return vsCommandStatus.vsCommandStatusSupported |
+                (IsTextSelected() ?
+                vsCommandStatus.vsCommandStatusEnabled :
+                vsCommandStatus.vsCommandStatusUnsupported);
+        }
 
-				if (classEntity != null && classEntity.Success)
-				{
-					var obj = new FieldsListWindow(classEntity);
-					obj.Topmost = true;
-					obj.Show();
-				}
-			}
-			catch (Exception ex)
-			{
-				UIUtilities.ShowExceptionMessage(Caption, ex.Message, String.Empty, ex.ToString());
-			}
-		}
-
-		/// <summary>
-		/// 	Gets the status of the FieldsListFromSelectedClassCommand command.
-		/// </summary>
-		/// <remarks>
-		/// 	FieldsListFromSelectedClassCommand is always supported. If text is selected, the
-		/// 	command is enabled.
-		/// </remarks>
-		/// <returns>
-		/// 	The status.
-		/// </returns>
-		public override vsCommandStatus GetStatus()
-		{
-			// This will add vsCommandStatusEnabled to vsCommandStatusSupported,
-			// if IsTextSelected() returns true. Otherwise or'ing with
-			// vsCommandStatusUnsupported leaves vsCommandStatusSupported
-			// unchanged.
-			return vsCommandStatus.vsCommandStatusSupported |
-				(IsTextSelected() ?
-				vsCommandStatus.vsCommandStatusEnabled :
-				vsCommandStatus.vsCommandStatusUnsupported);
-		}
-
-		#endregion
-
-	}
+        #endregion
+    }
 }
