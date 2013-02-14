@@ -10,6 +10,7 @@ using XamlHelpmeet.ReflectionLoader;
 using XamlHelpmeet.UI.SelectClass;
 using XamlHelpmeet.UI.Utilities;
 using XamlHelpmeet.Extentions;
+using System.Text;
 
 namespace XamlHelpmeet.Utility
 {
@@ -76,7 +77,7 @@ namespace XamlHelpmeet.Utility
 				{
 					var isSilverlight = PtHelpers.IsProjectSilverlight(PtHelpers.GetProjectTypeGuids(TargetProject).Split(';'));
 					// BMK Reflection Code
-					remoteResponse = remoteWorker.GetClassEntityFromUserSelectedClass(assemblyPath, isSilverlight, NameOfSourceCommand, GetProjectReferences(TargetProject));
+					remoteResponse = remoteWorker.GetClassEntityFromUserSelectedClass(assemblyPath, isSilverlight, GetProjectReferences(TargetProject));
 
 					if (remoteResponse.ResponseStatus != ResponseStatus.Success)
 					{
@@ -117,7 +118,7 @@ namespace XamlHelpmeet.Utility
 
 			if (remoteResponse == null || remoteResponse.ResponseStatus != ResponseStatus.Success || remoteResponse.Result == null || remoteResponse.Result.Count == 0)
 			{
-				if (remoteResponse.ResponseStatus == ResponseStatus.Success)
+				if (remoteResponse == null || remoteResponse.ResponseStatus == ResponseStatus.Success)
 					UIUtilities.ShowInformationMessage("No Model", "Unable to find a class suitable for this command.");
 				return null;
 			}
@@ -193,11 +194,15 @@ namespace XamlHelpmeet.Utility
 				if (remoteWorker != null)
 				{
 					var isSilverlight = PtHelpers.IsProjectSilverlight(PtHelpers.GetProjectTypeGuids(TargetProject).Split(';'));
-					remoteResponse = remoteWorker.GetClassEntityFromUserSelectedClass(assemblyPath, isSilverlight, NameOfSourceCommand, GetProjectReferences(TargetProject));
+					remoteResponse = remoteWorker.GetClassEntityFromUserSelectedClass(assemblyPath, isSilverlight, GetProjectReferences(TargetProject));
 
 					if (remoteResponse.ResponseStatus != ResponseStatus.Success)
 					{
 						UIUtilities.ShowExceptionMessage("Unable to Reflect Type", "The following exception was returned. " + remoteResponse.CustomMessageAndException, string.Empty, remoteResponse.Exception.ToString());
+					}
+					else if (remoteResponse.CustomMessage.IsNotNullOrEmpty())
+					{
+						UIUtilities.ShowInformationMessage("Reflection Error", string.Format("Unable to reflect the following:\r\n\r\n{0}\r\nAt least one other assembly however successfully reflected.", remoteResponse.CustomMessage));
 					}
 				}
 				else

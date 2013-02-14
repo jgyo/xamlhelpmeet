@@ -34,8 +34,7 @@ namespace XamlHelpmeet.ReflectionLoader
 			return string.Empty;
 		}
 
-		// BMK Clean up parameters when finished
-		public RemoteResponse<AssembliesNamespacesClasses> GetClassEntityFromUserSelectedClass(string assemblyPath, bool isSilverlight, string NameOfSourceCommand, List<string> references)
+		public RemoteResponse<AssembliesNamespacesClasses> GetClassEntityFromUserSelectedClass(string assemblyPath, bool isSilverlight, List<string> references)
 		{
 			var ancs = new AssembliesNamespacesClasses();
 			var targetProjectPath = Path.GetDirectoryName(assemblyPath);
@@ -65,18 +64,25 @@ namespace XamlHelpmeet.ReflectionLoader
 					assembliesToLoad.Add(name.ToLower(), null);
 			}
 
+			string failedAssemblies = string.Empty;
+			var status = ResponseStatus.Failed;
 			foreach (string assemblyToLoadPath in assembliesToLoad.Keys)
 			{
 				targetAssemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyToLoadPath);
 
 				LoadAssemblyClasses(targetAssemblyDefinition, isSilverlight, ancs, out ex, assembliesToLoad);
 
-				if (ex != null)
+				if (ex == null)
 				{
-					return new RemoteResponse<AssembliesNamespacesClasses>(null, ResponseStatus.Exception, ex, String.Format("Unable to load types from target assembly: {0}", targetAssemblyDefinition.Name));
+					status = ResponseStatus.Success;
+					continue;
 				}
+
+				failedAssemblies += String.Format("{0}{1}", targetAssemblyDefinition.Name, Environment.NewLine);
+				// return new RemoteResponse<AssembliesNamespacesClasses>(null, ResponseStatus.Exception, ex, String.Format("Unable to load types from target assembly: {0}", targetAssemblyDefinition.Name));
+
 			}
-			return new RemoteResponse<AssembliesNamespacesClasses>(ancs, ResponseStatus.Success, null, null);
+			return new RemoteResponse<AssembliesNamespacesClasses>(ancs, status, failedAssemblies);
 		}
 
 		private bool CanWrite(PropertyDefinition Property)

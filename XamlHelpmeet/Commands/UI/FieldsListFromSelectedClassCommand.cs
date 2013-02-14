@@ -71,14 +71,9 @@ namespace XamlHelpmeet.Commands.UI
         /// <seealso cref="M:XamlHelpmeet.Commands.CommandBase.GetStatus()"/>
         public override vsCommandStatus GetStatus()
         {
-            // This will add vsCommandStatusEnabled to vsCommandStatusSupported,
-            // if IsTextSelected() returns true. Otherwise or'ing with
-            // vsCommandStatusUnsupported leaves vsCommandStatusSupported
-            // unchanged.
+            // This command is supported and always enabled.
             return vsCommandStatus.vsCommandStatusSupported |
-                (IsTextSelected() ?
-                vsCommandStatus.vsCommandStatusEnabled :
-                vsCommandStatus.vsCommandStatusUnsupported);
+                vsCommandStatus.vsCommandStatusEnabled;
         }
 
         #endregion

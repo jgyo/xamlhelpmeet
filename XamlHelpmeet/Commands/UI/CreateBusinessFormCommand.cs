@@ -77,7 +77,9 @@ namespace XamlHelpmeet.Commands.UI
 		/// </returns>
 		public override vsCommandStatus GetStatus()
 		{
-			return vsCommandStatus.vsCommandStatusSupported;
+			// This command is supported and always enabled.
+			return vsCommandStatus.vsCommandStatusSupported |
+				vsCommandStatus.vsCommandStatusEnabled;
 		}
 
 		#endregion

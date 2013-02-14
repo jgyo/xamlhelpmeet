@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using XamlHelpmeet;
 using XamlHelpmeet.Extentions;
 
 namespace XamlHelpmeet.Model
@@ -26,16 +25,23 @@ namespace XamlHelpmeet.Model
 		/// <param name="Ex">
 		/// 	The exception.
 		/// </param>
-		/// <param name="customMessage">
+		/// <param name="CustomMessage">
 		/// 	A custom message describing the response.
 		/// </param>
 
-		public RemoteResponse(T Result, ResponseStatus Status, Exception Ex, string customMessage)
+		public RemoteResponse(T Result, ResponseStatus Status, Exception Ex, string CustomMessage)
 		{
 			_result = Result;
 			_responseStatus = Status;
 			_exception = Ex;
-			_customMessage = customMessage;
+			_customMessage = CustomMessage;
+		}
+
+		public RemoteResponse(T Result, ResponseStatus Status, string CustomMessage)
+		{
+			_result = Result;
+			_responseStatus = Status;
+			_customMessage = CustomMessage;
 		}
 
 		/// <summary>

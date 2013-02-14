@@ -9,7 +9,7 @@
     <GettingStartedGuide>http://xamlhelpmeet.codeplex.com/wikipage?title=Getting%20Started</GettingStartedGuide>
     <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
     <Icon>Resources\XamlPageControl.ico</Icon>
-    <PreviewImage>1-22-2013 8-06-44 PM.png</PreviewImage>
+    <PreviewImage>XamlHelpmeet.png</PreviewImage>
     <Tags>XAML, Utilties, WPF, Silverlight, Visual Studio 2012</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
