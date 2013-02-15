@@ -16,9 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recorder", "Recorder\Recorder.csproj", "{86CDF6AA-C283-4D84-A321-AABD171AE0D2}"
 EndProject
 Global
-	GlobalSection(CodealikeProperties) = postSolution
-		SolutionGuid = dd6d19f5-97fa-47f6-a5db-00e92c99ff96
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -90,8 +87,8 @@ Global
 		{70DB1DC2-5400-486A-955A-EF5CFB320926}.Release|x86.Build.0 = Release|x86
 		{86CDF6AA-C283-4D84-A321-AABD171AE0D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{86CDF6AA-C283-4D84-A321-AABD171AE0D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86CDF6AA-C283-4D84-A321-AABD171AE0D2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{86CDF6AA-C283-4D84-A321-AABD171AE0D2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{86CDF6AA-C283-4D84-A321-AABD171AE0D2}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{86CDF6AA-C283-4D84-A321-AABD171AE0D2}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{86CDF6AA-C283-4D84-A321-AABD171AE0D2}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{86CDF6AA-C283-4D84-A321-AABD171AE0D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86CDF6AA-C283-4D84-A321-AABD171AE0D2}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -104,5 +101,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .
+	EndGlobalSection
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = dd6d19f5-97fa-47f6-a5db-00e92c99ff96
 	EndGlobalSection
 EndGlobal

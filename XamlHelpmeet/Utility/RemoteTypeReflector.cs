@@ -69,14 +69,44 @@ namespace XamlHelpmeet.Utility
 					ShadowCopyFiles = "True"
 				};
 
+				//++ Secondary Application Domain
+				 
 				_secondaryAppDomain = AppDomain.CreateDomain("SecondaryAppDomain", null, appSetup);
 				AppDomain.CurrentDomain.AssemblyResolve += SecondaryAppDomain_AssemblyResolve;
+
+				//! This creates remoteWorker in a secondary domain, allowing it to run
+				//! in a separate context from the current domain. This separates
+				//! remoteWorker from the rest of the application (VS), so if the
+				//! domain becomes unstable, it can be unloaded without harming the
+				//! current domain.
 				remoteWorker = _secondaryAppDomain.CreateInstanceFromAndUnwrap(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "XamlHelpmeet.ReflectionLoader.dll"), "XamlHelpmeet.ReflectionLoader.RemoteWorker") as RemoteWorker;
+
+				//+ remoteWorker inherits a MarshalByRefObject. This
+				//+ enables access to objects returned by its
+				//+ methods across domains.
 
 				if (remoteWorker != null)
 				{
 					var isSilverlight = PtHelpers.IsProjectSilverlight(PtHelpers.GetProjectTypeGuids(TargetProject).Split(';'));
-					// BMK Reflection Code
+					
+					// remoteResponse is a helper class that is serialized so it can
+					// wrap objects returned from a secondary (i.e., remote) application
+					// domain.
+					
+					// A problem exists in this call when an object is returned from
+					// the secondary domain that is of a different version than the
+					// same object in the current domain. When that happens an
+					// InvalidCastException is thrown, and remoteResponse will be
+					// null. I think this may occur when XHM is used on its own
+					// assemblies, if the assemblies have been recompiled since
+					// the operating vsix file was produced. In fact it is likely
+					// that the object that is causing the throw is remoteResponse
+					// itself. This might be resolved by freezing the project
+					// that RemoteResponse is in, and compile it only when necessary.
+					// It would make sense also to move the class into the
+					// ReflectionLoader namespace so it is less likely it would
+					// need to be recompiled when other changes are needed in
+					// the solution.
 					remoteResponse = remoteWorker.GetClassEntityFromUserSelectedClass(assemblyPath, isSilverlight, GetProjectReferences(TargetProject));
 
 					if (remoteResponse.ResponseStatus != ResponseStatus.Success)

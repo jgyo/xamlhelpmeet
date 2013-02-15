@@ -2,9 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using XamlHelpmeet.Extentions;
+using XamlHelpmeet.Model;
 
-namespace XamlHelpmeet.Model
+namespace XamlHelpmeet.ReflectionLoader
 {
+	/**=========================================================================
+	 * <summary>
+	 *  Remote response.
+	 * </summary>
+	 * <remarks>
+	 *  This is used to carry a response from one application domain to another
+	 *  in order to reflect the properites of an assembly.
+	 * </remarks>
+	 * <typeparam name="T">	Generic type parameter.</typeparam>
+	 *-----------------------------------------------------------------------**/
+
 	[Serializable]
 	public class RemoteResponse<T>
 	{

@@ -41,11 +41,11 @@ namespace XamlHelpmeet
     {
         #region Fields
 
-        private List<CommandBase> _commandsList;
+		private readonly List<CommandBase> _commandsList;
         private DTE _dte;
         private Events _events;
-        private CommandEvents _fileSaveAll;
-        private CommandEvents _fileSaveSelectedItems;
+        //private CommandEvents _fileSaveAll;
+        //private CommandEvents _fileSaveSelectedItems;
         private OleMenuCommandService _mcs;
         private IVsUIShell _uiShell;
 
@@ -60,9 +60,6 @@ namespace XamlHelpmeet
         /// </summary>
         public XamlHelpmeetPackage()
         {
-#if DEBUG
-            YoderTools.Recorder.Instance.SetPath(@"C:\Users\Yoder\Desktop");
-#endif
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this));
             _commandsList = new List<CommandBase>();
         }
@@ -248,20 +245,6 @@ namespace XamlHelpmeet
         }
 
         #endregion Menu
-
-        private void OnDisconnection()
-        {
-            // this removes or deletes menus in the reverse order they were added.
-
-            foreach (var command in CommandsList)
-            {
-                _mcs.RemoveCommand(command.MenuCommand);
-                command.Dispose();
-            }
-
-            CommandsList.Clear();
-            _commandsList = null;
-        }
 
         #endregion Package Members
     }

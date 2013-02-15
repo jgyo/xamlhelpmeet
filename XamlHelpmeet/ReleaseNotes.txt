@@ -1,4 +1,4 @@
-﻿RELEASE NOTES FOR XAML HELPMEET 0.1 Alpha
+﻿RELEASE NOTES FOR XAML HELPMEET 0.3 Alpha
 Copyright (c) Gil Yoder 2013
 
 This software is an early alpha version and likely contains many
