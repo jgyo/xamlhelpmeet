@@ -229,6 +229,7 @@ namespace XamlHelpmeet.Commands
                     {
                         ht.Add(nameSpace, nameSpace);
                         namespaceManager.AddNamespace(nameSpace, String.Format(CultureInfo.InvariantCulture, "urn:{0}", nameSpace));
+						addedNamespaces.Add(String.Format("xmlns:{0}=\"urn:{0}\"", nameSpace));
                     }
 
                     // Shifflett's code had a "Continue Do" here, but C# does not
