@@ -14,6 +14,7 @@ using XamlHelpmeet.UI;
 using System.Xml.Schema;
 using XamlHelpmeet.UI.GridColumnAndRowEditor;
 using System.ComponentModel.Design;
+using XamlHelpmeet.Utility;
 
 namespace XamlHelpmeet.Commands.UI
 {
@@ -94,9 +95,12 @@ namespace XamlHelpmeet.Commands.UI
 				}
 				var selectedCodeBlock = Application.ActiveDocument.Selection as TextSelection;
 				var XAML = selectedCodeBlock.Text.Trim(WhiteSpaceCharacters);
-				if (!XAML.StartsWith("<Grid", StringComparison.InvariantCultureIgnoreCase) || !XAML.EndsWith("</Grid>", StringComparison.InvariantCultureIgnoreCase))
+				
+				// Modified to beaf up the selection test. Old test just insured that the selection began with a starting
+				// grid tag, and ended with an ending grid tag, whether or not they belonged to the same element.
+				if (XAML.IsCompleteControl("Grid")==false)
 				{
-					UIUtilities.ShowExceptionMessage("You must select a grid", "Your selection must begin and end with Grid tags.");
+					UIUtilities.ShowExceptionMessage("You must select a grid", "Your selection must begin and end with both Grid tags.");
 					return;
 				}
 				var nameTable = new NameTable();

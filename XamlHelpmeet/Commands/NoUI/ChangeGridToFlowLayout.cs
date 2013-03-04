@@ -11,6 +11,7 @@ using EnvDTE;
 using System.Windows;
 using XamlHelpmeet.UI.Utilities;
 using System.ComponentModel.Design;
+using XamlHelpmeet.Utility;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
@@ -61,6 +62,11 @@ namespace XamlHelpmeet.Commands.NoUI
 				{
 					var selectedCodeBlock = Application.ActiveDocument.Selection as TextSelection;
 					var sb = new StringBuilder(selectedCodeBlock.Text.Trim(WhiteSpaceCharacters));
+					if (sb.ToString().IsCompleteControl() == false)
+					{
+						UIUtilities.ShowExceptionMessage("You must select a control", "Your selection must begin and end with both control tags.");
+						return;
+					}
 					StripUnwantedProperty("Margin", sb);
 					StripUnwantedProperty("MinHeight", sb);
 					StripUnwantedProperty("MinWidth", sb);

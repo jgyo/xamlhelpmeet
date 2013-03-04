@@ -187,7 +187,9 @@
     <Compile Include="Commands\NoUI\GroupIntoUniformGrid.cs" />
     <Compile Include="Commands\NoUI\GroupIntoViewBox.cs" />
     <Compile Include="Commands\NoUI\GroupIntoWrapPanel.cs" />
+    <Compile Include="Commands\NoUI\NarrowSelection.cs" />
     <Compile Include="Commands\NoUI\RemoveMarginsCommand.cs" />
+    <Compile Include="Commands\NoUI\WiddenSelection.cs" />
     <Compile Include="Commands\UI\AboutCommand.cs" />
     <Compile Include="Commands\UI\ControlDefaultsCommand.cs" />
     <Compile Include="Commands\UI\CreateBusinessFormCommand.cs" />
@@ -207,6 +209,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Utility\XmlHelpers.cs" />
     <Compile Include="XamlHelpmeetPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

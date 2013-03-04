@@ -9,6 +9,8 @@ using EnvDTE;
 using XamlHelpmeet.UI.Utilities;
 using System.Globalization;
 using System.ComponentModel.Design;
+using XamlHelpmeet.Utility;
+using System.Text;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
@@ -59,6 +61,13 @@ namespace XamlHelpmeet.Commands.NoUI
 		{
 			try
 			{
+				var selectedCodeBlock = Application.ActiveDocument.Selection as TextSelection;
+				var sb = new StringBuilder(selectedCodeBlock.Text.Trim(WhiteSpaceCharacters));
+				if (sb.ToString().IsCompleteControl() == false)
+				{
+					UIUtilities.ShowExceptionMessage("You must select a control", "Your selection must begin and end with both control tags.");
+					return;
+				}
 				GroupInto("<Border>", "</Border>");
 			}
 			catch (Exception ex)
