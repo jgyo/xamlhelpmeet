@@ -10,6 +10,7 @@ using EnvDTE80;
 using EnvDTE;
 using XamlHelpmeet.UI.Utilities;
 using System.ComponentModel.Design;
+using XamlHelpmeet.Utility;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
@@ -56,6 +57,13 @@ namespace XamlHelpmeet.Commands.NoUI
 		{
 			try
 			{
+				var selectedCodeBlock = Application.ActiveDocument.Selection as TextSelection;
+				var sb = new StringBuilder(selectedCodeBlock.Text.Trim(WhiteSpaceCharacters));
+				if (sb.ToString().AreAllRootTagsClosed() == false)
+				{
+					UIUtilities.ShowExceptionMessage("Invalid Selection", "Your selection must include complete controls with their opening and ending nodes.");
+					return;
+				}
 				GroupInto("<Border>\r\n<Grid>\r\n", "</Grid>\r\n</Border>\r\n");
 			}
 			catch (Exception ex)
