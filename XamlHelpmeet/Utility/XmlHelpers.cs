@@ -1,336 +1,340 @@
-﻿using System;
+﻿// <copyright file="XmlHelpers.cs" company="Gil Yoder">
+// Copyright (c) 2013 Gil Yoder. All rights reserved.
+// </copyright>
+// <author>Gil Yoder</author>
+// <date>3/7/2013</date>
+// <summary>Implements the xml helpers class</summary>
+using System;
 using System.Text.RegularExpressions;
+using EnvDTE;
+using XamlHelpmeet.Extensions;
+using XamlHelpmeet.UI.Utilities;
 
 namespace XamlHelpmeet.Utility
 {
-	public static class XmlHelpers
-	{
-		/// <summary>
-		///  Regular expression built for C# on: Sun, Mar 3, 2013, 03:59:31 PM
-		///  Using Expresso Version: 3.0.3634, http://www.ultrapico.com.
-		///  Gets a list of Tag names from a Xml string.
-		/// </summary>
-		public static Regex TagNameRegex = new Regex(
-			  string.Format(STARTTAG_PATTERN, TAGNAMECHARS_PATTERN),
-			RegexOptions.IgnoreCase
-			| RegexOptions.Multiline
-			| RegexOptions.Singleline
-			| RegexOptions.CultureInvariant
-			| RegexOptions.IgnorePatternWhitespace
-			);
+    /// <summary>
+    ///     Xml helpers.
+    /// </summary>
+    public static class XmlHelpers
+    {
+        private static string _documentText;
+        private static XamlNode _rootNode;
 
-		private const string ENDTAG_PATTERN = @"</{0}>|<{0}(?:[\s/])[^>]*?/>";
-		private const string STARTTAG_PATTERN = @"<(?<TagName>{0})[\s>]";
-		private const string TAGNAMECHARS_PATTERN = @"[\w:\.]+?";
+        #region Regular Expression Public Constants
 
-		/// <summary>
-		/// 	A string extension method that determine if all root tags are
-		/// 	closed.
-		/// </summary>
-		/// <param name="target">
-		/// 	The target to act on.
-		/// </param>
-		/// <returns>
-		/// 	true if all root tags are closed, otherwise false.
-		/// </returns>
-		public static bool AreAllRootTagsClosed(this string target)
-		{
-			int targetIndex = 0;
-			while (targetIndex < target.Length)
-			{
-				var endOfNode = target.Substring(targetIndex).FindEndOfNode();
-				if (endOfNode == -1)
-					return false;
-				if (endOfNode == 0)
-					return true;
-				targetIndex += endOfNode;
-			}
-			return true;
-		}
+        /// <summary>
+        ///     A pattern specifying an attribute.
+        /// </summary>
+        public const string ATTRIBUTE_PATTERN = @"(?:\s+(?<Attribute>(?<AttribName>\w+?(?::\w+?)?)=""(?<AttribValue>.*?)""))";
 
-		/// <summary>
-		/// 	A string extension method that searches for the first end of node of
-		/// 	the first node. If no new starting or ending nodes are found, this
-		/// 	method returns 0. If a starting node is found, but the ending node is
-		/// 	not found, or if an ending node is found before the first starting
-		/// 	node, -1 is returned. Otherwise the index to the character following
-		/// 	the end tag is returned.
-		/// </summary>
-		/// <param name="target">
-		/// 	The target to act on.
-		/// </param>
-		/// <returns>
-		/// 	The found end of node.
-		/// </returns>
-		public static int FindEndOfNode(this string target)
-		{
-			var firstCloseTagIndex = target.IndexOf("</");
+        /// <summary>
+        ///     A pattern specifying a comment.
+        /// </summary>
+        public const string COMMENT_PATTERN = @"<!--
+\s*?
+(?<Comment>\b[\w\s[-\]\\.!?""',:/|[}{()+=*&^%$#@!~`]*?)
+\s*?
+-->";
 
-			// If no start and end tags....
-			if (TagNameRegex.IsMatch(target) == false && firstCloseTagIndex == -1)
-				return 0;
+        /// <summary>
+        ///     A pattern specifying an end tag.
+        /// </summary>
+        public const string ENDTAG_PATTERN = @"</(?<EndTagName>\w+?(?::\w+?)?(?:\.\w+?)*?)
+(?:\s+(?:\w+?(?::\w+?)?=""[^><]*?""))*
+\s*?>";
 
-			// If there are close tags without open tags....
-			if (TagNameRegex.IsMatch(target) == false)
-				return -1;
+        /// <summary>
+        ///     A pattern specifying an start tag.
+        /// </summary>
+        public const string STARTTAG_PATTERN = @"<(?<StartTagName>[\w:.]+?)(?=[\s/>])
+(?:\s+(?<AttribName>[\w\.]+?(?::\w+?)?="".*?""))*
+\s*?/?>";
 
-			// Get the first tagname found.
-			var tagName = TagNameRegex.Match(target).Groups["TagName"].Captures[0].Value;
+        /// <summary>
+        ///     A pattern specifying tagnamechars.
+        /// </summary>
+        public const string TAGNAMECHARS_PATTERN = @"[\w:\.]+?";
 
-			var startRegex = GetStartTagRegex(tagName);
-			var startMatches = startRegex.Matches(target);
+        /// <summary>
+        ///     A pattern specifying xml comments.
+        /// </summary>
+        public const string XMLCOMMENTS_PATTERN = @"<!--
+\s*?
+(?<Comment>\b[\w\s[-\]\\.!?""',:/|[}{()+=*&^%$#@!~`]*?)
+\s*?
+-->";
 
-			// if first close tag comes before first open tag....
-			if (startMatches[0].Captures[0].Index > firstCloseTagIndex)
-				return -1;
+        #endregion
 
-			var endRegex = GetEndTagRegex(tagName);
-			var endMatches = endRegex.Matches(target);
+        /// <summary>
+        ///     A TextSelection extension method that determine if we are siblings
+        ///     selected.
+        /// </summary>
+        /// <param name="selection">
+        ///     The target to act on.
+        /// </param>
+        /// <returns>
+        ///     true if siblings selected, otherwise false.
+        /// </returns>
+        public static bool AreSiblingsSelected(this TextSelection selection)
+        {
+            var ep = GetEditorPoints(selection);
+            if (ep.IsInvalid)
+                return false;
+            //ep.RestoreSelectedText(selection);
+            var firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(ep.TopPoint - 1, ep.BottomPoint - 1);
+            return firstAndLast.Item1.Parent == firstAndLast.Item2.Parent;
+        }
 
-			// Find the end tag for the first open tag.
-			var startsIndex = -1;
-			var stopsIndex = 0;
-			var depth = 0;
-			int startsCharIndex;
+        /// <summary>
+        ///     A TextSelection extension method that queries if 'selection' is node
+        ///     selected.
+        /// </summary>
+        /// <param name="selection">
+        ///     The target to act on.
+        /// </param>
+        /// <param name="name">
+        ///     (optional) the name.
+        /// </param>
+        /// <returns>
+        ///     true if node selected, otherwise false.
+        /// </returns>
+        public static bool IsNodeSelected(this TextSelection selection, string name = "")
+        {
+            var ep = GetEditorPoints(selection);
+            if (ep.IsInvalid)
+                return false;
+            ep.RestoreSelectedText(selection);
+            var firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(ep.TopPoint - 1, ep.BottomPoint - 1);
+            if (firstAndLast.Item1 != firstAndLast.Item2)
+                return false;
+            if (name == string.Empty)
+                return true;
+            return Regex.IsMatch(selection.Text, string.Format(@"<(?<StartTagName>{0})(?=[\s/>])", name));
+        }
 
-			while (stopsIndex < endMatches.Count)
-			{
-				startsIndex++;
-				if (startsIndex > startMatches.Count)
-					return -1;
-				if (startsIndex < startMatches.Count)
-					startsCharIndex = startMatches[startsIndex].Captures[0].Index;
-				else
-					// All the remaining end tags follow the last start tag.
-					// This will cause the end tags to be exhausted below.
-					startsCharIndex = target.Length;
+        /// <summary>
+        ///     A TextSelection extension method that expand selection.
+        /// </summary>
+        /// <param name="selection">
+        ///     The target to act on.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
+        public static WiddenSelectionResult ExpandSelection(this TextSelection selection)
+        {
+            var ep = selection.GetEditorPoints();
 
-				var stopsCharIndex = endMatches[stopsIndex].Captures[0].Index;
-				if (startsCharIndex <= stopsCharIndex)
-				{
-					// increase depth for new starting node if before next
-					// closing node. Otherwise delay this increment until after
-					// the closing node logic.
-					depth++;
-					if (startsCharIndex < stopsCharIndex)
-						// restart loop if current node is not self closing.
-						continue;
-				}
-				do
-				{
-					// To get here stopsCharIndex <= startsCharIndex
-					depth--;	// decrease depth for each end node
-					if (depth == 0)
-					{
-						// Found the last node! Calculate the result and leave.
-						var lastAngle = target.IndexOf('>', stopsCharIndex);
-						return lastAngle + 1;
-					}
+            // If nothing is selected, select the closest node.
+            if (ep.IsEmpty)
+            {
+                selection.ResetSelection(ep);
+                if (selection.SelectNode())
+                {
+                    return WiddenSelectionResult.Success;
+                }
+                return WiddenSelectionResult.NodeSelectError;
+            }
+            // If a node or nodes are selected, select the parent.
+            if (selection.IsNodeSelected() || selection.AreSiblingsSelected())
+            {
+                if (selection.SelectParent())
+                    return WiddenSelectionResult.Success;
+                return WiddenSelectionResult.ParentSelectError;
+            }
+            return WiddenSelectionResult.LogicError;
+        }
 
-					if (startsCharIndex != target.Length)
-						// Catch up for last start node skipped above.
-						depth++;
+        /// <summary>
+        ///     A TextSelection extension method that select parent.
+        /// </summary>
+        /// <param name="selection">
+        ///     The target to act on.
+        /// </param>
+        /// <returns>
+        ///     true if it succeeds, otherwise false.
+        /// </returns>
+        public static bool SelectParent(this TextSelection selection)
+        {
+            var ep = selection.GetEditorPoints();
+            var nodes = _rootNode.GetSelectedNodes(ep);
+            if (nodes == null || nodes == null)
+                return false;
+            var parent = nodes[0].Parent;
+            selection.SetSelection(parent.BottomPoint + 1, parent.TopPoint + 1);
+            return true;
+        }
 
-					stopsIndex++;
-					stopsCharIndex = endMatches[stopsIndex].Captures[0].Index;
+        /// <summary>
+        ///     A TextSelection extension method that contract selection.
+        /// </summary>
+        /// <param name="selection">
+        ///     The target to act on.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
+        public static NarrowSelectionResult ContractSelection(this TextSelection selection)
+        {
+            if (selection.IsEmpty)
+                return NarrowSelectionResult.SelectionIsEmpty;
 
-					// do this loop for each closing node before the next
-					// opening node.
-				} while (stopsCharIndex <= startsCharIndex);
-			}
+            //! If the selection begins or ends other than at the beginning and
+            //! ending of a node, narrow the selection to include only the node.
+            //
+            //! If the selection begins and ends at the ends of a node, narrow
+            //! the selection by removing the node tags from the selection.
+            //
+            //! If neither of the above, report a failure.
 
-			// Didn't find the last node if we are here.
-			return -1;
-		}
+            // Get the original end points of the selection
+            var origEndPoints = GetEditorPoints(selection);
 
-		/// <summary>
-		/// 	A string extension method that searches for the first end of node
-		/// 	of the first node following the start index. If no new starting
-		/// 	or ending nodes are found, this method returns 0. If a starting
-		/// 	node is found, but the ending node is not found, or if an
-		/// 	ending node is found before the first starting node, -1 is
-		/// 	returned. Otherwise the index to the character following the
-		/// 	end tag is returned.
-		/// </summary>
-		/// <param name="target">
-		/// 	The target to act on.
-		/// </param>
-		/// <param name="start">
-		/// 	The start.
-		/// </param>
-		/// <returns>
-		/// 	The found end of node.
-		/// </returns>
-		public static int FindEndOfNode(this string target, int start)
-		{
-			var tempResult = target.Substring(start).FindEndOfNode();
-			return tempResult < 1 ? tempResult : tempResult + start;
-		}
+            // Get the first and last selected nodes.
+            var firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(origEndPoints.TopPoint - 1, origEndPoints.BottomPoint - 1);
 
-		/// <summary>
-		/// 	A string extension method that searches for the first end of node
-		/// 	named by tagName. Returns the index to the character following the
-		/// 	tag, if the node is found. Otherwise -1 is returned.
-		/// </summary>
-		/// <param name="target">
-		/// 	The target to act on.
-		/// </param>
-		/// <param name="tagName">
-		/// 	Name of the tag.
-		/// </param>
-		/// <returns>
-		/// 	The found end of node.
-		/// </returns>
-		public static int FindEndOfNode(this string target, string tagName)
-		{
-			var startRegex = GetStartTagRegex(tagName);
-			if (!startRegex.IsMatch(target))
-				return -1;
-			var match = startRegex.Match(target);
-			var startIndex = match.Captures[0].Index;
-			var tempResult = target.Substring(startIndex).FindEndOfNode();
-			return tempResult == -1 ? -1 : tempResult + startIndex;
-		}
+            //+ Case: No nodes are returned
+            //  Means that the selection nodes were not within one parent
+            if (firstAndLast == null)
+                return NarrowSelectionResult.InconsistentSelectionEnds;
 
-		/// <summary>
-		/// 	A string extension method that searches for the first end of
-		/// 	node named by tagName. Returns the index to the character
-		/// 	following the tag, if the node is found. Otherwise -1 is
-		/// 	returned.
-		/// </summary>
-		/// <param name="target">
-		/// 	The target to act on.
-		/// </param>
-		/// <param name="tagName">
-		/// 	Name of the tag.
-		/// </param>
-		/// <param name="start">
-		/// 	The start.
-		/// </param>
-		/// <returns>
-		/// 	The found end of node.
-		/// </returns>
-		public static int FindEndOfNode(this string target, string tagName, int start)
-		{
-			var tempResult = target.Substring(start).FindEndOfNode(tagName);
-			return tempResult == -1 ? -1 : tempResult + start;
-		}
+            //+ Case: one node is returned.
+            if (firstAndLast.Item1 == firstAndLast.Item2)
+            {
+                if (firstAndLast.Item1.IsNodeWithin(origEndPoints.TopPoint - 1, origEndPoints.BottomPoint - 1) && !firstAndLast.Item1.IsSelfClosing)
+                {
+                    var contentEndPoints = firstAndLast.Item1.GetContentEndPoints();
+                    contentEndPoints.RestoreSelectedText(selection);
+                }
+                else
+                {
+                    selection.MoveToAbsoluteOffset(selection.ActivePoint.AbsoluteCharOffset);
+                }
+                return NarrowSelectionResult.Success;
+            }
 
-		/// <summary>
-		/// 	A string extension method that queries if 'target' is complete
-		/// 	control.
-		/// </summary>
-		/// <param name="target">
-		/// 	The target to act on.
-		/// </param>
-		/// <returns>
-		/// 	true if complete control, otherwise false.
-		/// </returns>
-		public static bool IsCompleteControl(this string target)
-		{
-			if (TagNameRegex.IsMatch(target) == false)
-				return false;
+            //+ Case: multiple nodes are selected within one parent.
 
-			// Get the first tagname found.
-			var tagName = TagNameRegex.Match(target).Groups["TagName"].Captures[0].Value;
+            // if we have more than one node, we narrow the selection by removing
+            // the node farthest away from the anchor point from the selection.
 
-			return target.IsCompleteControl(tagName);
-		}
+            int top;
+            int bottom;
+            if (selection.IsActiveEndGreater)
+            {
+                // remove the top node from the selection.
+                // +1 to point beyond the last character.
+                // +1 to change from 0- to 1-based offset.
+                top = firstAndLast.Item1.BottomPoint + 2;
+                bottom = firstAndLast.Item2.BottomPoint + 2;
+            }
+            else
+            {
+                // remove the bottom node from the selection.
+                // +1 to change from 0- to 1-based offset.
+                top = firstAndLast.Item1.TopPoint + 1;
+                bottom = firstAndLast.Item2.TopPoint + 1;
+            }
+            if (selection.IsActiveEndGreater)
+            {
+                selection.MoveToAbsoluteOffset(top);
+                selection.MoveToAbsoluteOffset(bottom, true);
+            }
+            else
+            {
+                selection.MoveToAbsoluteOffset(bottom);
+                selection.MoveToAbsoluteOffset(top, true);
+            }
+            selection.Trim();
+            return NarrowSelectionResult.Success;
+        }
 
-		/// <summary>
-		/// 	A string extension method that queries if 'target' is complete
-		/// 	control.
-		/// </summary>
-		/// <param name="target">
-		/// 	The target to act on.
-		/// </param>
-		/// <param name="tagName">
-		/// 	Name of the tag.
-		/// </param>
-		/// <returns>
-		/// 	true if complete control, otherwise false.
-		/// </returns>
-		public static bool IsCompleteControl(this string target, string tagName)
-		{
-			var endTagRegex = RegexFactory(ENDTAG_PATTERN, tagName);
-			var startTagRegex = RegexFactory(STARTTAG_PATTERN, tagName);
+        /// <summary>
+        ///     A TextSelection extension method that selects a single node.
+        /// </summary>
+        /// <param name="selection">
+        ///     The target to act on.
+        /// </param>
+        /// <returns>
+        ///     true if it succeeds, otherwise false.
+        /// </returns>
+        public static bool SelectNode(this TextSelection selection)
+        {
+            // Works only when the selected text is empty.
+            if (!selection.IsEmpty)
+                return false;
 
-			//if(target.EndsWith(tagNamePatternStop) ==false)
-			//	return false;
+            // This has to be done here primarily to prime the data
+            // needed by called methods. Othwerwise we could just
+            // reference the offsets directly.
+            var ep = GetEditorPoints(selection);
+            var node = _rootNode.GetNodeWithOffset(ep.ActivePoint - 1);
+            if (node == null)
+            {
+                return false;
+            }
+            selection.SetSelection(node.BottomPoint + 1, node.TopPoint + 1);
+            return true;
+        }
 
-			var starts = startTagRegex.Matches(target);
-			var stops = endTagRegex.Matches(target);
-			if (starts.Count != stops.Count)
-				return false;
+        /// <summary>
+        ///     A TextSelection extension method that selects one or more nodes
+        ///     contained by one parent node.
+        /// </summary>
+        /// <param name="selection">
+        ///     The target to act on.
+        /// </param>
+        /// <returns>
+        ///     true if it succeeds, otherwise false.
+        /// </returns>
+        public static bool SelectNodes(this TextSelection selection)
+        {
+            var ep = GetEditorPoints(selection);
 
-			if (starts[0].Captures[0].Index != 0 || stops[stops.Count - 1].Captures[0].Length + stops[stops.Count - 1].Captures[0].Index != target.Length)
-				return false;
+            // Find the nodes that are within or that contain the ends of the selection.
+            var firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(ep.TopPoint - 1, ep.BottomPoint - 1);
+            // Null is returned if one end of the selection is outside the root node.
+            if (firstAndLast.Item1 == null || firstAndLast.Item2 == null)
+            {
+                // Select the root node.
+                selection.SelectAll();
+                selection.Trim();
+                return true;
+            }
 
-			var startsIndex = -1;
-			var stopsIndex = 0;
-			var depth = 0;
-			int startsCharIndex;
+            // Select the the text for the nodes found above.
+            selection.SetSelection(firstAndLast.Item2.BottomPoint + 1, firstAndLast.Item1.TopPoint + 1);
 
-			while (stopsIndex < stops.Count)
-			{
-				startsIndex++;
-				if (startsIndex > starts.Count)
-					return false;
-				if (startsIndex < starts.Count)
-					startsCharIndex = starts[startsIndex].Captures[0].Index;
-				else
-					startsCharIndex = target.Length;
-				var stopsCharIndex = stops[stopsIndex].Captures[0].Index;
-				if (startsCharIndex <= stopsCharIndex)
-				{
-					depth++;
-					continue;
-				}
-				if (startsCharIndex >= stopsCharIndex)
-				{
-					while (startsCharIndex >= stopsCharIndex)
-					{
-						depth--;
-						stopsIndex++;
-						if (depth == 0)
-							break;
-						if (stopsIndex < stops.Count)
-						{
-							stopsCharIndex = stops[stopsIndex].Captures[0].Index;
-							continue;
-						}
-						if (depth != 0)
-							return false;	// Last stop tag, but still in deep.
-						break;
-					}
-					if (depth == 0 && (stopsIndex < stops.Count || startsIndex < starts.Count))
-						return false;	// Found last tag before end of open tags.
-					if (startsCharIndex < target.Length)
-						depth++;
-				}
-			}
-			return true;
-		}
+            return true;
+        }
 
-		private static Regex GetEndTagRegex(string tagName)
-		{
-			return RegexFactory(ENDTAG_PATTERN, tagName);
-		}
+        private static EditorPoints GetEditorPoints(Tuple<XamlNode, XamlNode> firstAndLast)
+        {
+            var ep = EditorPoints.GetEditorPoints(firstAndLast.Item1.TopPoint + 1,
+                firstAndLast.Item2.BottomPoint + 1, _documentText);
+            return ep;
+        }
 
-		private static Regex GetStartTagRegex(string tagName)
-		{
-			return RegexFactory(STARTTAG_PATTERN, tagName);
-		}
 
-		private static Regex RegexFactory(string regexPattern, string tagName)
-		{
-			return new Regex(string.Format(regexPattern, tagName),
-							RegexOptions.IgnoreCase
-						| RegexOptions.Multiline
-						| RegexOptions.Singleline
-						| RegexOptions.CultureInvariant
-						| RegexOptions.IgnorePatternWhitespace
-						);
-		}
-	}
+        private static EditorPoints GetEditorPoints(TextSelection sel, bool handleExceptions = true)
+        {
+
+            var ep = sel.GetEditorPoints();
+            try
+            {
+                if (_documentText == ep.DocumentText)
+                    return ep;
+
+                _documentText = ep.DocumentText;
+                _rootNode = new XamlNode(_documentText);
+                return ep;
+            }
+            catch
+            {
+                ep.RestoreSelectedText(sel);
+                return EditorPoints.GetInvalidEditorPoints();
+            }
+        }
+    }
 }

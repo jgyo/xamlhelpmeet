@@ -1,7 +1,7 @@
 ﻿using Mono.Cecil;
 using VSLangProj;
 
-namespace XamlHelpmeet.Extentions
+namespace XamlHelpmeet.Extensions
 {
 	/// <summary>
 	/// 	Assembly helpers.

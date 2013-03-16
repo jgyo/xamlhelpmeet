@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
-using XamlHelpmeet.Extentions;
+using XamlHelpmeet.Extensions;
+
 
 // namespace: XamlHelpmeet.Model
 //

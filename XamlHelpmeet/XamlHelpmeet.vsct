@@ -55,17 +55,17 @@
 				</Strings>
 			</Menu>
 
-			<!-- In: XamlHelpmeetXamlWindowMenuGroup.  Contains: ToolsMenuGroup. -->
+			<!-- In: XamlHelpmeetXamlWindowSubmenusGroup.  Contains: ToolsMenuGroup. -->
 			<Menu guid="guidXamlHelpmeetCmdSet" id="ToolsMenu" priority="0x0100" type="Menu">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowSubmenusGroup" />
 				<Strings>
 					<ButtonText>Tools</ButtonText>
 				</Strings>
 			</Menu>
 
-			<!-- In: XamlHelpmeetXamlWindowMenuGroup.  Contains: GroupIntoMenuGroup. -->
+			<!-- In: XamlHelpmeetXamlWindowSubmenusGroup.  Contains: GroupIntoMenuGroup. -->
 			<Menu guid="guidXamlHelpmeetCmdSet" id="GroupIntoMenu" priority="0x0100" type="Menu">
-				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" />
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowSubmenusGroup" />
 				<Strings>
 					<ButtonText>Group Into</ButtonText>
 				</Strings>
@@ -184,6 +184,29 @@
 				</Strings>
 			</Button>
 			
+			<!-- New Selection Commands -->
+			<Button guid="guidXamlHelpmeetCmdSet" id="SelectContainingControlCommand" priority="0x130">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowSelectGroup"/>
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Select control</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidXamlHelpmeetCmdSet" id="WiddenSelectionCommand" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowSelectGroup"/>
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Expand selection</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidXamlHelpmeetCmdSet" id="NarrowSelectionCommand" priority="0x120">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowSelectGroup"/>
+				<CommandFlag>TextOnly</CommandFlag>
+				<Strings>
+					<ButtonText>Contract selection</ButtonText>
+				</Strings>
+			</Button>
+
 			<!-- One of the buttons in the Tools menu that is contained in the
 			     Xaml Helpmeet menu for Xaml code. -->
 
@@ -331,13 +354,23 @@
 			<Group guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeWindowMenuGroup" priority="0x000">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetCodeWindowMenu" />
 			</Group>
+			
 			<!-- This group will be added to the xaml window context menu. -->
 			<Group guid="guidXamlHelpmeetCmdSet" id="XamlWindowCtxMenuGroup" priority="0x000">
 				<Parent guid="guidXamlEdGrp" id="IDMX_XAML_SOURCE_XAML" />
 			</Group>
-			<Group guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" priority="0x000">
+      
+			<!-- New group for select commands to nestle into the Xaml menu -->
+			<Group guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowSelectGroup" priority="0x100">
+				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenu"/>
+			</Group>
+			<Group guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenuGroup" priority="0x800">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenu" />
 			</Group>
+      <Group guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowSubmenusGroup" priority="0x900">
+        <Parent guid="guidXamlHelpmeetCmdSet" id="XamlHelpmeetXamlWindowMenu" />
+      </Group>
+      
 			<Group guid="guidXamlHelpmeetCmdSet" id="ToolsMenuGroup" priority="0x000">
 				<Parent guid="guidXamlHelpmeetCmdSet" id="ToolsMenu" />
 			</Group>
@@ -423,7 +456,9 @@
 			<IDSymbol name="XamlHelpmeetCodeWindowMenuGroup"                    value="0x0200" />
 			<IDSymbol name="XamlWindowCtxMenuGroup"                             value="0x0300" />
 			<IDSymbol name="XamlHelpmeetXamlWindowMenuGroup"                    value="0x0400" />
-			<IDSymbol name="ToolsMenuGroup"                                     value="0x0500" />
+      <IDSymbol name="XamlHelpmeetXamlWindowSelectGroup"									value="0x0450" />
+      <IDSymbol name="XamlHelpmeetXamlWindowSubmenusGroup"								value="0x0480" />
+      <IDSymbol name="ToolsMenuGroup"                                     value="0x0500" />
 			<IDSymbol name="GroupIntoMenuGroup"                                 value="0x0600" />
 			<IDSymbol name="GroupIntoBorderMenuGroup"                           value="0x0700" />
 			
@@ -449,6 +484,11 @@
 			<IDSymbol name="RemoveMarginsCommand"                               value="0x04B6" />
 			<IDSymbol name="ChangeGridToFlowLayoutCommand"                      value="0x04B7" />
 			<IDSymbol name="ChainsawDesignerExtraPropertiesCommand"             value="0x04B8" />
+			
+			<!-- XamlHelpmeetXamlWindowSelectGroup -->
+			<IDSymbol name="SelectContainingControlCommand"                     value="0x04D1" />
+			<IDSymbol name="WiddenSelectionCommand"                             value="0x04D2" />
+			<IDSymbol name="NarrowSelectionCommand"                             value="0x04D3" />
 
 			<!-- ToolsMenu in ToolsMenuGroup -->
 			<IDSymbol name="ControlDefaultsCommand"                             value="0x05B1" />

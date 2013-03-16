@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Data;
-using XamlHelpmeet.Extentions;
+ using XamlHelpmeet.Extensions;
 using System.Globalization;
 
 namespace XamlHelpmeet.UI.Converters

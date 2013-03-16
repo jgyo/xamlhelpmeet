@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Xml;
 using XamlHelpmeet.Model;
 using XamlHelpmeet.UI.Commands;
-using XamlHelpmeet.Extentions;
+using XamlHelpmeet.Extensions;
 using XamlHelpmeet.UI.Utilities;
 
 // namespace: XamlHelpmeet.UI.ExtractPropertiesToStyle
@@ -187,6 +187,9 @@ namespace XamlHelpmeet.UI.ExtractPropertiesToStyle
 
 			foreach (XmlAttribute atr in Document.ChildNodes[0].Attributes)
 			{
+				// First IF lists attributes or attribute characteristics that
+				// exist in properties that should not be extracted and placed
+				// in a style.
 				if (atr.Name.Contains(".") ||
 					atr.Name == "Name" ||
 					atr.Name == "x:Name" ||
@@ -194,7 +197,8 @@ namespace XamlHelpmeet.UI.ExtractPropertiesToStyle
 					atr.Name.StartsWith("Command") ||
 					atr.Name.StartsWith("Click"))
 				{
-					// TODO: Developers may add more checks here as desired
+					// Developers may add more checks here as desired, i.e.,
+					// to prevent an extraction.
 				}
 				else if (atr.Name != "Style")
 				{

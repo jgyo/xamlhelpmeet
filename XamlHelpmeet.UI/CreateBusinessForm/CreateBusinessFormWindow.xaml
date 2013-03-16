@@ -8,320 +8,328 @@
         Title="Create Business Form"
         SizeToContent="WidthAndHeight"
         WindowStyle="ToolWindow">
-    <Window.Resources>
-        <Popup x:Key="columnPopUp">
-            <Grid>
-                <Rectangle HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch"
-                           Fill="WhiteSmoke"
-                           Stroke="Black"
-                           StrokeThickness="1" />
-                <Border Margin="10"
-                        VerticalAlignment="Top"
-                        Background="White"
-                        BorderBrush="LightGray"
-                        BorderThickness="1"
-                        CornerRadius="10"
-                        Padding="5">
-                    <StackPanel>
-                        <TextBlock HorizontalAlignment="Center"
-                                   VerticalAlignment="Top"
-                                   FontSize="11"
-                                   Foreground="Gray"><Run Text="Set Column Size" />
-                        </TextBlock>
-                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                            <Button HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    Click="btnPopupColumnAutoSize_Click"
-                                    Content="Auto"
-                                    FontSize="8" />
-                            <Button Margin="5,0,0,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    Click="btnPopupColumnStarSize_Click"
-                                    Content="Star"
-                                    FontSize="8" />
-                            <TextBox Width="45"
-                                     Margin="5,0,0,0"
-                                     VerticalAlignment="Top"
-                                     FontSize="10"
-                                     KeyDown="txtPopupColumnWidth_KeyPress"
-                                     Tag="{Binding Tag,
-                                                   RelativeSource={RelativeSource FindAncestor,
-                                                                                  AncestorType={x:Type Popup}}}"
-                                     ToolTip="Set column width and press ENTER." />
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </Grid>
-        </Popup>
+	<Window.Resources>
+		<Popup x:Key="columnPopUp">
+			<Grid>
+				<Rectangle HorizontalAlignment="Stretch"
+				           VerticalAlignment="Stretch"
+				           Fill="WhiteSmoke"
+				           Stroke="Black"
+				           StrokeThickness="1" />
+				<Border Margin="10"
+				        VerticalAlignment="Top"
+				        Background="White"
+				        BorderBrush="LightGray"
+				        BorderThickness="1"
+				        CornerRadius="10"
+				        Padding="5">
+					<StackPanel>
+						<TextBlock HorizontalAlignment="Center"
+						           VerticalAlignment="Top"
+						           FontSize="11"
+						           Foreground="Gray"><Run Text="Set Column Size" />
+						</TextBlock>
+						<StackPanel Margin="0,8,0,0"
+						            Orientation="Horizontal">
+							<Button HorizontalAlignment="Left"
+							        VerticalAlignment="Top"
+							        Click="btnPopupColumnAutoSize_Click"
+							        Content="Auto"
+							        FontSize="8" />
+							<Button Margin="5,0,0,0"
+							        HorizontalAlignment="Left"
+							        VerticalAlignment="Top"
+							        Click="btnPopupColumnStarSize_Click"
+							        Content="Star"
+							        FontSize="8" />
+							<TextBox Width="45"
+							         Margin="5,0,0,0"
+							         VerticalAlignment="Top"
+							         FontSize="10"
+							         KeyDown="txtPopupColumnWidth_KeyPress"
+							         Tag="{Binding Tag,
+							                       RelativeSource={RelativeSource FindAncestor,
+							                                                      AncestorType={x:Type Popup}}}"
+							         ToolTip="Set column width and press ENTER." />
+						</StackPanel>
+					</StackPanel>
+				</Border>
+			</Grid>
+		</Popup>
 
-        <Popup x:Key="rowPopUp">
+		<Popup x:Key="rowPopUp">
 
-            <Grid>
+			<Grid>
 
-                <Rectangle HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch"
-                           Fill="WhiteSmoke"
-                           Stroke="Black"
-                           StrokeThickness="1" />
+				<Rectangle HorizontalAlignment="Stretch"
+				           VerticalAlignment="Stretch"
+				           Fill="WhiteSmoke"
+				           Stroke="Black"
+				           StrokeThickness="1" />
 
-                <Border Margin="10"
-                        VerticalAlignment="Top"
-                        Background="White"
-                        BorderBrush="LightGray"
-                        BorderThickness="1"
-                        CornerRadius="10"
-                        Padding="5">
-                    <StackPanel>
-                        <TextBlock HorizontalAlignment="Center"
-                                   VerticalAlignment="Top"
-                                   FontSize="11"
-                                   Foreground="Gray"><Run Text="Set Row Size" />
-                        </TextBlock>
-                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                            <Button HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    Click="btnPopupRowAutoSize_Click"
-                                    Content="Auto"
-                                    FontSize="8" />
-                            <Button Margin="5,0,0,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    Click="btnPopupRowStarSize_Click"
-                                    Content="Star"
-                                    FontSize="8" />
-                            <TextBox Width="45"
-                                     Margin="5,0,0,0"
-                                     VerticalAlignment="Top"
-                                     FontSize="10"
-                                     KeyDown="txtPopupRowHeight_KeyPress"
-                                     Tag="{Binding Tag,
-                                                   RelativeSource={RelativeSource FindAncestor,
-                                                                                  AncestorType={x:Type Popup}}}"
-                                     ToolTip="Set row height and press ENTER." />
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </Grid>
-        </Popup>
-    </Window.Resources>
-    <Window.DataContext>
-        <Model:CellContent />
-    </Window.DataContext>
-    <Grid MinWidth="400">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+				<Border Margin="10"
+				        VerticalAlignment="Top"
+				        Background="White"
+				        BorderBrush="LightGray"
+				        BorderThickness="1"
+				        CornerRadius="10"
+				        Padding="5">
+					<StackPanel>
+						<TextBlock HorizontalAlignment="Center"
+						           VerticalAlignment="Top"
+						           FontSize="11"
+						           Foreground="Gray"><Run Text="Set Row Size" />
+						</TextBlock>
+						<StackPanel Margin="0,8,0,0"
+						            Orientation="Horizontal">
+							<Button HorizontalAlignment="Left"
+							        VerticalAlignment="Top"
+							        Click="btnPopupRowAutoSize_Click"
+							        Content="Auto"
+							        FontSize="8" />
+							<Button Margin="5,0,0,0"
+							        HorizontalAlignment="Left"
+							        VerticalAlignment="Top"
+							        Click="btnPopupRowStarSize_Click"
+							        Content="Star"
+							        FontSize="8" />
+							<TextBox Width="45"
+							         Margin="5,0,0,0"
+							         VerticalAlignment="Top"
+							         FontSize="10"
+							         KeyDown="txtPopupRowHeight_KeyPress"
+							         Tag="{Binding Tag,
+							                       RelativeSource={RelativeSource FindAncestor,
+							                                                      AncestorType={x:Type Popup}}}"
+							         ToolTip="Set row height and press ENTER." />
+						</StackPanel>
+					</StackPanel>
+				</Border>
+			</Grid>
+		</Popup>
+	</Window.Resources>
+	<Window.DataContext>
+		<Model:CellContent />
+	</Window.DataContext>
+	<Grid MinWidth="400">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
 
-        <TextBlock x:Name="tbBusinessClassTitle"
-                   Grid.ColumnSpan="2"
-                   Margin="10"
-                   HorizontalAlignment="Center"
-                   FontSize="16"
-                   Text="Create Form" />
+		<TextBlock x:Name="tbBusinessClassTitle"
+		           Grid.ColumnSpan="2"
+		           Margin="10"
+		           HorizontalAlignment="Center"
+		           FontSize="16"
+		           Text="Create Form" />
 
-        <!--  Column Controls Top of Window  -->
-        <StackPanel Grid.Row="1"
-                    Grid.ColumnSpan="2"
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    Orientation="Horizontal">
+		<!--  Column Controls Top of Window  -->
+		<StackPanel Grid.Row="1"
+		            Grid.ColumnSpan="2"
+		            Margin="10"
+		            HorizontalAlignment="Center"
+		            Orientation="Horizontal">
 
-            <Border VerticalAlignment="Top"
-                    BorderBrush="LightGray"
-                    BorderThickness="1"
-                    CornerRadius="10"
-                    Padding="5">
-                <StackPanel>
-                    <TextBlock HorizontalAlignment="Left"
-                               VerticalAlignment="Top"
-                               FontSize="11"
-                               Foreground="Gray"><Run FontWeight="Bold" Text="1." /><Run Text=" Set Number of Columns" />
-                    </TextBlock>
-                    <!--
-                        The NumberOfRows and NumberOfColumns text boxes are bound to DefinedRows
-                        and DefinedColumns, string properties, of this window with values that
-                        parse to one less than the NumberOfRows and NumberOfColumns properties.
-                        Those properties are updated only when a user presses enter within
-                        these text boxes.
-                    -->
-                    <TextBox x:Name="txtNumberOfColumns"
-                             Width="40"
-                             Margin="0,8,0,0"
-                             VerticalAlignment="Top"
-                             DataContext="{Binding ElementName=createBusinessFormWindow}"
-                             FontSize="10"
-                             KeyDown="txtNumberOfRowsOrColumns_KeyPress"
-                             Text="{Binding DefinedColumns}"
-                             ToolTip="Set number of columns and press ENTER." />
-                </StackPanel>
-            </Border>
+			<Border VerticalAlignment="Top"
+			        BorderBrush="LightGray"
+			        BorderThickness="1"
+			        CornerRadius="10"
+			        Padding="5">
+				<StackPanel>
+					<TextBlock HorizontalAlignment="Left"
+					           VerticalAlignment="Top"
+					           FontSize="11"
+					           Foreground="Gray"><Run FontWeight="Bold"
+						     Text="1." /><Run Text=" Set Number of Columns" />
+					</TextBlock>
+					<!--
+						The NumberOfRows and NumberOfColumns text boxes are bound to DefinedRows
+						and DefinedColumns, string properties, of this window with values that
+						parse to one less than the NumberOfRows and NumberOfColumns properties.
+						Those properties are updated only when a user presses enter within
+						these text boxes.
+					-->
+					<TextBox x:Name="txtNumberOfColumns"
+					         Width="40"
+					         Margin="0,8,0,0"
+					         VerticalAlignment="Top"
+					         DataContext="{Binding ElementName=createBusinessFormWindow}"
+					         FontSize="10"
+					         KeyDown="txtNumberOfRowsOrColumns_KeyPress"
+					         Text="{Binding DefinedColumns}"
+					         ToolTip="Set number of columns and press ENTER." />
+				</StackPanel>
+			</Border>
 
-            <Border VerticalAlignment="Top"
-                    BorderBrush="LightGray"
-                    BorderThickness="1"
-                    CornerRadius="10"
-                    Padding="5">
-                <StackPanel>
-                    <TextBlock HorizontalAlignment="Left"
-                               VerticalAlignment="Top"
-                               FontSize="11"
-                               Foreground="Gray"><Run FontWeight="Bold" Text="2." /><Run Text=" Set All Column Sizing" />
-                    </TextBlock>
-                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                        <Button HorizontalAlignment="Left"
-                                VerticalAlignment="Top"
-                                Click="btnAllColumnsAuto_Click"
-                                Content="Auto"
-                                FontSize="8" />
-                        <Button Margin="5,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top"
-                                Click="btnAllColumnsStar_Click"
-                                Content="Star"
-                                FontSize="8" />
-                        <!--
-                            The ColumnSize and RowSize text boxes are bound to the AllColumnSize
-                            and AllRowSize properties of this window. These are string values.
-                            ColumnDefaultSize and RowDefaultSize are updated when the user
-                            presses ENTER, which we catch with the KeyDown event.
-                        -->
-                        <TextBox x:Name="txtColumnSize"
-                                 Width="45"
-                                 Margin="5,0,0,0"
-                                 VerticalAlignment="Top"
-                                 DataContext="{Binding ElementName=createBusinessFormWindow}"
-                                 FontSize="10"
-                                 KeyDown="txtAllColumnsWidth_KeyPress"
-                                 Text="{Binding AllColumnSize}"
-                                 ToolTip="Set column width and press ENTER." />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+			<Border VerticalAlignment="Top"
+			        BorderBrush="LightGray"
+			        BorderThickness="1"
+			        CornerRadius="10"
+			        Padding="5">
+				<StackPanel>
+					<TextBlock HorizontalAlignment="Left"
+					           VerticalAlignment="Top"
+					           FontSize="11"
+					           Foreground="Gray"><Run FontWeight="Bold"
+						     Text="2." /><Run Text=" Set All Column Sizing" />
+					</TextBlock>
+					<StackPanel Margin="0,8,0,0"
+					            Orientation="Horizontal">
+						<Button HorizontalAlignment="Left"
+						        VerticalAlignment="Top"
+						        Click="btnAllColumnsAuto_Click"
+						        Content="Auto"
+						        FontSize="8" />
+						<Button Margin="5,0,0,0"
+						        HorizontalAlignment="Left"
+						        VerticalAlignment="Top"
+						        Click="btnAllColumnsStar_Click"
+						        Content="Star"
+						        FontSize="8" />
+						<!--
+							The ColumnSize and RowSize text boxes are bound to the AllColumnSize
+							and AllRowSize properties of this window. These are string values.
+							ColumnDefaultSize and RowDefaultSize are updated when the user
+							presses ENTER, which we catch with the KeyDown event.
+						-->
+						<TextBox x:Name="txtColumnSize"
+						         Width="45"
+						         Margin="5,0,0,0"
+						         VerticalAlignment="Top"
+						         DataContext="{Binding ElementName=createBusinessFormWindow}"
+						         FontSize="10"
+						         KeyDown="txtAllColumnsWidth_KeyPress"
+						         Text="{Binding AllColumnSize}"
+						         ToolTip="Set column width and press ENTER." />
+					</StackPanel>
+				</StackPanel>
+			</Border>
+		</StackPanel>
 
-        <!--  Number of Rows Control Upper Left  -->
-        <StackPanel Grid.Row="2"
-                    Margin="10"
-                    VerticalAlignment="Top">
+		<!--  Number of Rows Control Upper Left  -->
+		<StackPanel Grid.Row="2"
+		            Margin="10"
+		            VerticalAlignment="Top">
 
-            <Border VerticalAlignment="Top"
-                    BorderBrush="LightGray"
-                    BorderThickness="1"
-                    CornerRadius="10"
-                    Padding="5">
-                <StackPanel>
-                    <TextBlock HorizontalAlignment="Left"
-                               VerticalAlignment="Top"
-                               FontSize="11"
-                               Foreground="Gray"><Run FontWeight="Bold" Text="3." /><Run Text=" Set Number of Rows" />
-                    </TextBlock>
-                    <!--
-                        The NumberOfRows and NumberOfColumns text boxes are bound to DefinedRows
-                        and DefinedColumns, string properties, of this window with values that
-                        parse to one less than the NumberOfRows and NumberOfColumns properties.
-                        Those properties are updated only when a user presses enter within
-                        these text boxes.
-                    -->
-                    <TextBox x:Name="txtNumberOfRows"
-                             Width="40"
-                             Margin="0,8,0,0"
-                             VerticalAlignment="Top"
-                             DataContext="{Binding ElementName=createBusinessFormWindow}"
-                             FontSize="10"
-                             KeyDown="txtNumberOfRowsOrColumns_KeyPress"
-                             Text="{Binding DefinedRows}"
-                             ToolTip="Set number of columns and press ENTER." />
-                </StackPanel>
-            </Border>
+			<Border VerticalAlignment="Top"
+			        BorderBrush="LightGray"
+			        BorderThickness="1"
+			        CornerRadius="10"
+			        Padding="5">
+				<StackPanel>
+					<TextBlock HorizontalAlignment="Left"
+					           VerticalAlignment="Top"
+					           FontSize="11"
+					           Foreground="Gray"><Run FontWeight="Bold"
+						     Text="3." /><Run Text=" Set Number of Rows" />
+					</TextBlock>
+					<!--
+						The NumberOfRows and NumberOfColumns text boxes are bound to DefinedRows
+						and DefinedColumns, string properties, of this window with values that
+						parse to one less than the NumberOfRows and NumberOfColumns properties.
+						Those properties are updated only when a user presses enter within
+						these text boxes.
+					-->
+					<TextBox x:Name="txtNumberOfRows"
+					         Width="40"
+					         Margin="0,8,0,0"
+					         VerticalAlignment="Top"
+					         DataContext="{Binding ElementName=createBusinessFormWindow}"
+					         FontSize="10"
+					         KeyDown="txtNumberOfRowsOrColumns_KeyPress"
+					         Text="{Binding DefinedRows}"
+					         ToolTip="Set number of columns and press ENTER." />
+				</StackPanel>
+			</Border>
 
-            <!--  All Row Sizing Controls Upper Left  -->
-            <Border Margin="0,10,0,0"
-                    VerticalAlignment="Top"
-                    BorderBrush="LightGray"
-                    BorderThickness="1"
-                    CornerRadius="10"
-                    Padding="5">
-                <StackPanel>
-                    <TextBlock HorizontalAlignment="Left"
-                               VerticalAlignment="Top"
-                               FontSize="11"
-                               Foreground="Gray"><Run FontWeight="Bold" Text="4." /><Run Text=" Set All Row Sizing" />
-                    </TextBlock>
-                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                        <Button HorizontalAlignment="Left"
-                                VerticalAlignment="Top"
-                                Click="btnAllRowsAuto_Click"
-                                Content="Auto"
-                                FontSize="8" />
-                        <Button Margin="5,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top"
-                                Click="btnAllRowsStar_Click"
-                                Content="Star"
-                                FontSize="8" />
-                        <!--
-                            The ColumnSize and RowSize text boxes are bound to the AllColumnSize
-                            and AllRowSize properties of this window. These are string values.
-                            ColumnDefaultSize and RowDefaultSize are updated when the user
-                            presses ENTER, which we catch with the KeyDown event.
-                        -->
-                        <TextBox x:Name="txtRowSize"
-                                 Width="45"
-                                 Margin="5,0,0,0"
-                                 VerticalAlignment="Top"
-                                 DataContext="{Binding ElementName=createBusinessFormWindow}"
-                                 FontSize="10"
-                                 KeyDown="txtAllRowsHeight_KeyPress"
-                                 Text="{Binding AllRowSize}"
-                                 ToolTip="Set row height and press ENTER." />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+			<!--  All Row Sizing Controls Upper Left  -->
+			<Border Margin="0,10,0,0"
+			        VerticalAlignment="Top"
+			        BorderBrush="LightGray"
+			        BorderThickness="1"
+			        CornerRadius="10"
+			        Padding="5">
+				<StackPanel>
+					<TextBlock HorizontalAlignment="Left"
+					           VerticalAlignment="Top"
+					           FontSize="11"
+					           Foreground="Gray"><Run FontWeight="Bold"
+						     Text="4." /><Run Text=" Set All Row Sizing" />
+					</TextBlock>
+					<StackPanel Margin="0,8,0,0"
+					            Orientation="Horizontal">
+						<Button HorizontalAlignment="Left"
+						        VerticalAlignment="Top"
+						        Click="btnAllRowsAuto_Click"
+						        Content="Auto"
+						        FontSize="8" />
+						<Button Margin="5,0,0,0"
+						        HorizontalAlignment="Left"
+						        VerticalAlignment="Top"
+						        Click="btnAllRowsStar_Click"
+						        Content="Star"
+						        FontSize="8" />
+						<!--
+							The ColumnSize and RowSize text boxes are bound to the AllColumnSize
+							and AllRowSize properties of this window. These are string values.
+							ColumnDefaultSize and RowDefaultSize are updated when the user
+							presses ENTER, which we catch with the KeyDown event.
+						-->
+						<TextBox x:Name="txtRowSize"
+						         Width="45"
+						         Margin="5,0,0,0"
+						         VerticalAlignment="Top"
+						         DataContext="{Binding ElementName=createBusinessFormWindow}"
+						         FontSize="10"
+						         KeyDown="txtAllRowsHeight_KeyPress"
+						         Text="{Binding AllRowSize}"
+						         ToolTip="Set row height and press ENTER." />
+					</StackPanel>
+				</StackPanel>
+			</Border>
+		</StackPanel>
 
-        <!--
-            This holds the grid that displays the controls representing the user's
-            desired form.
-        -->
-        <ScrollViewer Grid.Row="2"
-                      Grid.Column="1"
-                      Margin="10,10,0,0">
+		<!--
+			This holds the grid that displays the controls representing the user's
+			desired form.
+		-->
+		<ScrollViewer Grid.Row="2"
+		              Grid.Column="1"
+		              Margin="10,10,0,0">
 
-            <Border Margin="10"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    BorderBrush="LightGray"
-                    BorderThickness="1">
+			<Border Margin="10"
+			        HorizontalAlignment="Left"
+			        VerticalAlignment="Top"
+			        BorderBrush="LightGray"
+			        BorderThickness="1">
 
-                <Grid x:Name="gridLayout"
-                      HorizontalAlignment="Left"
-                      VerticalAlignment="Top"
-                      ShowGridLines="True" />
-            </Border>
-        </ScrollViewer>
+				<Grid x:Name="gridLayout"
+				      HorizontalAlignment="Left"
+				      VerticalAlignment="Top"
+				      ShowGridLines="True" />
+			</Border>
+		</ScrollViewer>
 
-        <!--  Buttons at Bottom of Window  -->
-        <StackPanel Grid.Row="3"
-                    Grid.Column="1"
-                    Margin="10"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-            <Button Margin="0,0,10,0"
-                    Click="btnCreate_Click"
-                    Content="Create"
-                    FontSize="10" />
-            <Button Click="btnCancel_Click"
-                    Content="Cancel"
-                    FontSize="10" />
-        </StackPanel>
-    </Grid>
+		<!--  Buttons at Bottom of Window  -->
+		<StackPanel Grid.Row="3"
+		            Grid.Column="1"
+		            Margin="10"
+		            HorizontalAlignment="Right"
+		            Orientation="Horizontal">
+			<Button Margin="0,0,10,0"
+			        Click="btnCreate_Click"
+			        Content="Create"
+			        FontSize="10" />
+			<Button Click="btnCancel_Click"
+			        Content="Cancel"
+			        FontSize="10" />
+		</StackPanel>
+	</Grid>
 </Window>

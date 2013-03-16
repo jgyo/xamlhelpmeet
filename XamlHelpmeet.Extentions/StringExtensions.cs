@@ -1,9 +1,12 @@
-﻿namespace XamlHelpmeet.Extentions
+﻿using System;
+using System.Text;
+
+namespace XamlHelpmeet.Extensions
 {
 	/// <summary>
 	/// 	String extentions.
 	/// </summary>
-	public static class StringExtentions
+	public static class StringExtensions
 	{
 		/// <summary>
 		/// 	A char extension method that queries if a character is letter or digit.

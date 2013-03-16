@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using XamlHelpmeet.Model;
 using XamlHelpmeet.UI.Commands;
-using XamlHelpmeet.Extentions;
+using XamlHelpmeet.Extensions;
 
 namespace XamlHelpmeet.UI.ViewModelCreation
 {
@@ -934,6 +934,7 @@ End Set
 			return sb.ToString();
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2241:Provide correct arguments to formatting methods")]
 		private string GetCSharpINPC()
 		{
 			return String.Format(@"#region INotifyProperty Changed Method

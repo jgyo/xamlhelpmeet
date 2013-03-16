@@ -12,7 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using XamlHelpmeet.Extentions;
+ using XamlHelpmeet.Extensions;
 using XamlHelpmeet.Model;
 using XamlHelpmeet.UI.Editors;
 using XamlHelpmeet.UI.UIControlFactory;

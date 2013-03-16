@@ -39,7 +39,7 @@
                            FontSize="14">
                     <Run x:Name="VersionRun"
                          Text="1.0.0.0" />
-                    <Run Text="Alpha - Check often for updates." />
+                    <Run Text="Beta." />
                 </TextBlock>
             </StackPanel>
             <TextBlock Margin="0,12,5,0"

@@ -19,6 +19,7 @@ namespace XamlHelpmeet.Model
         private bool _isSelected;
         private string _propertyName;
         private string _propertyValue;
+		[NonSerialized]
         private XmlAttribute _xmlAttribute;
 
         #endregion

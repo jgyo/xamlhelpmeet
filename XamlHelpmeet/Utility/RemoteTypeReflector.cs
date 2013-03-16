@@ -9,7 +9,7 @@ using XamlHelpmeet.Model;
 using XamlHelpmeet.ReflectionLoader;
 using XamlHelpmeet.UI.SelectClass;
 using XamlHelpmeet.UI.Utilities;
-using XamlHelpmeet.Extentions;
+ using XamlHelpmeet.Extensions;
 using System.Text;
 
 namespace XamlHelpmeet.Utility
@@ -38,7 +38,7 @@ namespace XamlHelpmeet.Utility
 		/// </returns>
 		public ClassEntity GetClassEntityFromSelectedClass(Project TargetProject, string NameOfSourceCommand)
 		{
-			// Note from Karl Shifflett in original vb code:
+			// Karl Shifflett in original vb code:
 			//
 			// 'TODO karl you left off here.  must ensure that the SL verions is added
 			// 'Dim strSilverlightVersion As String = String.Empty

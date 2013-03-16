@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using XamlHelpmeet.UI.Utilities;
-using XamlHelpmeet.Extentions;
+using XamlHelpmeet.Extensions;
 
 namespace XamlHelpmeet.UI.UIControlFactory
 {

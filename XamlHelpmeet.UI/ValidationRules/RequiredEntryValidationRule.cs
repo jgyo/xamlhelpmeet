@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using XamlHelpmeet.Extentions;
+using XamlHelpmeet.Extensions;
 
 namespace XamlHelpmeet.UI.ValidationRules
 {

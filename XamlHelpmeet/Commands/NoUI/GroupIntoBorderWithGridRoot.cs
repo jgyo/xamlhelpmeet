@@ -58,8 +58,8 @@ namespace XamlHelpmeet.Commands.NoUI
 			try
 			{
 				var selectedCodeBlock = Application.ActiveDocument.Selection as TextSelection;
-				var sb = new StringBuilder(selectedCodeBlock.Text.Trim(WhiteSpaceCharacters));
-				if (sb.ToString().AreAllRootTagsClosed() == false)
+
+				if (selectedCodeBlock.AreSiblingsSelected() == false)
 				{
 					UIUtilities.ShowExceptionMessage("Invalid Selection", "Your selection must include complete controls with their opening and ending nodes.");
 					return;

@@ -12,6 +12,7 @@ using System.Windows;
 using XamlHelpmeet.UI.Utilities;
 using System.ComponentModel.Design;
 using XamlHelpmeet.Utility;
+using XamlHelpmeet.Extensions;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
@@ -62,18 +63,18 @@ namespace XamlHelpmeet.Commands.NoUI
 				{
 					var selectedCodeBlock = Application.ActiveDocument.Selection as TextSelection;
 					var sb = new StringBuilder(selectedCodeBlock.Text.Trim(WhiteSpaceCharacters));
-					if (sb.ToString().IsCompleteControl() == false)
+
+					if (selectedCodeBlock.IsNodeSelected() == false)
 					{
 						UIUtilities.ShowExceptionMessage("You must select a control", "Your selection must begin and end with both control tags.");
 						return;
 					}
+					selectedCodeBlock.Trim();
 					StripUnwantedProperty("Margin", sb);
 					StripUnwantedProperty("MinHeight", sb);
 					StripUnwantedProperty("MinWidth", sb);
 					SetAllRowsAndColumnsToAuto(sb);
-					var editPoint = selectedCodeBlock.TopPoint.CreateEditPoint();
-					selectedCodeBlock.Delete();
-					editPoint.Insert(sb.ToString());
+					selectedCodeBlock.ReplaceSelectedText(sb.ToString());
 				}
 			}
 			catch (Exception ex)

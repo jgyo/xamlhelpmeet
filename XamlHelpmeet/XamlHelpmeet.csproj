@@ -96,14 +96,18 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activities" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -187,9 +191,10 @@
     <Compile Include="Commands\NoUI\GroupIntoUniformGrid.cs" />
     <Compile Include="Commands\NoUI\GroupIntoViewBox.cs" />
     <Compile Include="Commands\NoUI\GroupIntoWrapPanel.cs" />
-    <Compile Include="Commands\NoUI\NarrowSelection.cs" />
+    <Compile Include="Commands\NoUI\NarrowSelectionCommand.cs" />
     <Compile Include="Commands\NoUI\RemoveMarginsCommand.cs" />
-    <Compile Include="Commands\NoUI\WiddenSelection.cs" />
+    <Compile Include="Commands\NoUI\SelectContainingControlCommand.cs" />
+    <Compile Include="Commands\NoUI\WidenSelectionCommand.cs" />
     <Compile Include="Commands\UI\AboutCommand.cs" />
     <Compile Include="Commands\UI\ControlDefaultsCommand.cs" />
     <Compile Include="Commands\UI\CreateBusinessFormCommand.cs" />
@@ -200,6 +205,11 @@
     <Compile Include="Commands\UI\FieldsListFromSelectedClassCommand.cs" />
     <Compile Include="Guid.cs" />
     <Compile Include="PkgCmdList.cs" />
+    <Compile Include="Utility\NarrowSelectionResult.cs" />
+    <Compile Include="Utility\NodeEndMatches.cs" />
+    <Compile Include="Utility\NodePosition.cs" />
+    <Compile Include="Utility\PositionAndNode.cs" />
+    <Compile Include="Utility\SpanType.cs" />
     <Compile Include="Utility\VSLangProjPrjKind.cs" />
     <Compile Include="Utility\PtHelpers.cs" />
     <Compile Include="Utility\RemoteTypeReflector.cs" />
@@ -209,6 +219,16 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Utility\WiddenSelectionResult.cs" />
+    <Compile Include="Utility\XamlCollection.cs" />
+    <Compile Include="Utility\XamlNode.cs" />
+    <Compile Include="Utility\XamlParts\XamlPart.cs" />
+    <Compile Include="Utility\XamlParts\XamlAttribute.cs" />
+    <Compile Include="Utility\XamlParts\XamlComment.cs" />
+    <Compile Include="Utility\XamlParts\XamlInnerText.cs" />
+    <Compile Include="Utility\XamlParts\XamlWhiteSpace.cs" />
+    <Compile Include="Utility\XamlParts\XamlTag.cs" />
+    <Compile Include="Utility\XamlParts\XamlTagType.cs" />
     <Compile Include="Utility\XmlHelpers.cs" />
     <Compile Include="XamlHelpmeetPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

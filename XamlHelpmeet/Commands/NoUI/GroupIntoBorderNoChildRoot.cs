@@ -51,7 +51,7 @@ namespace XamlHelpmeet.Commands.NoUI
 		/// </returns>
 		public override bool CanExecute(vsCommandExecOption executeOption)
 		{
-			return base.CanExecute(executeOption) && IsTextSelected();
+			return base.CanExecute(executeOption) && !IsTextSelected();
 		}
 
 		/// <summary>
@@ -62,12 +62,12 @@ namespace XamlHelpmeet.Commands.NoUI
 			try
 			{
 				var selectedCodeBlock = Application.ActiveDocument.Selection as TextSelection;
-				var sb = new StringBuilder(selectedCodeBlock.Text.Trim(WhiteSpaceCharacters));
-				if (sb.ToString().IsCompleteControl() == false)
+				if (selectedCodeBlock.SelectNode()==false)
 				{
 					UIUtilities.ShowExceptionMessage("You must select a control", "Your selection must begin and end with both control tags.");
 					return;
 				}
+				var sb = new StringBuilder(selectedCodeBlock.Text.Trim(WhiteSpaceCharacters));
 				GroupInto("<Border>", "</Border>");
 			}
 			catch (Exception ex)

@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.Design;
 using EnvDTE80;
 using EnvDTE;
 using System.Text.RegularExpressions;
 using XamlHelpmeet.UI.Utilities;
+using XamlHelpmeet.Extensions;
+using XamlHelpmeet.Utility;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
-	public class WiddenSelection : CommandBase
+	public class WidenSelectionCommand : CommandBase
 	{
 		/// <summary>
 		/// Initializes a new instance of the WiddenSelection class.
 		/// </summary>
 		/// <param name="application">The application.</param>
 		/// <param name="id">The id.</param>
-		public WiddenSelection(DTE2 application, CommandID id)
+		public WidenSelectionCommand(DTE2 application, CommandID id)
 			: base(application, id)
 		{
 			Caption = "Widden Selection";
@@ -29,22 +29,33 @@ namespace XamlHelpmeet.Commands.NoUI
 		public override void Execute()
 		{
 			var selectedCodeBlock = Application.ActiveDocument.Selection as TextSelection;
-			var XAML = selectedCodeBlock.Text.Trim(WhiteSpaceCharacters);
-			var regex = new Regex(@"<(\w+)");
+			var result = selectedCodeBlock.ExpandSelection();
 
-			if ((selectedCodeBlock.IsEmpty || IsSelfClosing(regex, XAML)) && (!regex.IsMatch(XAML) || !CheckSelection(regex, XAML)))
+			var errorMsg = string.Empty;
+
+			switch (result)
 			{
-				// The selection does not contain a control
-				UIUtilities.ShowInformationMessage("Selection Is Invalid", "You can use this command without a selection, but selections must begin and end with a control's start and end tags.");
-				return;
+				case WiddenSelectionResult.Unknown:
+					throw new Exception();
+				case WiddenSelectionResult.Success:
+					break;
+				case WiddenSelectionResult.NodeSelectError:
+					errorMsg = "An error occured while trying to select a node.";
+					break;
+				case WiddenSelectionResult.ParentSelectError:
+					errorMsg = "An error occured while trying to select a selected node's parent.";
+					break;
+				case WiddenSelectionResult.LogicError:
+					errorMsg = "Programming logic is insufficient to handle this request.";
+					break;
 			}
 
-			// Find next previous opening tag
-			
-
-			// Find that tags closing tag
-
+			if (result != WiddenSelectionResult.Success)
+			{
+				UIUtilities.ShowInformationMessage("Widden Selection Error", errorMsg);
+			}
 		}
+
 		private bool IsSelfClosing(Regex regex, string XAML)
 		{
 			var matches = regex.Matches(XAML);

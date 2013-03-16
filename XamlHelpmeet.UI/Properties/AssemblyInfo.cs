@@ -8,7 +8,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Xaml Helpmeet User Interface")]
-[assembly: AssemblyDescription("This is a very early alpha version. You will find many bugs. Please report them.")]
+[assembly: AssemblyDescription("This is beta software and may have bugs that prevent completely successful use.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Yoder Tools")]
 [assembly: AssemblyProduct("XamlHelpmeet.UI")]
@@ -51,6 +51,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.3.*")]
+[assembly: AssemblyVersion("0.5.*")]
 //[assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: GuidAttribute("B51CEF5C-5E7C-4FFD-A1C6-D0BD7FCC64E0")]

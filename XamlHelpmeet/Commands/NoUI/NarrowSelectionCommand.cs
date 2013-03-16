@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.Design;
 using EnvDTE80;
 using EnvDTE;
+using XamlHelpmeet.Extensions;
+using XamlHelpmeet.Utility;
+using XamlHelpmeet.UI.Utilities;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
-	public class NarrowSelection : CommandBase
+	public class NarrowSelectionCommand : CommandBase
 	{
 		/// <summary>
 		/// Initializes a new instance of the NarrowSelection class.
 		/// </summary>
 		/// <param name="application">The application.</param>
 		/// <param name="id">The id.</param>
-		public NarrowSelection(DTE2 application, CommandID id)
+		public NarrowSelectionCommand(DTE2 application, CommandID id)
 			: base(application, id)
 		{
 			Caption = "Narrow Selection";
@@ -58,7 +59,29 @@ namespace XamlHelpmeet.Commands.NoUI
 
 		public override void Execute()
 		{
-			throw new NotImplementedException();
+			var selection = Application.ActiveDocument.Selection as TextSelection;
+			var result = selection.ContractSelection();
+
+			var errorMsg = string.Empty;
+
+			switch (result)
+			{
+				case Utility.NarrowSelectionResult.SelectionIsEmpty:
+					errorMsg = "Cannot narrow an empty selection.";
+					break;
+				case Utility.NarrowSelectionResult.InconsistentSelectionEnds:
+					errorMsg = "Narrowing works only when the selection is of complete nodes, or children of a single parent.";
+					break;
+				case Utility.NarrowSelectionResult.PartialTagSelected:
+					errorMsg = "A partial tag selection cannot be narrowed.";
+					break;
+				case Utility.NarrowSelectionResult.Success:
+					
+					break;
+			}
+			if(result== NarrowSelectionResult.Success)
+				return;
+			UIUtilities.ShowInformationMessage("Narrow Selection Error", errorMsg);
 		}
 	}
 }

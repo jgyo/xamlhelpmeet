@@ -10,11 +10,11 @@ using EnvDTE;
 using System.Xml;
 using XamlHelpmeet.UI.Utilities;
 using System.IO;
-using XamlHelpmeet.UI;
 using System.Xml.Schema;
 using XamlHelpmeet.UI.GridColumnAndRowEditor;
 using System.ComponentModel.Design;
 using XamlHelpmeet.Utility;
+using XamlHelpmeet.Extensions;
 
 namespace XamlHelpmeet.Commands.UI
 {
@@ -96,11 +96,14 @@ namespace XamlHelpmeet.Commands.UI
 				var selectedCodeBlock = Application.ActiveDocument.Selection as TextSelection;
 				var XAML = selectedCodeBlock.Text.Trim(WhiteSpaceCharacters);
 				
-				// Modified to beaf up the selection test. Old test just insured that the selection began with a starting
-				// grid tag, and ended with an ending grid tag, whether or not they belonged to the same element.
-				if (XAML.IsCompleteControl("Grid")==false)
+				// Modified to beaf up the selection test. Old test just insured
+				// that the selection began with a starting grid tag, and ended
+				// with an ending grid tag, whether or not they belonged to the
+				// same element.
+
+				if (selectedCodeBlock.IsNodeSelected("Grid") == false)
 				{
-					UIUtilities.ShowExceptionMessage("You must select a grid", "Your selection must begin and end with both Grid tags.");
+					UIUtilities.ShowExceptionMessage("You must select a grid", "You must select a Grid control for this command.");
 					return;
 				}
 				var nameTable = new NameTable();
@@ -131,9 +134,8 @@ namespace XamlHelpmeet.Commands.UI
 					sb.Replace("    ", " ");
 					sb.Replace("   ", " ");
 					sb.Replace("  ", " ");
-					var editPoint = selectedCodeBlock.TopPoint.CreateEditPoint();
-					selectedCodeBlock.Delete();
-					editPoint.Insert(sb.ToString());
+					// Added a reformatting step to the process.
+					selectedCodeBlock.ReplaceSelectedText(sb.ToString());
 				}
 			}
 			catch (Exception ex)

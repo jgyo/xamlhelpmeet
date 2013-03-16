@@ -10,7 +10,7 @@ using System.Windows.Media;
 using XamlHelpmeet.Model;
 using XamlHelpmeet.UI.Editors;
 using XamlHelpmeet.UI.Enums;
-using XamlHelpmeet.Extentions;
+using XamlHelpmeet.Extensions;
 using Mono;
 using XamlHelpmeet.UI.DynamicForm;
 

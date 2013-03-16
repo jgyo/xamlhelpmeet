@@ -13,7 +13,7 @@ using XamlHelpmeet.UI;
 using XamlHelpmeet.UI.ExtractPropertiesToStyle;
 using XamlHelpmeet.UI.Utilities;
 using XamlHelpmeet.Utility;
-using XamlHelpmeet.Extentions;
+ using XamlHelpmeet.Extensions;
 using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.UI
@@ -185,7 +185,7 @@ namespace XamlHelpmeet.Commands.UI
 		/// </returns>
 		public override vsCommandStatus GetStatus()
 		{
-			// Note: vsCommandStatus.vsCommandStatusUnsupported has a value
+			// vsCommandStatus.vsCommandStatusUnsupported has a value
 			// of zero, so or'ing it with any other value returns the other
 			// value.
 			return vsCommandStatus.vsCommandStatusSupported |

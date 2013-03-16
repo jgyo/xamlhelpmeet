@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Mono.Cecil;
-using XamlHelpmeet.Extentions;
+ using XamlHelpmeet.Extensions;
 using XamlHelpmeet.Model;
 
 namespace XamlHelpmeet.ReflectionLoader
