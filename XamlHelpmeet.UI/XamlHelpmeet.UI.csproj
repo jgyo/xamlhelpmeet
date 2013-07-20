@@ -59,21 +59,18 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.Cecil">
       <HintPath>..\XamlHelpmeet\Resources\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -83,108 +80,108 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="About\AboutWindow.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="CheckListBox\CheckListBoxResourceDictionary.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="CreateBusinessForm\CreateBusinessFormWindow.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Editors\CheckBoxEditor.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DynamicForm\CreateBusinessFormFromClassWindow.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Editors\CheckBoxEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\ComboBoxEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\DatePickerEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\DynamicFormCheckBoxEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\DynamicFormComboBoxEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\DynamicFormDatePickerEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\DynamicFormEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\DynamicFormTextBlockEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\DynamicFormTextBoxEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\GridCellEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\ImageEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\LabelEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\TextBlockEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\TextBoxEditor.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ViewModelCreation\CreateCommandWindow.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ViewModelCreation\CreateViewModelWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ExtractPropertiesToStyle\ExtractSelectedPropertiesToStyleWindow.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="FieldsList\FieldsListWindow.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="GridColumnAndRowEditor\GridRowColumnEditWindow.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="SelectClass\SelectClassFromAssembliesWindow.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UIControlFactory\UIControlDefaultsWindow.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewModelCreation\CreateCommandWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewModelCreation\CreateViewModelWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +201,9 @@
     <Compile Include="CreateBusinessForm\CreateBusinessFormWindow.xaml.cs">
       <DependentUpon>CreateBusinessFormWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DynamicForm\CreateBusinessFormFromClassWindow.xaml.cs">
+      <DependentUpon>CreateBusinessFormFromClassWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DynamicForm\DragAndDrop\DragDropHelper.cs" />
     <Compile Include="DynamicForm\DragAndDrop\DraggedAdorner.cs" />
     <Compile Include="DynamicForm\DragAndDrop\DynamicFormUtilities.cs" />
@@ -211,9 +211,6 @@
     <Compile Include="DynamicForm\DynamicFormListBoxContent.cs" />
     <Compile Include="Editors\CheckBoxEditor.xaml.cs">
       <DependentUpon>CheckBoxEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DynamicForm\CreateBusinessFormFromClassWindow.xaml.cs">
-      <DependentUpon>CreateBusinessFormFromClassWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\ComboBoxEditor.xaml.cs">
       <DependentUpon>ComboBoxEditor.xaml</DependentUpon>
@@ -255,23 +252,6 @@
       <DependentUpon>TextBoxEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Enums\DynamicFormControlType.cs" />
-    <Compile Include="UIControlFactory\SerializableObservableCollection.cs" />
-    <Compile Include="UIControlFactory\UIControl.cs" />
-    <Compile Include="UIControlFactory\UIControlFactory.cs" />
-    <Compile Include="UIControlFactory\UIControlRole.cs" />
-    <Compile Include="UIControlFactory\UIControls.cs" />
-    <Compile Include="UIControlFactory\UIPlatform.cs" />
-    <Compile Include="UIControlFactory\UIProperty.cs" />
-    <Compile Include="Utilities\UIHelpers.cs" />
-    <Compile Include="ValidationRules\PositiveIntegerValidationRule.cs" />
-    <Compile Include="ValidationRules\RequiredEntryValidationRule.cs" />
-    <Compile Include="ViewModelCreation\CreateCommandSource.cs" />
-    <Compile Include="ViewModelCreation\CreateCommandWindow.xaml.cs">
-      <DependentUpon>CreateCommandWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModelCreation\CreateViewModelWindow.xaml.cs">
-      <DependentUpon>CreateViewModelWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ExtractPropertiesToStyle\ExtractSelectedPropertiesToStyleWindow.xaml.cs">
       <DependentUpon>ExtractSelectedPropertiesToStyleWindow.xaml</DependentUpon>
     </Compile>
@@ -281,6 +261,23 @@
     <Compile Include="GridColumnAndRowEditor\GridRowColumnEditWindow.xaml.cs">
       <DependentUpon>GridRowColumnEditWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectClass\SelectClassFromAssembliesWindow.xaml.cs">
+      <DependentUpon>SelectClassFromAssembliesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIControlFactory\SerializableObservableCollection.cs" />
+    <Compile Include="UIControlFactory\UIControl.cs" />
+    <Compile Include="UIControlFactory\UIControlDefaultsWindow.xaml.cs">
+      <DependentUpon>UIControlDefaultsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIControlFactory\UIControlFactory.cs" />
+    <Compile Include="UIControlFactory\UIControlRole.cs" />
+    <Compile Include="UIControlFactory\UIControls.cs" />
+    <Compile Include="UIControlFactory\UIPlatform.cs" />
+    <Compile Include="UIControlFactory\UIProperty.cs" />
+    <Compile Include="Utilities\UIHelpers.cs" />
+    <Compile Include="ValidationRules\PositiveIntegerValidationRule.cs" />
+    <Compile Include="ValidationRules\RequiredEntryValidationRule.cs" />
+    <Compile Include="ViewModelCreation\CreateCommandSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -294,13 +291,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SelectClass\SelectClassFromAssembliesWindow.xaml.cs">
-      <DependentUpon>SelectClassFromAssembliesWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UIControlFactory\UIControlDefaultsWindow.xaml.cs">
-      <DependentUpon>UIControlDefaultsWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utilities\UIUtilities.cs" />
+    <Compile Include="ViewModelCreation\CreateCommandWindow.xaml.cs">
+      <DependentUpon>CreateCommandWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModelCreation\CreateViewModelWindow.xaml.cs">
+      <DependentUpon>CreateViewModelWindow.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -335,6 +332,7 @@
   <ItemGroup>
     <Resource Include="Resources\application16x16.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

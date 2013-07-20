@@ -611,7 +611,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 return;
             }
 
-            SetDimention(sender as TextBox, false);
+            this.SetDimension(sender as TextBox, false);
             ColumnSizePopUp.IsOpen = false;
         }
 
@@ -622,7 +622,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 return;
             }
             e.Handled = true;
-            SetDimention(sender as TextBox, true);
+            this.SetDimension(sender as TextBox, true);
             RowSizePopUp.IsOpen = false;
         }
 
@@ -1051,14 +1051,14 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             txtRowSize.Text = string.Empty;
         }
 
-        private void SetDimention(TextBox txt, bool doRow)
+        private void SetDimension(TextBox txt, bool doRow)
         {
             int index;
             if (txt.Text.IsNullOrWhiteSpace())
                 return;
 
-            int dimention;
-            if (!(int.TryParse(txt.Text, out dimention) && dimention >= 0))
+            int dimension;
+            if (!(int.TryParse(txt.Text, out dimension) && dimension >= 0))
             {
                 MessageBox.Show("The dimention must be an integer greater than or equal to zero, please reenter.", "Invalid Data", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
@@ -1069,7 +1069,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 for (int i = 0; i < NumberOfRows - 1; i++)
                 {
                     txt.Tag = i;
-                    SetDimention(txt, doRow);
+                    this.SetDimension(txt, doRow);
                 }
                 txt.Tag = null;
                 return;
@@ -1093,8 +1093,8 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 GridLengthCollection = ColumnWidthsCollection;
             }
 
-            TextBlockCollection[index].Text = dimention.ToString();
-            GridLengthCollection[index] = new GridLength(dimention);
+            TextBlockCollection[index].Text = dimension.ToString();
+            GridLengthCollection[index] = new GridLength(dimension);
 
             //txt.Text = string.Empty;
         }

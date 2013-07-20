@@ -17,7 +17,7 @@ namespace XamlHelpmeet.UI.Commands
 		{
 			if (ExecuteMethod == null)
 			{
-				throw new ArgumentNullException("ExecuteMethod", "Delagate commands cannot be null");
+				throw new ArgumentNullException("ExecuteMethod", "Delegate commands cannot be null");
 			}
 			_canExecuteMethod = CanExecuteMethod;
 			_executeMethod = ExecuteMethod;
@@ -88,7 +88,7 @@ namespace XamlHelpmeet.UI.Commands
 		{
 			if (ExecuteMethod == null)
 			{
-				throw new ArgumentNullException("ExecuteMethod", "Delagate commands cannot be null");
+				throw new ArgumentNullException("ExecuteMethod", "Delegate commands cannot be null");
 			}
 			_canExecuteMethod = CanExecuteMethod;
 			_executeMethod = ExecuteMethod;
