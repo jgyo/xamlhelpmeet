@@ -19,46 +19,6 @@
     /// </summary>
     public partial class GridRowColumnEditWindow : Window
     {
-        #region Declarations
-
-        /// <summary>
-        ///     Values that represent GridAction.
-        /// </summary>
-        private enum GridAction
-        {
-            /// <summary>
-            ///     .
-            /// </summary>
-            DeleteRow,
-
-            /// <summary>
-            ///     .
-            /// </summary>
-            DeleteColumn,
-
-            /// <summary>
-            ///     .
-            /// </summary>
-            InsertRowBefore,
-
-            /// <summary>
-            ///     .
-            /// </summary>
-            InsertRowAfter,
-
-            /// <summary>
-            ///     .
-            /// </summary>
-            InsertColumnBefore,
-
-            /// <summary>
-            ///     .
-            /// </summary>
-            InsertColumnAfter
-        }
-
-        #endregion Declarations
-
         #region Constructors
 
         /// <summary>
@@ -83,7 +43,7 @@
 
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
 
         /// <summary>
         ///     Gets or sets the users XAML document.
@@ -93,453 +53,9 @@
         /// </value>
         public XmlDocument UsersXamlDocument { get; set; }
 
-        #endregion Properties
-
-        #region Enums
-
-        #region Nested type: InsertLocation
-
-        /// <summary>
-        ///     Values that represent InsertLocation.
-        /// </summary>
-        private enum InsertLocation
-        {
-            /// <summary>
-            ///     .
-            /// </summary>
-            Before,
-
-            /// <summary>
-            ///     .
-            /// </summary>
-            After
-        }
-
         #endregion
 
-        #region Nested type: SpanType
-
-        /// <summary>
-        ///     Values that represent SpanType.
-        /// </summary>
-        private enum SpanType
-        {
-            /// <summary>
-            ///     .
-            /// </summary>
-            Column,
-
-            /// <summary>
-            ///     .
-            /// </summary>
-            Row
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        ///     Event handler. Called by ContextMenuItem for click events.
-        /// </summary>
-        /// <param name="sender">
-        ///     Source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     Routed event information.
-        /// </param>
-        private void ContextMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            var rectangle = (sender as ContextMenu).PlacementTarget as Rectangle;
-
-            // Original code checked rectangle for null as if it might be possible
-            // we might not be able to determine the location of the context
-            // menu's placment, but it only skipped the initialization of
-            // rectangleRow, and rectangleColumn if rectangle was null. But
-            // if if rectangleRow and rectangleColumn are not initialized,
-            // we would not know which row and column to work on in the
-            // switch block below. So I added to the logic flow an exit if we
-            // don't really get a rectangle. I'll flatten the code and do a
-            // little refactoring at the same time.
-
-            if (rectangle == null)
-            {
-                return;
-            }
-
-            var rectangleRow = (int)rectangle.GetValue(Grid.RowProperty);
-            var rectangleColumn = (int)rectangle.GetValue(Grid.ColumnProperty);
-
-            switch ((GridAction)((e.OriginalSource as MenuItem).Tag))
-            {
-                case GridAction.DeleteRow:
-                    this.DeleteSpan<RowDefinition>(rectangleRow);
-                    break;
-
-                case GridAction.DeleteColumn:
-                    this.DeleteSpan<ColumnDefinition>(rectangleColumn);
-                    break;
-
-                case GridAction.InsertRowBefore:
-                    this.InsertSpan(rectangleRow, InsertLocation.Before, SpanType.Row);
-                    break;
-
-                case GridAction.InsertRowAfter:
-                    this.InsertSpan(rectangleRow, InsertLocation.After, SpanType.Row);
-                    break;
-
-                case GridAction.InsertColumnBefore:
-                    this.InsertSpan(rectangleColumn, InsertLocation.Before, SpanType.Column);
-                    break;
-
-                case GridAction.InsertColumnAfter:
-                    this.InsertSpan(rectangleColumn, InsertLocation.After, SpanType.Column);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        /// <summary>
-        ///     Deletes the span described by spanToDeleteIndex.
-        /// </summary>
-        /// <typeparam name="TDefinition">
-        ///     Type of the definition.
-        /// </typeparam>
-        /// <param name="spanToDeleteIndex">
-        ///     Zero-based index of the span to delete.
-        /// </param>
-        private void DeleteSpan<TDefinition>(int spanToDeleteIndex) where TDefinition : DefinitionBase
-        {
-            bool IsRowDeleteRequested = GetIsRowRequested<TDefinition>();
-
-            // Dummy just helps to specify the generic method.
-            // No real value is returned through it, but
-            // something must be assigned to it to prevent
-            // a compiler error.
-            // dummy = null;
-
-            List<TDefinition> spanDefinitions;
-
-            this.GetSpanDefinitions(out spanDefinitions);
-            var columnDefinitions = spanDefinitions as List<ColumnDefinition>;
-            var rowDefinitions = spanDefinitions as List<RowDefinition>;
-
-            if (spanDefinitions == null || IsRowDeleteRequested
-                    ? rowDefinitions.Count == 0
-                    : columnDefinitions.Count == 0)
-            {
-                return;
-            }
-
-            XmlNode removeNode = null;
-            XmlNode removeWhiteSpace = null;
-            int nodeIndex = 0;
-
-            string spanName = IsRowDeleteRequested ? "Grid.RowDefinitions" : "Grid.ColumnDefinitions";
-
-            XmlNode gridDotDefinitions =
-                (from XmlNode x in this.UsersXamlDocument.ChildNodes[0].ChildNodes where x.Name == spanName select x)
-                    .FirstOrDefault();
-
-            if (gridDotDefinitions != null)
-            {
-                foreach (XmlNode span in gridDotDefinitions.ChildNodes)
-                {
-                    if (span.NodeType != XmlNodeType.Whitespace && span.NodeType != XmlNodeType.Comment)
-                    {
-                        if (nodeIndex == spanToDeleteIndex)
-                        {
-                            removeNode = span;
-                            break;
-                        }
-                        nodeIndex++;
-                    }
-                    else if (span.NodeType == XmlNodeType.Whitespace)
-                    {
-                        removeWhiteSpace = span;
-                    }
-                }
-
-                if (removeNode == null)
-                {
-                    return;
-                }
-
-                if (removeWhiteSpace != null)
-                {
-                    gridDotDefinitions.RemoveChild(removeWhiteSpace);
-                }
-
-                gridDotDefinitions.RemoveChild(removeNode);
-                this.IncrementRowOrColumnOnOrAfter(spanToDeleteIndex,
-                                                   -1,
-                                                   IsRowDeleteRequested ? SpanType.Row : SpanType.Column);
-            }
-        }
-
-        /// <summary>
-        ///     Gets the first named attribute.
-        /// </summary>
-        /// <param name="nodeAttributes">
-        ///     The node attributes.
-        /// </param>
-        /// <param name="attributeName">
-        ///     Name of the attribute.
-        /// </param>
-        /// <returns>
-        ///     The first named attribute.
-        /// </returns>
-        private static XmlAttribute GetFirstNamedAttribute(XmlAttributeCollection nodeAttributes, string attributeName)
-        {
-            return (from XmlAttribute a in nodeAttributes where a.Name == attributeName select a).FirstOrDefault();
-        }
-
-        /// <summary>
-        ///     Gets is row requested.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown when the requested operation is invalid.
-        /// </exception>
-        /// <typeparam name="TDefinition">
-        ///     Type of the definition.
-        /// </typeparam>
-        /// <returns>
-        ///     true if it succeeds, otherwise false.
-        /// </returns>
-        private static bool GetIsRowRequested<TDefinition>() where TDefinition : DefinitionBase
-        {
-            // Determine the type for the request.
-            bool IsRowRequested = typeof(TDefinition) == typeof(RowDefinition);
-            if (!IsRowRequested && typeof(TDefinition) != typeof(ColumnDefinition))
-            {
-                throw new InvalidOperationException(
-                    "Generic method requires either RowDefinition type or ColumnDefinion");
-            }
-            return IsRowRequested;
-        }
-
-        /// <summary>
-        ///     Increment row or column on or after.
-        /// </summary>
-        /// <param name="startIndex">
-        ///     The start index.
-        /// </param>
-        /// <param name="incrementValue">
-        ///     The increment value.
-        /// </param>
-        /// <param name="spanType">
-        ///     Type of the span.
-        /// </param>
-        private void IncrementRowOrColumnOnOrAfter(int startIndex, int incrementValue, SpanType spanType)
-        {
-            string spanName = spanType == SpanType.Column ? "Grid.Column" : "Grid.Row";
-
-            foreach (var xmlNode in (from XmlNode x in this.UsersXamlDocument.ChildNodes[0].ChildNodes
-                                     where x.Name.StartsWith("Grid.") == false && x.Name != "#whitespace"
-                                     select x))
-            {
-                XmlAttribute attribute =
-                    (from XmlAttribute a in xmlNode.Attributes where a.Name == spanName select a).FirstOrDefault();
-
-                int gridSpanIndex = int.Parse(attribute.Value);
-
-                if (gridSpanIndex >= startIndex)
-                {
-                    attribute.Value =
-                        (gridSpanIndex + incrementValue > 0 ? gridSpanIndex + incrementValue : 0).ToString();
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Inserts a span.
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when one or more arguments are outside the required range.
-        /// </exception>
-        /// <param name="spanIndex">
-        ///     Zero-based index of the span.
-        /// </param>
-        /// <param name="loc">
-        ///     The location.
-        /// </param>
-        /// <param name="spanType">
-        ///     Type of the span.
-        /// </param>
-        private void InsertSpan(int spanIndex, InsertLocation loc, SpanType spanType)
-        {
-            string orientationSizeName;
-            string orientationSpanName;
-
-            if (spanType == SpanType.Row)
-            {
-                orientationSizeName = "Height";
-                orientationSpanName = "Row";
-            }
-            else
-            {
-                orientationSizeName = "Width";
-                orientationSpanName = "Column";
-            }
-
-            string orientationDefinition = String.Format("{0}Definition", orientationSpanName);
-            string orientationDefinitions = String.Format("Grid.{0}s", orientationDefinition);
-
-            XmlNode definitionNodeCollection =
-                (from XmlNode x in this.UsersXamlDocument.ChildNodes[0].ChildNodes
-                 where x.Name == orientationDefinitions
-                 select x).First();
-
-            XmlNode spanDefinitionWhiteSpaceNode = null;
-            var spanDefinifitionNodesWithoutWhiteSpace = new List<XmlNode>();
-
-            foreach (XmlNode node in definitionNodeCollection.ChildNodes)
-            {
-                if (node.NodeType != XmlNodeType.Whitespace && node.NodeType != XmlNodeType.Comment)
-                {
-                    spanDefinifitionNodesWithoutWhiteSpace.Add(node);
-                }
-                else
-                {
-                    spanDefinitionWhiteSpaceNode = node.CloneNode(true);
-                }
-            }
-
-            List<RowDefinition> rowDefinitions = null;
-            List<ColumnDefinition> columnDefintions = null;
-            XmlElement newSpanElement = null;
-
-            if (spanType == SpanType.Row)
-            {
-                this.GetSpanDefinitions(out rowDefinitions);
-                newSpanElement =
-                    this.UsersXamlDocument.CreateNode(XmlNodeType.Element, "", orientationDefinition, string.Empty) as
-                    XmlElement;
-                newSpanElement.SetAttribute(orientationSizeName,
-                                            this.ParseGridDefinitionLength(rowDefinitions[spanIndex].Height));
-            }
-            else
-            {
-                this.GetSpanDefinitions(out columnDefintions);
-                newSpanElement =
-                    this.UsersXamlDocument.CreateNode(XmlNodeType.Element, "", orientationDefinition, string.Empty) as
-                    XmlElement;
-                newSpanElement.SetAttribute(orientationSizeName,
-                                            this.ParseGridDefinitionLength(columnDefintions[spanIndex].Width));
-            }
-            newSpanElement.SetAttribute("Tag", "New");
-
-            if (loc == InsertLocation.Before)
-            {
-                definitionNodeCollection.InsertBefore(newSpanElement, spanDefinifitionNodesWithoutWhiteSpace[spanIndex]);
-
-                if (spanDefinitionWhiteSpaceNode != null)
-                {
-                    definitionNodeCollection.InsertBefore(spanDefinitionWhiteSpaceNode,
-                                                          spanDefinifitionNodesWithoutWhiteSpace[spanIndex]);
-                }
-
-                this.IncrementRowOrColumnOnOrAfter(spanIndex, 1, spanType);
-            }
-            else if (loc == InsertLocation.After)
-            {
-                definitionNodeCollection.InsertAfter(newSpanElement, spanDefinifitionNodesWithoutWhiteSpace[spanIndex]);
-
-                if (spanDefinitionWhiteSpaceNode != null)
-                {
-                    definitionNodeCollection.InsertAfter(spanDefinitionWhiteSpaceNode,
-                                                         spanDefinifitionNodesWithoutWhiteSpace[spanIndex]);
-                }
-
-                this.IncrementRowOrColumnOnOrAfter(spanIndex + 1, 1, spanType);
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("loc", loc, "The value passed in was not programmed.");
-            }
-
-            this.BuildGrid();
-        }
-
-        /// <summary>
-        ///     Parses a GridLength object and returns a string for defining' a Width or
-        ///     Hight atributes in xaml.
-        /// </summary>
-        /// <param name="obj">
-        ///     The object.
-        /// </param>
-        /// <returns>
-        ///     .
-        /// </returns>
-        private string ParseGridDefinitionLength(GridLength obj)
-        {
-            if (obj.IsAuto)
-            {
-                return "Auto";
-            }
-
-            if (!obj.IsStar)
-            {
-                return obj.Value.ToString();
-            }
-
-            if (obj.Value != 1 && obj.Value != 0)
-            {
-                return string.Format("{0}*", obj.Value);
-            }
-
-            return "*";
-        }
-
-        /// <summary>
-        ///     Promotes the attribute.
-        /// </summary>
-        /// <param name="xmlNode">
-        ///     The XML node.
-        /// </param>
-        /// <param name="attribute">
-        ///     The attribute.
-        /// </param>
-        private static void PromoteAttribute(XmlNode xmlNode, XmlAttribute attribute)
-        {
-            xmlNode.Attributes.Prepend(xmlNode.Attributes.Remove(attribute));
-        }
-
-        /// <summary>
-        ///     Event handler. Called by btnCancel for click events.
-        /// </summary>
-        /// <param name="sender">
-        ///     Source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     Routed event information.
-        /// </param>
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-        }
-
-        /// <summary>
-        ///     Event handler. Called by btnCreate for click events.
-        /// </summary>
-        /// <param name="sender">
-        ///     Source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     Routed event information.
-        /// </param>
-        private void btnCreate_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = true;
-        }
-
-        #endregion Methods
-
-        #region Loaded Methods
+        #region Methods (private)
 
         /// <summary>
         ///     Insures that a Grid control has at least one Grid.Row element and one
@@ -790,6 +306,68 @@
         }
 
         /// <summary>
+        ///     Event handler. Called by ContextMenuItem for click events.
+        /// </summary>
+        /// <param name="sender">
+        ///     Source of the event.
+        /// </param>
+        /// <param name="e">
+        ///     Routed event information.
+        /// </param>
+        private void ContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var rectangle = (sender as ContextMenu).PlacementTarget as Rectangle;
+
+            // Original code checked rectangle for null as if it might be possible
+            // we might not be able to determine the location of the context
+            // menu's placment, but it only skipped the initialization of
+            // rectangleRow, and rectangleColumn if rectangle was null. But
+            // if if rectangleRow and rectangleColumn are not initialized,
+            // we would not know which row and column to work on in the
+            // switch block below. So I added to the logic flow an exit if we
+            // don't really get a rectangle. I'll flatten the code and do a
+            // little refactoring at the same time.
+
+            if (rectangle == null)
+            {
+                return;
+            }
+
+            var rectangleRow = (int)rectangle.GetValue(Grid.RowProperty);
+            var rectangleColumn = (int)rectangle.GetValue(Grid.ColumnProperty);
+
+            switch ((GridAction)((e.OriginalSource as MenuItem).Tag))
+            {
+                case GridAction.DeleteRow:
+                    this.DeleteSpan<RowDefinition>(rectangleRow);
+                    break;
+
+                case GridAction.DeleteColumn:
+                    this.DeleteSpan<ColumnDefinition>(rectangleColumn);
+                    break;
+
+                case GridAction.InsertRowBefore:
+                    this.InsertSpan(rectangleRow, InsertLocation.Before, SpanType.Row);
+                    break;
+
+                case GridAction.InsertRowAfter:
+                    this.InsertSpan(rectangleRow, InsertLocation.After, SpanType.Row);
+                    break;
+
+                case GridAction.InsertColumnBefore:
+                    this.InsertSpan(rectangleColumn, InsertLocation.Before, SpanType.Column);
+                    break;
+
+                case GridAction.InsertColumnAfter:
+                    this.InsertSpan(rectangleColumn, InsertLocation.After, SpanType.Column);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
         ///     Creates the context menu for the cells of the window's grid.
         /// </summary>
         /// <returns>
@@ -805,11 +383,135 @@
             cm.Items.Add(mi);
             mi = new MenuItem { Header = "Row Commands" };
             mi.Items.Add(new MenuItem { Header = "Insert Row Before", Tag = GridAction.InsertRowBefore });
-            mi.Items.Add(new MenuItem { Header = "Inser Row After", Tag = GridAction.InsertRowAfter });
+            mi.Items.Add(new MenuItem { Header = "Insert Row After", Tag = GridAction.InsertRowAfter });
             mi.Items.Add(new MenuItem { Header = "Delete Row", Tag = GridAction.DeleteRow });
             cm.Items.Add(mi);
 
             return cm;
+        }
+
+        /// <summary>
+        ///     Deletes the span described by spanToDeleteIndex.
+        /// </summary>
+        /// <typeparam name="TDefinition">
+        ///     Type of the definition.
+        /// </typeparam>
+        /// <param name="spanToDeleteIndex">
+        ///     Zero-based index of the span to delete.
+        /// </param>
+        private void DeleteSpan<TDefinition>(int spanToDeleteIndex) where TDefinition : DefinitionBase
+        {
+            bool IsRowDeleteRequested = GetIsRowRequested<TDefinition>();
+
+            // Dummy just helps to specify the generic method.
+            // No real value is returned through it, but
+            // something must be assigned to it to prevent
+            // a compiler error.
+            // dummy = null;
+
+            List<TDefinition> spanDefinitions;
+
+            this.GetSpanDefinitions(out spanDefinitions);
+            var columnDefinitions = spanDefinitions as List<ColumnDefinition>;
+            var rowDefinitions = spanDefinitions as List<RowDefinition>;
+
+            // Don't allow deleting spans that don't exist.
+            if (spanDefinitions == null || IsRowDeleteRequested
+                    ? rowDefinitions.Count == 0
+                    : columnDefinitions.Count == 0)
+            {
+                return;
+            }
+
+            XmlNode removeNode = null;
+            XmlNode removeWhiteSpace = null;
+            int nodeIndex = 0;
+
+            string spanName = IsRowDeleteRequested ? "Grid.RowDefinitions" : "Grid.ColumnDefinitions";
+
+            XmlNode gridDotDefinitions =
+                (from XmlNode x in this.UsersXamlDocument.ChildNodes[0].ChildNodes where x.Name == spanName select x)
+                    .FirstOrDefault();
+
+            if (gridDotDefinitions != null)
+            {
+                foreach (XmlNode span in gridDotDefinitions.ChildNodes)
+                {
+                    if (span.NodeType != XmlNodeType.Whitespace && span.NodeType != XmlNodeType.Comment)
+                    {
+                        if (nodeIndex == spanToDeleteIndex)
+                        {
+                            removeNode = span;
+                            break;
+                        }
+                        nodeIndex++;
+                    }
+                    else if (span.NodeType == XmlNodeType.Whitespace)
+                    {
+                        removeWhiteSpace = span;
+                    }
+                }
+
+                // Make sure we have something to delete. Otherwise just leave.
+                if (removeNode == null)
+                {
+                    return;
+                }
+
+                // Delete leading whitespace, if any.
+                if (removeWhiteSpace != null)
+                {
+                    gridDotDefinitions.RemoveChild(removeWhiteSpace);
+                }
+
+                gridDotDefinitions.RemoveChild(removeNode);
+                this.IncrementRowOrColumnOnOrAfter(spanToDeleteIndex,
+                                                   -1,
+                                                   IsRowDeleteRequested ? SpanType.Row : SpanType.Column);
+                // Update the UI.
+                this.BuildGrid();
+            }
+        }
+
+        /// <summary>
+        ///     Gets the first named attribute.
+        /// </summary>
+        /// <param name="nodeAttributes">
+        ///     The node attributes.
+        /// </param>
+        /// <param name="attributeName">
+        ///     Name of the attribute.
+        /// </param>
+        /// <returns>
+        ///     The first named attribute.
+        /// </returns>
+        private static XmlAttribute GetFirstNamedAttribute(XmlAttributeCollection nodeAttributes, string attributeName)
+        {
+            return (from XmlAttribute a in nodeAttributes where a.Name == attributeName select a).FirstOrDefault();
+        }
+
+        /// <summary>
+        ///     Gets is row requested.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown when the requested operation is invalid.
+        /// </exception>
+        /// <typeparam name="TDefinition">
+        ///     Type of the definition.
+        /// </typeparam>
+        /// <returns>
+        ///     true if it succeeds, otherwise false.
+        /// </returns>
+        private static bool GetIsRowRequested<TDefinition>() where TDefinition : DefinitionBase
+        {
+            // Determine the type for the request.
+            bool IsRowRequested = typeof(TDefinition) == typeof(RowDefinition);
+            if (!IsRowRequested && typeof(TDefinition) != typeof(ColumnDefinition))
+            {
+                throw new InvalidOperationException(
+                    "Generic method requires either RowDefinition type or ColumnDefinion");
+            }
+            return IsRowRequested;
         }
 
         /// <summary>
@@ -922,6 +624,193 @@
         }
 
         /// <summary>
+        ///     Increment row or column on or after.
+        /// </summary>
+        /// <param name="startIndex">
+        ///     The start index.
+        /// </param>
+        /// <param name="incrementValue">
+        ///     The increment value.
+        /// </param>
+        /// <param name="spanType">
+        ///     Type of the span.
+        /// </param>
+        private void IncrementRowOrColumnOnOrAfter(int startIndex, int incrementValue, SpanType spanType)
+        {
+            string spanName = spanType == SpanType.Column ? "Grid.Column" : "Grid.Row";
+
+            foreach (var xmlNode in (from XmlNode x in this.UsersXamlDocument.ChildNodes[0].ChildNodes
+                                     where x.Name.StartsWith("Grid.") == false && x.Name != "#whitespace"
+                                     select x))
+            {
+                XmlAttribute attribute =
+                    (from XmlAttribute a in xmlNode.Attributes where a.Name == spanName select a).FirstOrDefault();
+
+                int gridSpanIndex = int.Parse(attribute.Value);
+
+                if (gridSpanIndex >= startIndex)
+                {
+                    attribute.Value =
+                        (gridSpanIndex + incrementValue > 0 ? gridSpanIndex + incrementValue : 0).ToString();
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Inserts a span.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown when one or more arguments are outside the required range.
+        /// </exception>
+        /// <param name="spanIndex">
+        ///     Zero-based index of the span.
+        /// </param>
+        /// <param name="loc">
+        ///     The location.
+        /// </param>
+        /// <param name="spanType">
+        ///     Type of the span.
+        /// </param>
+        private void InsertSpan(int spanIndex, InsertLocation loc, SpanType spanType)
+        {
+            string orientationSizeName;
+            string orientationSpanName;
+
+            if (spanType == SpanType.Row)
+            {
+                orientationSizeName = "Height";
+                orientationSpanName = "Row";
+            }
+            else
+            {
+                orientationSizeName = "Width";
+                orientationSpanName = "Column";
+            }
+
+            string orientationDefinition = String.Format("{0}Definition", orientationSpanName);
+            string orientationDefinitions = String.Format("Grid.{0}s", orientationDefinition);
+
+            XmlNode definitionNodeCollection =
+                (from XmlNode x in this.UsersXamlDocument.ChildNodes[0].ChildNodes
+                 where x.Name == orientationDefinitions
+                 select x).First();
+
+            XmlNode spanDefinitionWhiteSpaceNode = null;
+            var spanDefinifitionNodesWithoutWhiteSpace = new List<XmlNode>();
+
+            foreach (XmlNode node in definitionNodeCollection.ChildNodes)
+            {
+                if (node.NodeType != XmlNodeType.Whitespace && node.NodeType != XmlNodeType.Comment)
+                {
+                    spanDefinifitionNodesWithoutWhiteSpace.Add(node);
+                }
+                else
+                {
+                    spanDefinitionWhiteSpaceNode = node.CloneNode(true);
+                }
+            }
+
+            List<RowDefinition> rowDefinitions = null;
+            List<ColumnDefinition> columnDefintions = null;
+            XmlElement newSpanElement = null;
+
+            if (spanType == SpanType.Row)
+            {
+                this.GetSpanDefinitions(out rowDefinitions);
+                newSpanElement =
+                    this.UsersXamlDocument.CreateNode(XmlNodeType.Element, "", orientationDefinition, string.Empty) as
+                    XmlElement;
+                newSpanElement.SetAttribute(orientationSizeName,
+                                            this.ParseGridDefinitionLength(rowDefinitions[spanIndex].Height));
+            }
+            else
+            {
+                this.GetSpanDefinitions(out columnDefintions);
+                newSpanElement =
+                    this.UsersXamlDocument.CreateNode(XmlNodeType.Element, "", orientationDefinition, string.Empty) as
+                    XmlElement;
+                newSpanElement.SetAttribute(orientationSizeName,
+                                            this.ParseGridDefinitionLength(columnDefintions[spanIndex].Width));
+            }
+            newSpanElement.SetAttribute("Tag", "New");
+
+            if (loc == InsertLocation.Before)
+            {
+                definitionNodeCollection.InsertBefore(newSpanElement, spanDefinifitionNodesWithoutWhiteSpace[spanIndex]);
+
+                if (spanDefinitionWhiteSpaceNode != null)
+                {
+                    definitionNodeCollection.InsertBefore(spanDefinitionWhiteSpaceNode,
+                                                          spanDefinifitionNodesWithoutWhiteSpace[spanIndex]);
+                }
+
+                this.IncrementRowOrColumnOnOrAfter(spanIndex, 1, spanType);
+            }
+            else if (loc == InsertLocation.After)
+            {
+                definitionNodeCollection.InsertAfter(newSpanElement, spanDefinifitionNodesWithoutWhiteSpace[spanIndex]);
+
+                if (spanDefinitionWhiteSpaceNode != null)
+                {
+                    definitionNodeCollection.InsertAfter(spanDefinitionWhiteSpaceNode,
+                                                         spanDefinifitionNodesWithoutWhiteSpace[spanIndex]);
+                }
+
+                this.IncrementRowOrColumnOnOrAfter(spanIndex + 1, 1, spanType);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("loc", loc, "The value passed in was not programmed.");
+            }
+
+            this.BuildGrid();
+        }
+
+        /// <summary>
+        ///     Parses a GridLength object and returns a string for defining' a Width or
+        ///     Hight atributes in xaml.
+        /// </summary>
+        /// <param name="obj">
+        ///     The object.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
+        private string ParseGridDefinitionLength(GridLength obj)
+        {
+            if (obj.IsAuto)
+            {
+                return "Auto";
+            }
+
+            if (!obj.IsStar)
+            {
+                return obj.Value.ToString();
+            }
+
+            if (obj.Value != 1 && obj.Value != 0)
+            {
+                return string.Format("{0}*", obj.Value);
+            }
+
+            return "*";
+        }
+
+        /// <summary>
+        ///     Promotes the attribute.
+        /// </summary>
+        /// <param name="xmlNode">
+        ///     The XML node.
+        /// </param>
+        /// <param name="attribute">
+        ///     The attribute.
+        /// </param>
+        private static void PromoteAttribute(XmlNode xmlNode, XmlAttribute attribute)
+        {
+            xmlNode.Attributes.Prepend(xmlNode.Attributes.Remove(attribute));
+        }
+
+        /// <summary>
         ///     Handles the Loaded event for the window. Used to create the initial grid
         ///     seen in the window when first opened.
         /// </summary>
@@ -940,6 +829,114 @@
                                               new RoutedEventHandler(this.ContextMenuItem_Click));
         }
 
-        #endregion Loaded Methods
+        /// <summary>
+        ///     Event handler. Called by btnCancel for click events.
+        /// </summary>
+        /// <param name="sender">
+        ///     Source of the event.
+        /// </param>
+        /// <param name="e">
+        ///     Routed event information.
+        /// </param>
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+        }
+
+        /// <summary>
+        ///     Event handler. Called by btnCreate for click events.
+        /// </summary>
+        /// <param name="sender">
+        ///     Source of the event.
+        /// </param>
+        /// <param name="e">
+        ///     Routed event information.
+        /// </param>
+        private void btnCreate_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
+
+        #endregion
+
+        #region Nested type: GridAction
+
+        /// <summary>
+        ///     Values that represent GridAction.
+        /// </summary>
+        private enum GridAction
+        {
+            /// <summary>
+            ///     .
+            /// </summary>
+            DeleteRow,
+
+            /// <summary>
+            ///     .
+            /// </summary>
+            DeleteColumn,
+
+            /// <summary>
+            ///     .
+            /// </summary>
+            InsertRowBefore,
+
+            /// <summary>
+            ///     .
+            /// </summary>
+            InsertRowAfter,
+
+            /// <summary>
+            ///     .
+            /// </summary>
+            InsertColumnBefore,
+
+            /// <summary>
+            ///     .
+            /// </summary>
+            InsertColumnAfter
+        }
+
+        #endregion
+
+        #region Nested type: InsertLocation
+
+        /// <summary>
+        ///     Values that represent InsertLocation.
+        /// </summary>
+        private enum InsertLocation
+        {
+            /// <summary>
+            ///     .
+            /// </summary>
+            Before,
+
+            /// <summary>
+            ///     .
+            /// </summary>
+            After
+        }
+
+        #endregion
+
+        #region Nested type: SpanType
+
+        /// <summary>
+        ///     Values that represent SpanType.
+        /// </summary>
+        private enum SpanType
+        {
+            /// <summary>
+            ///     .
+            /// </summary>
+            Column,
+
+            /// <summary>
+            ///     .
+            /// </summary>
+            Row
+        }
+
+        #endregion
     }
 }
