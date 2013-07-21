@@ -4,11 +4,15 @@
         xmlns:clstb="clr-namespace:XamlHelpmeet.UI.CheckListBox"
         xmlns:local="clr-namespace:XamlHelpmeet.UI.ViewModelCreation"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
         Title="Create ViewModel"
         Width="760"
         Height="727"
         Loaded="CreateViewModelWindow_Unloaded"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance local:CreateViewModelWindow}">
     <StackPanel>
         <StackPanel.Resources>
 
