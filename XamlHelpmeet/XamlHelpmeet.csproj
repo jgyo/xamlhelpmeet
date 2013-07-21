@@ -112,10 +112,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="XamlHelpMeet.ReflectionLoader, Version=0.2.4793.34372, Culture=neutral, PublicKeyToken=f6863922d231c7d1, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\XamlHelpmeet.ReflectionLoader\bin\x86\Debug\XamlHelpMeet.ReflectionLoader.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="EnvDTE">
@@ -297,6 +293,10 @@
     <ProjectReference Include="..\XamlHelpmeet.Extentions\XamlHelpmeet.Extentions.csproj">
       <Project>{70db1dc2-5400-486a-955a-ef5cfb320926}</Project>
       <Name>XamlHelpmeet.Extentions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XamlHelpmeet.ReflectionLoader\XamlHelpmeet.ReflectionLoader.csproj">
+      <Project>{fbae28c6-89b0-4e4f-9e0d-14597e2ba91a}</Project>
+      <Name>XamlHelpmeet.ReflectionLoader</Name>
     </ProjectReference>
     <ProjectReference Include="..\XamlHelpmeet.UI\XamlHelpmeet.UI.csproj">
       <Project>{51D8F5EF-2E44-450B-94A5-03895206FFD2}</Project>
