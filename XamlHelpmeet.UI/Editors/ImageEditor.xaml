@@ -7,7 +7,6 @@
         <Style TargetType="{x:Type StackPanel}">
             <Setter Property="Margin" Value="0,10,0,0" />
         </Style>
-
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -15,7 +14,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal">
-            <TextBlock Width="50" Text="Source" />
+            <TextBlock Width="50"
+                       Text="Source" />
             <Grid>
                 <TextBox x:Name="txtBindingPath"
                          Width="100"

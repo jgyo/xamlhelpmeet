@@ -16,23 +16,29 @@
     <StackPanel>
         <StackPanel.Resources>
 
-            <CollectionViewSource x:Key="cvsProperties" Source="{Binding Path=ClassEntity.PropertyInfomation}">
+            <CollectionViewSource x:Key="cvsProperties"
+                                  Source="{Binding Path=ClassEntity.PropertyInfomation}">
                 <CollectionViewSource.SortDescriptions>
                     <scm:SortDescription PropertyName="Name" />
                 </CollectionViewSource.SortDescriptions>
             </CollectionViewSource>
 
             <Style TargetType="{x:Type TextBlock}">
-                <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
             </Style>
 
             <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
 
-            <Style x:Key="alternatingWithTriggers" TargetType="{x:Type ListBoxItem}">
+            <Style x:Key="alternatingWithTriggers"
+                   TargetType="{x:Type ListBoxItem}">
                 <Style.Triggers>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="WhiteSmoke" />
+                    <Trigger Property="ItemsControl.AlternationIndex"
+                             Value="1">
+                        <Setter Property="Background"
+                                Value="WhiteSmoke" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -42,23 +48,29 @@
         <TabControl x:Name="tcPropertyGeneration">
             <TabItem Header="Step 1 (required)">
                 <StackPanel>
-                    <TextBlock Margin="7" Text="Configure how the Model will be exposed on the ViewModel" />
-                    <StackPanel Margin="7" Orientation="Horizontal">
-                        <TextBlock FontSize="14" Text="Data Class" />
+                    <TextBlock Margin="7"
+                               Text="Configure how the Model will be exposed on the ViewModel" />
+                    <StackPanel Margin="7"
+                                Orientation="Horizontal">
+                        <TextBlock FontSize="14"
+                                   Text="Data Class" />
                         <TextBlock Margin="7,0,0,0"
                                    FontSize="14"
                                    FontWeight="Bold"
                                    Text="{Binding Path=TypeName}" />
                     </StackPanel>
 
-                    <StackPanel Margin="3.5" Orientation="Horizontal">
-                        <TextBlock Foreground="Blue" Text="{Binding Path=PropertySignature}" />
+                    <StackPanel Margin="3.5"
+                                Orientation="Horizontal">
+                        <TextBlock Foreground="Blue"
+                                   Text="{Binding Path=PropertySignature}" />
                         <TextBox Width="200"
                                  Margin="7,0"
                                  Text="{Binding Path=PropertyName,
                                                 Mode=TwoWay,
                                                 UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock Foreground="Blue" Text="As" />
+                        <TextBlock Foreground="Blue"
+                                   Text="As" />
                         <Grid Margin="7,0">
                             <ComboBox x:Name="cboPropertyType"
                                       Width="317"
@@ -78,8 +90,10 @@
                                Foreground="Blue"
                                Text="Get" />
 
-                    <StackPanel Margin="17.5,3.5" Orientation="Horizontal">
-                        <TextBlock Foreground="Blue" Text="Return" />
+                    <StackPanel Margin="17.5,3.5"
+                                Orientation="Horizontal">
+                        <TextBlock Foreground="Blue"
+                                   Text="Return" />
                         <TextBox Width="200"
                                  Margin="7,0"
                                  Text="{Binding Path=FieldName,
@@ -90,24 +104,29 @@
                                Foreground="Blue"
                                Text="End Get" />
 
-                    <StackPanel Margin="10.5,3.5" Orientation="Horizontal">
+                    <StackPanel Margin="10.5,3.5"
+                                Orientation="Horizontal">
                         <TextBlock Margin="0,0,7,0"
                                    Foreground="Blue"
                                    Text="Private"
                                    Visibility="{Binding Path=HasPrivateSetter,
                                                         Converter={StaticResource booleanToVisibilityConverter}}" />
-                        <TextBlock Foreground="Blue" Text="Set(ByVal " />
+                        <TextBlock Foreground="Blue"
+                                   Text="Set(ByVal " />
                         <TextBlock Text="Value " />
-                        <TextBlock Foreground="Blue" Text="As" />
+                        <TextBlock Foreground="Blue"
+                                   Text="As" />
                         <TextBlock Margin="7,0,0,0"
                                    Foreground="Blue"
                                    Text="{Binding Path=PropertyType}" />
                         <TextBlock Text=")" />
                     </StackPanel>
 
-                    <StackPanel Margin="17.5,3.5" Orientation="Horizontal">
+                    <StackPanel Margin="17.5,3.5"
+                                Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=FieldName}" />
-                        <TextBlock Margin="7,0" Text="= Value" />
+                        <TextBlock Margin="7,0"
+                                   Text="= Value" />
                     </StackPanel>
 
                     <StackPanel Margin="17.5,3.5"
@@ -129,9 +148,12 @@
                                                     UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                         <TextBlock Text="(" />
-                        <TextBlock Foreground="Maroon" Text="&quot;" />
-                        <TextBlock Foreground="Maroon" Text="{Binding Path=PropertyName}" />
-                        <TextBlock Foreground="Maroon" Text="&quot;" />
+                        <TextBlock Foreground="Maroon"
+                                   Text="&quot;" />
+                        <TextBlock Foreground="Maroon"
+                                   Text="{Binding Path=PropertyName}" />
+                        <TextBlock Foreground="Maroon"
+                                   Text="&quot;" />
                         <TextBlock Text=")" />
                     </StackPanel>
 
@@ -145,7 +167,8 @@
 
                     <GroupBox Margin="7">
                         <GroupBox.Header>
-                            <TextBlock FontWeight="Bold" Text="Options" />
+                            <TextBlock FontWeight="Bold"
+                                       Text="Options" />
                         </GroupBox.Header>
                         <StackPanel>
                             <CheckBox Margin="3.5"
@@ -186,8 +209,10 @@
                     <TextBlock Margin="7"
                                Text="Note: The below ListBox uses Extended selection mode making it very easy to multi-select. (CTRL + click and SHIFT + click)"
                                TextWrapping="Wrap" />
-                    <StackPanel Margin="7" Orientation="Horizontal">
-                        <TextBlock FontSize="14" Text="Data Class" />
+                    <StackPanel Margin="7"
+                                Orientation="Horizontal">
+                        <TextBlock FontSize="14"
+                                   Text="Data Class" />
                         <TextBlock Margin="7,0,0,0"
                                    FontSize="14"
                                    FontWeight="Bold"
@@ -214,25 +239,31 @@
                                  SelectionMode="Extended">
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="{x:Type ListBoxItem}">
-                                    <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+                                    <Setter Property="IsSelected"
+                                            Value="{Binding Path=IsSelected, Mode=TwoWay}" />
                                     <Style.Triggers>
-                                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                                            <Setter Property="Background" Value="WhiteSmoke" />
+                                        <Trigger Property="ItemsControl.AlternationIndex"
+                                                 Value="1">
+                                            <Setter Property="Background"
+                                                    Value="WhiteSmoke" />
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </ListBox.ItemContainerStyle>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Margin="3.5,2" Text="{Binding Path=FullName}" />
+                                    <TextBlock Margin="3.5,2"
+                                               Text="{Binding Path=FullName}" />
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </clstb:CheckListBox>
 
-                    <GroupBox Margin="7" Visibility="{Binding Path=IsVB, Converter={StaticResource booleanToVisibilityConverter}}">
+                    <GroupBox Margin="7"
+                              Visibility="{Binding Path=IsVB, Converter={StaticResource booleanToVisibilityConverter}}">
                         <GroupBox.Header>
-                            <TextBlock FontWeight="Bold" Text="Options" />
+                            <TextBlock FontWeight="Bold"
+                                       Text="Options" />
                         </GroupBox.Header>
                         <StackPanel>
                             <CheckBox Margin="3.5"
@@ -246,9 +277,11 @@
             </TabItem>
         </TabControl>
 
-        <GroupBox Height="150" Margin="7">
+        <GroupBox Height="150"
+                  Margin="7">
             <GroupBox.Header>
-                <TextBlock FontWeight="Bold" Text="Commands" />
+                <TextBlock FontWeight="Bold"
+                           Text="Commands" />
             </GroupBox.Header>
             <Grid>
                 <Grid.RowDefinitions>

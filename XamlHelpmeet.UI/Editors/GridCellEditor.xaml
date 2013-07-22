@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Converters="clr-namespace:XamlHelpmeet.UI.Converters"
              xmlns:helps="clr-namespace:XamlHelpmeet.UI.Utilities"
-             xmlns:local="clr-namespace:XamlHelpmeet.UI.Editors"
              xmlns:model="clr-namespace:XamlHelpmeet.Model;assembly=XamlHelpmeet.Model"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              DataContextChanged="UserControl_DataContextChanged">
 
     <UserControl.Resources>
@@ -44,7 +42,8 @@
                                              Converter={StaticResource ControlTypeEnumConverter},
                                              Mode=TwoWay}" />
 
-            <Grid x:Name="editorContent" Grid.Row="1" />
+            <Grid x:Name="editorContent"
+                  Grid.Row="1" />
 
         </Grid>
     </Border>
