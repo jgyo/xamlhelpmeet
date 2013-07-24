@@ -1,28 +1,32 @@
 ﻿// file:	CreateBusinessForm\CreateBusinessFormWindow.xaml.cs
 //
 // summary:	Implements the create business form window.xaml class
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Threading;
- using XamlHelpmeet.Extensions;
-using XamlHelpmeet.Model;
-using XamlHelpmeet.UI.Editors;
-using XamlHelpmeet.UI.UIControlFactory;
-
 namespace XamlHelpmeet.UI.CreateBusinessForm
 {
+    #region Imports
+
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Shapes;
+    using System.Windows.Threading;
+    using XamlHelpmeet.Extensions;
+    using XamlHelpmeet.Model;
+    using XamlHelpmeet.UI.Editors;
+    using XamlHelpmeet.UI.UIControlFactory;
+
+    #endregion
+
     /// <summary>
     ///     Interaction logic for CreateBusinessFormWindow.xaml.
     /// </summary>
-    /// <seealso cref="T:System.Windows.Window"/>
+    /// <seealso cref="T:System.Windows.Window" />
     public partial class CreateBusinessFormWindow : Window, INotifyPropertyChanged
     {
         #region Constants
@@ -34,18 +38,31 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         #region Fields
 
         private readonly List<ComboBox> _columnHeaderComboBoxCollection;
+
         private readonly List<TextBlock> _columnHeaderTextBlockCollection;
+
         private readonly List<GridLength> _columnWidthsCollection;
+
         private readonly Dictionary<String, CellContent> _gridCellCollection;
+
         private readonly List<TextBlock> _rowHeaderTextBlockCollection;
+
         private readonly List<GridLength> _rowHeightsCollection;
+
         private string _allColumnSize;
+
         private string _allRowSize;
+
         private GridLength _columnDefaultSize;
+
         private string _definedColumns = string.Empty;
+
         private string _definedRows = string.Empty;
+
         private int _numberOfColumns;
+
         private int _numberOfRows;
+
         private GridLength _rowDefaultSize;
 
         #endregion
@@ -61,59 +78,51 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         public CreateBusinessFormWindow(ClassEntity ClassEntity)
         {
             // Here's the call that the form designer forces us to call.
-            InitializeComponent();
+            this.InitializeComponent();
 
-            ColumnDefaultSize = new GridLength(0, GridUnitType.Auto);
-            RowDefaultSize = new GridLength(0, GridUnitType.Auto);
+            this.ColumnDefaultSize = new GridLength(0, GridUnitType.Auto);
+            this.RowDefaultSize = new GridLength(0, GridUnitType.Auto);
 
-            _columnHeaderComboBoxCollection = new List<ComboBox>();
-            _columnHeaderTextBlockCollection = new List<TextBlock>();
-            _columnWidthsCollection = new List<GridLength>();
-            _gridCellCollection = new Dictionary<string, CellContent>();
-            _rowHeaderTextBlockCollection = new List<TextBlock>();
-            _rowHeightsCollection = new List<GridLength>();
+            this._columnHeaderComboBoxCollection = new List<ComboBox>();
+            this._columnHeaderTextBlockCollection = new List<TextBlock>();
+            this._columnWidthsCollection = new List<GridLength>();
+            this._gridCellCollection = new Dictionary<string, CellContent>();
+            this._rowHeaderTextBlockCollection = new List<TextBlock>();
+            this._rowHeightsCollection = new List<GridLength>();
 
-            BusinessForm = string.Empty;
+            this.BusinessForm = string.Empty;
             CreateBusinessFormWindow.ClassEntity = ClassEntity;
         }
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        ///     Gets the class entity.
-        /// </summary>
-        /// <value>
-        ///     The class entity.
-        /// </value>
-        public static ClassEntity ClassEntity
-        {
-            get;
-            private set;
-        }
+        #region Properties and Indexers
 
         public string AllColumnSize
         {
-            get { return _allColumnSize; }
+            get { return this._allColumnSize; }
             set
             {
-                if (_allColumnSize == value)
+                if (this._allColumnSize == value)
+                {
                     return;
-                _allColumnSize = value;
-                OnPropertyChanged("AllColumnSize");
+                }
+                this._allColumnSize = value;
+                this.OnPropertyChanged("AllColumnSize");
             }
         }
 
         public string AllRowSize
         {
-            get { return _allRowSize; }
+            get { return this._allRowSize; }
             set
             {
-                if (_allRowSize == value)
+                if (this._allRowSize == value)
+                {
                     return;
-                _allRowSize = value;
-                OnPropertyChanged("AllRowSize");
+                }
+                this._allRowSize = value;
+                this.OnPropertyChanged("AllRowSize");
             }
         }
 
@@ -123,36 +132,45 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// <value>
         ///     The business form.
         /// </value>
-        public string BusinessForm
-        {
-            get;
-            private set;
-        }
+        public string BusinessForm { get; private set; }
 
         /// <summary>
-        /// Gets or sets the size of the column default.
+        ///     Gets the class entity.
         /// </summary>
         /// <value>
-        /// The size of the column default.
+        ///     The class entity.
+        /// </value>
+        public static ClassEntity ClassEntity { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets the size of the column default.
+        /// </summary>
+        /// <value>
+        ///     The size of the column default.
         /// </value>
         public GridLength ColumnDefaultSize
         {
-            get
-            {
-                return _columnDefaultSize;
-            }
+            get { return this._columnDefaultSize; }
             set
             {
-                if (_columnDefaultSize == value)
+                if (this._columnDefaultSize == value)
+                {
                     return;
-                _columnDefaultSize = value;
-                OnPropertyChanged("ColumnDefaultSize");
+                }
+                this._columnDefaultSize = value;
+                this.OnPropertyChanged("ColumnDefaultSize");
                 if (value.IsAuto)
-                    AllColumnSize = "Auto";
+                {
+                    this.AllColumnSize = "Auto";
+                }
                 else if (value.IsStar)
-                    AllColumnSize = "*";
+                {
+                    this.AllColumnSize = "*";
+                }
                 else
-                    AllColumnSize = value.Value.ToString();
+                {
+                    this.AllColumnSize = value.Value.ToString();
+                }
             }
         }
 
@@ -164,10 +182,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// </value>
         public List<ComboBox> ColumnHeaderComboBoxCollection
         {
-            get
-            {
-                return _columnHeaderComboBoxCollection;
-            }
+            get { return this._columnHeaderComboBoxCollection; }
         }
 
         /// <summary>
@@ -178,10 +193,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// </value>
         public List<TextBlock> ColumnHeaderTextBlockCollection
         {
-            get
-            {
-                return _columnHeaderTextBlockCollection;
-            }
+            get { return this._columnHeaderTextBlockCollection; }
         }
 
         /// <summary>
@@ -190,11 +202,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// <value>
         ///     The column size POP up.
         /// </value>
-        public Popup ColumnSizePopUp
-        {
-            get;
-            set;
-        }
+        public Popup ColumnSizePopUp { get; set; }
 
         /// <summary>
         ///     Gets or sets the column size popup timer.
@@ -202,11 +210,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// <value>
         ///     The column size popup timer.
         /// </value>
-        public DispatcherTimer ColumnSizePopupTimer
-        {
-            get;
-            set;
-        }
+        public DispatcherTimer ColumnSizePopupTimer { get; set; }
 
         /// <summary>
         ///     Gets a collection of column widths.
@@ -216,36 +220,34 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// </value>
         public List<GridLength> ColumnWidthsCollection
         {
-            get
-            {
-                return _columnWidthsCollection;
-            }
+            get { return this._columnWidthsCollection; }
         }
 
         public string DefinedColumns
         {
-            get { return _definedColumns; }
+            get { return this._definedColumns; }
             set
             {
-                if (_definedColumns == value)
+                if (this._definedColumns == value)
+                {
                     return;
-                _definedColumns = value;
-                OnPropertyChanged("DefinedColumns");
+                }
+                this._definedColumns = value;
+                this.OnPropertyChanged("DefinedColumns");
             }
         }
 
         public string DefinedRows
         {
-            get
-            {
-                return _definedRows;
-            }
+            get { return this._definedRows; }
             set
             {
-                if (_definedRows == value)
+                if (this._definedRows == value)
+                {
                     return;
-                _definedRows = value;
-                OnPropertyChanged("DefinedRows");
+                }
+                this._definedRows = value;
+                this.OnPropertyChanged("DefinedRows");
             }
         }
 
@@ -257,80 +259,80 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// </value>
         public Dictionary<String, CellContent> GridCellCollection
         {
-            get
-            {
-                return _gridCellCollection;
-            }
+            get { return this._gridCellCollection; }
         }
 
         /// <summary>
-        /// Gets or sets the number of columns.
+        ///     Gets or sets the number of columns.
         /// </summary>
         /// <value>
-        /// The total number of columns.
+        ///     The total number of columns.
         /// </value>
         public int NumberOfColumns
         {
-            get
-            {
-                return _numberOfColumns;
-            }
+            get { return this._numberOfColumns; }
             set
             {
-                if (_numberOfColumns == value)
+                if (this._numberOfColumns == value)
+                {
                     return;
-                _numberOfColumns = value;
-                OnPropertyChanged("NumberOfColumns");
-                DefinedColumns = (value - 1).ToString();
+                }
+                this._numberOfColumns = value;
+                this.OnPropertyChanged("NumberOfColumns");
+                this.DefinedColumns = (value - 1).ToString();
             }
         }
 
         /// <summary>
-        /// Gets or sets the number of rows.
+        ///     Gets or sets the number of rows.
         /// </summary>
         /// <value>
-        /// The total number of rows.
+        ///     The total number of rows.
         /// </value>
         public int NumberOfRows
         {
-            get
-            {
-                return _numberOfRows;
-            }
+            get { return this._numberOfRows; }
             set
             {
-                if (_numberOfRows == value)
+                if (this._numberOfRows == value)
+                {
                     return;
-                _numberOfRows = value;
-                OnPropertyChanged("NumberOfRows");
-                DefinedRows = (value - 1).ToString();
+                }
+                this._numberOfRows = value;
+                this.OnPropertyChanged("NumberOfRows");
+                this.DefinedRows = (value - 1).ToString();
             }
         }
 
         /// <summary>
-        /// Gets or sets the size of the row default.
+        ///     Gets or sets the size of the row default.
         /// </summary>
         /// <value>
-        /// The size of the row default.
+        ///     The size of the row default.
         /// </value>
         public GridLength RowDefaultSize
         {
-            get
-            {
-                return _rowDefaultSize;
-            }
+            get { return this._rowDefaultSize; }
             set
             {
-                if (_rowDefaultSize == value)
+                if (this._rowDefaultSize == value)
+                {
                     return;
-                _rowDefaultSize = value;
-                OnPropertyChanged("RowDefaultSize");
+                }
+                this._rowDefaultSize = value;
+                this.OnPropertyChanged("RowDefaultSize");
                 if (value.IsAuto)
-                    AllRowSize = "Auto";
+                {
+                    this.AllRowSize = "Auto";
+                }
                 else if (value.IsStar)
-                    AllRowSize = "*";
+                {
+                    this.AllRowSize = "*";
+                }
                 else
-                    AllRowSize = value.Value.ToString();
+                {
+                    this.AllRowSize = value.Value.ToString();
+                }
             }
         }
 
@@ -342,10 +344,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// </value>
         public List<TextBlock> RowHeaderTextBlockCollection
         {
-            get
-            {
-                return _rowHeaderTextBlockCollection;
-            }
+            get { return this._rowHeaderTextBlockCollection; }
         }
 
         /// <summary>
@@ -356,10 +355,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// </value>
         public List<GridLength> RowHeightsCollection
         {
-            get
-            {
-                return _rowHeightsCollection;
-            }
+            get { return this._rowHeightsCollection; }
         }
 
         /// <summary>
@@ -368,11 +364,7 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// <value>
         ///     The row size POP up.
         /// </value>
-        public Popup RowSizePopUp
-        {
-            get;
-            set;
-        }
+        public Popup RowSizePopUp { get; set; }
 
         /// <summary>
         ///     Gets or sets the row size popup timer.
@@ -380,324 +372,36 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
         /// <value>
         ///     The row size popup timer.
         /// </value>
-        public DispatcherTimer RowSizePopupTimer
-        {
-            get;
-            set;
-        }
+        public DispatcherTimer RowSizePopupTimer { get; set; }
 
         #endregion
 
-        #region Event Handlers
+        #region INotifyPropertyChanged Members
 
-        private void btnAllColumnsAuto_Click(object sender, RoutedEventArgs e)
-        {
-            SetAllColumnWidths(0, GridUnitType.Auto);
-        }
-
-        private void btnAllColumnsStar_Click(object sender, RoutedEventArgs e)
-        {
-            SetAllColumnWidths(1, GridUnitType.Star);
-        }
-
-        private void btnAllRowsAuto_Click(object sender, RoutedEventArgs e)
-        {
-            SetAllRowsHeights(0, GridUnitType.Auto);
-        }
-
-        private void btnAllRowsStar_Click(object sender, RoutedEventArgs e)
-        {
-            SetAllRowsHeights(1, GridUnitType.Star);
-        }
-
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            // BUG: Investigate exception: DialogResult can be set only after
-            // a window has been opened as a dialog.
-            DialogResult = false;
-        }
-
-        private void btnCreate_Click(object sender, RoutedEventArgs e)
-        {
-            var sb = new StringBuilder(10240);
-            sb.AppendLine("<Grid>");
-            sb.AppendLine("\t<Grid.RowDefinitions>");
-
-            var skipFirst = true;
-
-            foreach (var obj in RowHeightsCollection)
-            {
-                if (skipFirst)
-                {
-                    skipFirst = false;
-                    continue;
-                }
-                var height = obj.IsStar ? "*" : obj.IsAuto ? "Auto" : obj.Value.ToString();
-                sb.AppendFormat("\t\t<RowDefinition Height=\"{0}\" />\r\n", height);
-            }
-
-            sb.AppendLine("\t</Grid.RowDefinitions>");
-            sb.AppendLine("\t<Grid.ColumnDefinitions>");
-
-            skipFirst = true;
-            foreach (var obj in ColumnWidthsCollection)
-            {
-                if (skipFirst)
-                {
-                    skipFirst = false;
-                    continue;
-                }
-                var width = obj.IsStar ? "*" : obj.IsAuto ? "Auto" : obj.Value.ToString();
-                sb.AppendFormat("\t\t<ColumnDefinition Width=\"{0}\" />\r\n", width);
-            }
-
-            sb.AppendLine("\t</Grid.ColumnDefinitions>\r\n");
-
-            for (int columnIndex = 0; columnIndex < gridLayout.ColumnDefinitions.Count; columnIndex++)
-            {
-                for (int rowIndex = 0; rowIndex < gridLayout.RowDefinitions.Count; rowIndex++)
-                {
-                    if (GridCellCollection.ContainsKey(MakeKey(rowIndex, columnIndex)) && GridCellCollection[MakeKey(rowIndex, columnIndex)].ControlType != ControlType.None)
-                    {
-                        var obj = GridCellCollection[MakeKey(rowIndex, columnIndex)];
-
-                        if (ClassEntity != null && ClassEntity.IsSilverlight && obj.StringFormat.IsNotNullOrEmpty())
-                        {
-                            sb.AppendFormat("\t<!-- TODO - Add formatting converter for format: {0} -->", obj.StringFormat);
-                        }
-                        sb.AppendLine(ControlFactory(obj));
-                    }
-                }
-                sb.AppendLine();
-            }
-
-            sb.Replace(" >", ">");
-            sb.Replace("    ", " ");
-            sb.Replace("   ", " ");
-            sb.Replace("  ", " ");
-            sb.AppendLine("</Grid>");
-            BusinessForm = sb.ToString();
-
-            if (BusinessForm.IndexOf("CHAGEME") > -1)
-            {
-                BusinessForm = string.Concat("\r\n\t<!-- Search for and change all instances of CHANGEME -->\r\n", BusinessForm);
-            }
-            DialogResult = true;
-        }
-
-        private void btnPopupColumnAutoSize_Click(object sender, RoutedEventArgs e)
-        {
-            var columnIndex = int.Parse(ColumnSizePopUp.Tag.ToString());
-            ColumnWidthsCollection[columnIndex] = new GridLength(0, GridUnitType.Auto);
-            ColumnHeaderTextBlockCollection[columnIndex].Text = ParseGridLength(ColumnWidthsCollection[columnIndex]);
-            ColumnSizePopUp.IsOpen = false;
-        }
-
-        private void btnPopupColumnStarSize_Click(object sender, RoutedEventArgs e)
-        {
-            var columnIndex = int.Parse(ColumnSizePopUp.Tag.ToString());
-            ColumnWidthsCollection[columnIndex] = new GridLength(1, GridUnitType.Star);
-            ColumnHeaderTextBlockCollection[columnIndex].Text = ParseGridLength(ColumnWidthsCollection[columnIndex]);
-            ColumnSizePopUp.IsOpen = false;
-        }
-
-        private void btnPopupRowAutoSize_Click(object sender, RoutedEventArgs e)
-        {
-            var rowIndex = int.Parse(RowSizePopUp.Tag.ToString());
-            RowHeightsCollection[rowIndex] = new GridLength(0, GridUnitType.Auto);
-            RowHeaderTextBlockCollection[rowIndex].Text = ParseGridLength(RowHeightsCollection[rowIndex]);
-            RowSizePopUp.IsOpen = false;
-        }
-
-        private void btnPopupRowStarSize_Click(object sender, RoutedEventArgs e)
-        {
-            var rowIndex = int.Parse(RowSizePopUp.Tag.ToString());
-            RowHeightsCollection[rowIndex] = new GridLength(1, GridUnitType.Star);
-            RowHeaderTextBlockCollection[rowIndex].Text = ParseGridLength(RowHeightsCollection[rowIndex]);
-            RowSizePopUp.IsOpen = false;
-        }
-
-        private void cboColumnHeader_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var cbo = sender as ComboBox;
-            var columnIndex = (int)cbo.Tag;
-
-            if (cbo.SelectedValue.ToString() == "Select")
-            {
-                return;
-            }
-
-            var controlType = (ControlType)Enum.Parse(typeof(ControlType), cbo.SelectedValue.ToString());
-
-            for (int rowIndex = 1; rowIndex < NumberOfRows; rowIndex++)
-            {
-                GridCellCollection[MakeKey(rowIndex, columnIndex)].ControlType = controlType;
-            }
-
-            LayoutGrid();
-        }
-
-        private void ColumnTextBlock_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var tb = sender as TextBlock;
-            ColumnSizePopUp = FindResource("columnPopUp") as Popup;
-
-            ColumnSizePopUp.Tag = tb.Tag;
-            ColumnSizePopUp.StaysOpen = true;
-            ColumnSizePopUp.PlacementTarget = tb;
-            ColumnSizePopUp.VerticalOffset = -5;
-            ColumnSizePopUp.IsOpen = true;
-
-            ColumnSizePopupTimer = new DispatcherTimer()
-            {
-                Interval = new TimeSpan(0, 0, 1)
-            };
-            ColumnSizePopupTimer.Start();
-        }
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            var h = PropertyChanged;
-            if (h == null)
-                return;
-            h(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void RowTextBlock_MouseRightButtonDownEvent(object sender, MouseButtonEventArgs e)
-        {
-            var tb = sender as TextBlock;
-            RowSizePopUp = FindResource("rowPopUp") as Popup;
-
-            RowSizePopUp.Tag = tb.Tag;
-            RowSizePopUp.StaysOpen = true;
-            RowSizePopUp.PlacementTarget = tb;
-            RowSizePopUp.VerticalOffset = -5;
-            RowSizePopUp.IsOpen = true;
-
-            RowSizePopupTimer = new DispatcherTimer()
-            {
-                Interval = new TimeSpan(0, 0, 1)
-            };
-            RowSizePopupTimer.Start();
-        }
-
-        private void txtAllColumnsWidth_KeyPress(object sender,
-            KeyEventArgs e)
-        {
-            UpdateAllRowsOrColumns(sender, e, false);
-        }
-
-        private void txtAllRowsHeight_KeyPress(object sender,
-            KeyEventArgs e)
-        {
-            UpdateAllRowsOrColumns(sender, e, true);
-        }
-
-        private void txtNumberOfRowsOrColumns_KeyPress(object sender,
-            KeyEventArgs e)
-        {
-            if (!(sender is TextBox) || e.Key != Key.Enter)
-            {
-                return;
-            }
-            if (SetRowOrColumnNumber(sender as TextBox))
-                e.Handled = true;
-        }
-
-        private void txtPopupColumnWidth_KeyPress(object sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.Enter)
-            {
-                return;
-            }
-
-            this.SetDimension(sender as TextBox, false);
-            ColumnSizePopUp.IsOpen = false;
-        }
-
-        private void txtPopupRowHeight_KeyPress(object sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.Enter)
-            {
-                return;
-            }
-            e.Handled = true;
-            this.SetDimension(sender as TextBox, true);
-            RowSizePopUp.IsOpen = false;
-        }
-
-        private void UpdateAllRowsOrColumns(object sender, KeyEventArgs e, bool RowUpdate)
-        {
-            if (e.Key != Key.Enter)
-            {
-                return;
-            }
-            e.Handled = true;
-
-            List<GridLength> gridLengthCollection;
-            List<TextBlock> textBlockCollection;
-            int definitionCount;
-
-            if (RowUpdate)
-            {
-                gridLengthCollection = RowHeightsCollection;
-                textBlockCollection = RowHeaderTextBlockCollection;
-                definitionCount = gridLayout.RowDefinitions.Count - 1;
-            }
-            else
-            {
-                gridLengthCollection = ColumnWidthsCollection;
-                textBlockCollection = ColumnHeaderTextBlockCollection;
-                definitionCount = gridLayout.ColumnDefinitions.Count - 1;
-            }
-
-            var warning = RowUpdate ? "row height" : "column width";
-            var tb = sender as TextBox;
-            int length;
-
-            if (!int.TryParse(tb.Text, out length) || length < 0)
-            {
-                MessageBox.Show(String.Format("The {0} must be an integer greater than or equal to zero, please reenter.",
-                    warning), "Invalid Data", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                return;
-            }
-
-            var defaultSize = new GridLength(length, GridUnitType.Pixel);
-
-            if (RowUpdate)
-                RowDefaultSize = defaultSize;
-            else
-                ColumnDefaultSize = defaultSize;
-
-            for (int i = 0; i < definitionCount; i++)
-            {
-                gridLengthCollection[i] = defaultSize;
-                textBlockCollection[i].Text = ParseGridLength(defaultSize);
-            }
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
-        #region Methods
+        #region Methods (private)
 
         private void AddColumnHeaders()
         {
             // Starting in column 1 (because 0 row and column are used for size
             // configuration) add elements to the column headers.
-            for (int i = 1; i < gridLayout.ColumnDefinitions.Count; i++)
+            for (int i = 1; i < this.gridLayout.ColumnDefinitions.Count; i++)
             {
                 // Create and add the combo box.
-                var cbo = new ComboBox()
-                {
-                    FontSize = 10,
-                    VerticalAlignment = System.Windows.VerticalAlignment.Top,
-                    Margin = new Thickness(10),
-                    IsTabStop = false,
-                    Tag = i
-                };
+                var cbo = new ComboBox
+                          {
+                              FontSize = 10,
+                              VerticalAlignment = VerticalAlignment.Top,
+                              Margin = new Thickness(10),
+                              IsTabStop = false,
+                              Tag = i
+                          };
 
                 // Create a list of names from the enumeration
-                var ary = Enum.GetNames(typeof(ControlType));
+                string[] ary = Enum.GetNames(typeof(ControlType));
                 Array.Sort(ary);
 
                 // Create the values for the comboBox
@@ -725,9 +429,9 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 // Needs to follow above loop to have something to select
                 cbo.SelectedValue = "Select";
 
-                cbo.AddHandler(ComboBox.SelectionChangedEvent,
-                    new SelectionChangedEventHandler(cboColumnHeader_SelectionChanged));
-                ColumnHeaderComboBoxCollection.Add(cbo);
+                cbo.AddHandler(Selector.SelectionChangedEvent,
+                               new SelectionChangedEventHandler(this.cboColumnHeader_SelectionChanged));
+                this.ColumnHeaderComboBoxCollection.Add(cbo);
 
                 // Create the root element of the editor.
                 var sp = new StackPanel();
@@ -736,17 +440,17 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 sp.Children.Add(cbo);
 
                 // Create and add a text block to show the width of the column.
-                var tb = new TextBlock()
-                {
-                    Tag = i - 1,
-                    Margin = new Thickness(5),
-                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                    Text = ParseGridLength(ColumnWidthsCollection[i]),
-                    ToolTip = "Right click to edit this column's size"
-                };
-                tb.AddHandler(TextBlock.MouseRightButtonDownEvent,
-                    new MouseButtonEventHandler(ColumnTextBlock_MouseRightButtonDown));
-                ColumnHeaderTextBlockCollection.Add(tb);
+                var tb = new TextBlock
+                         {
+                             Tag = i - 1,
+                             Margin = new Thickness(5),
+                             HorizontalAlignment = HorizontalAlignment.Center,
+                             Text = this.ParseGridLength(this.ColumnWidthsCollection[i]),
+                             ToolTip = "Right click to edit this column's size"
+                         };
+                tb.AddHandler(MouseRightButtonDownEvent,
+                              new MouseButtonEventHandler(this.ColumnTextBlock_MouseRightButtonDown));
+                this.ColumnHeaderTextBlockCollection.Add(tb);
 
                 // tb goes into the StackPanel
                 sp.Children.Add(tb);
@@ -755,35 +459,35 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 sp.SetValue(Grid.ColumnProperty, i);
 
                 // StackPanel into the grid.
-                gridLayout.Children.Add(sp);
+                this.gridLayout.Children.Add(sp);
             }
         }
 
         private void AddRowHeadersAndData()
         {
             // Iterate through the rows (row 0 done above).
-            for (int rowsIndex = 1; rowsIndex < NumberOfRows; rowsIndex++)
+            for (int rowsIndex = 1; rowsIndex < this.NumberOfRows; rowsIndex++)
             {
                 // Iterate through the columns.
-                for (int columnIndex = 0; columnIndex < NumberOfColumns; columnIndex++)
+                for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
                 {
                     // If in the first column, add the size info.
                     if (columnIndex == 0)
                     {
                         // Row size text box.
-                        var tb = new TextBlock()
-                        {
-                            Tag = rowsIndex - 1,
-                            Margin = new Thickness(5),
-                            HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                            VerticalAlignment = System.Windows.VerticalAlignment.Center,
-                            Text = ParseGridLength(RowHeightsCollection[rowsIndex]),
-                            ToolTip = "Right click to edit this row's size"
-                        };
+                        var tb = new TextBlock
+                                 {
+                                     Tag = rowsIndex - 1,
+                                     Margin = new Thickness(5),
+                                     HorizontalAlignment = HorizontalAlignment.Center,
+                                     VerticalAlignment = VerticalAlignment.Center,
+                                     Text = this.ParseGridLength(this.RowHeightsCollection[rowsIndex]),
+                                     ToolTip = "Right click to edit this row's size"
+                                 };
 
                         // Right Mouse Button Down event
-                        tb.AddHandler(TextBlock.MouseRightButtonDownEvent,
-                            new MouseButtonEventHandler(RowTextBlock_MouseRightButtonDownEvent));
+                        tb.AddHandler(MouseRightButtonDownEvent,
+                                      new MouseButtonEventHandler(this.RowTextBlock_MouseRightButtonDownEvent));
 
                         // Set the row property.
                         tb.SetValue(Grid.RowProperty, rowsIndex);
@@ -792,19 +496,20 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                         tb.SetValue(Grid.ColumnProperty, columnIndex);
 
                         // Add to the RowHeaderTextBlockCollection.
-                        RowHeaderTextBlockCollection.Add(tb);
+                        this.RowHeaderTextBlockCollection.Add(tb);
 
                         // tb to the Grid.
-                        gridLayout.Children.Add(tb);
+                        this.gridLayout.Children.Add(tb);
                     }
                     else
                     {
                         // Else clause takes care of columns 1 and above.
 
                         // if the GridCellCollection does not have the row/column key, add it.
-                        if (!GridCellCollection.ContainsKey(MakeKey(rowsIndex, columnIndex)))
+                        if (!this.GridCellCollection.ContainsKey(this.MakeKey(rowsIndex, columnIndex)))
                         {
-                            GridCellCollection.Add(MakeKey(rowsIndex, columnIndex), new CellContent(rowsIndex, columnIndex));
+                            this.GridCellCollection.Add(this.MakeKey(rowsIndex, columnIndex),
+                                                        new CellContent(rowsIndex, columnIndex));
                         }
 
                         var gridCellEditor = new GridCellEditor();
@@ -815,13 +520,28 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                         // CellContent object for this row and column. This should
                         // allow the SelectedItem of the combo box to bind to the
                         // ControlType property of the CellContent object.
-                        gridCellEditor.DataContext = GridCellCollection[MakeKey(rowsIndex, columnIndex)];
+                        gridCellEditor.DataContext = this.GridCellCollection[this.MakeKey(rowsIndex, columnIndex)];
 
                         // cell editor into the Grid.
-                        gridLayout.Children.Add(gridCellEditor);
+                        this.gridLayout.Children.Add(gridCellEditor);
                     }
                 }
             }
+        }
+
+        private void ColumnTextBlock_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var tb = sender as TextBlock;
+            this.ColumnSizePopUp = this.FindResource("columnPopUp") as Popup;
+
+            this.ColumnSizePopUp.Tag = tb.Tag;
+            this.ColumnSizePopUp.StaysOpen = true;
+            this.ColumnSizePopUp.PlacementTarget = tb;
+            this.ColumnSizePopUp.VerticalOffset = -5;
+            this.ColumnSizePopUp.IsOpen = true;
+
+            this.ColumnSizePopupTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 1) };
+            this.ColumnSizePopupTimer.Start();
         }
 
         private string ControlFactory(CellContent obj)
@@ -833,8 +553,8 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 uiPlatform = UIPlatform.Silverlight;
             }
 
-            var columnIndex = obj.Column - 1;
-            var rowIndex = obj.Row - 1;
+            int columnIndex = obj.Column - 1;
+            int rowIndex = obj.Row - 1;
 
             if (obj.BindingPath.IsNullOrEmpty())
             {
@@ -844,37 +564,53 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             switch (obj.ControlType)
             {
                 case ControlType.CheckBox:
-                    return UIControlFactory.UIControlFactory.Instance
-                        .MakeCheckBox(uiPlatform, columnIndex, rowIndex,
-                        obj.ControlLabel, obj.BindingPath, obj.BindingMode);
+                    return UIControlFactory.Instance.MakeCheckBox(uiPlatform,
+                                                                  columnIndex,
+                                                                  rowIndex,
+                                                                  obj.ControlLabel,
+                                                                  obj.BindingPath,
+                                                                  obj.BindingMode);
                 case ControlType.ComboBox:
-                    return UIControlFactory.UIControlFactory.Instance
-                        .MakeComboBox(uiPlatform, columnIndex, rowIndex,
-                        obj.BindingPath, obj.BindingMode);
+                    return UIControlFactory.Instance.MakeComboBox(uiPlatform,
+                                                                  columnIndex,
+                                                                  rowIndex,
+                                                                  obj.BindingPath,
+                                                                  obj.BindingMode);
                 case ControlType.Image:
-                    return UIControlFactory.UIControlFactory.Instance
-                        .MakeImage(uiPlatform, columnIndex, rowIndex, obj.BindingPath);
+                    return UIControlFactory.Instance.MakeImage(uiPlatform, columnIndex, rowIndex, obj.BindingPath);
                 case ControlType.Label:
-                    return UIControlFactory.UIControlFactory.Instance
-                        .MakeLabelWithoutBinding(uiPlatform, columnIndex, rowIndex,
-                        obj.ControlLabel);
+                    return UIControlFactory.Instance.MakeLabelWithoutBinding(uiPlatform,
+                                                                             columnIndex,
+                                                                             rowIndex,
+                                                                             obj.ControlLabel);
                 case ControlType.TextBlock:
-                    return UIControlFactory.UIControlFactory.Instance
-                        .MakeTextBlock(uiPlatform, columnIndex, rowIndex,
-                        obj.BindingPath, obj.StringFormat,
-                        ClassEntity == null ? string.Empty :
-                        ClassEntity.SilverlightVersion);
+                    return UIControlFactory.Instance.MakeTextBlock(uiPlatform,
+                                                                   columnIndex,
+                                                                   rowIndex,
+                                                                   obj.BindingPath,
+                                                                   obj.StringFormat,
+                                                                   ClassEntity == null
+                                                                       ? string.Empty
+                                                                       : ClassEntity.SilverlightVersion);
                 case ControlType.TextBox:
-                    return UIControlFactory.UIControlFactory.Instance
-                        .MakeTextBox(uiPlatform, columnIndex, rowIndex, obj.BindingPath,
-                        obj.BindingMode, obj.Width, obj.MaximumLength, obj.StringFormat,
-                        obj.DataType.StartsWith("Nullable"),
-                        ClassEntity == null ? string.Empty :
-                        ClassEntity.SilverlightVersion);
+                    return UIControlFactory.Instance.MakeTextBox(uiPlatform,
+                                                                 columnIndex,
+                                                                 rowIndex,
+                                                                 obj.BindingPath,
+                                                                 obj.BindingMode,
+                                                                 obj.Width,
+                                                                 obj.MaximumLength,
+                                                                 obj.StringFormat,
+                                                                 obj.DataType.StartsWith("Nullable"),
+                                                                 ClassEntity == null
+                                                                     ? string.Empty
+                                                                     : ClassEntity.SilverlightVersion);
                 case ControlType.DatePicker:
-                    return UIControlFactory.UIControlFactory.Instance
-                        .MakeDatePicker(uiPlatform, columnIndex, rowIndex,
-                        obj.BindingPath, obj.Width);
+                    return UIControlFactory.Instance.MakeDatePicker(uiPlatform,
+                                                                    columnIndex,
+                                                                    rowIndex,
+                                                                    obj.BindingPath,
+                                                                    obj.Width);
                 default:
 
                     // No match
@@ -884,56 +620,54 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
 
         private int GetIntFromKey(string arg)
         {
-            var rowColumnArray = arg.Split(ROW_COLUMN_KEY_SEPARATOR);
+            string[] rowColumnArray = arg.Split(ROW_COLUMN_KEY_SEPARATOR);
             return int.Parse(rowColumnArray[1]);
         }
 
         private void LayoutGrid()
         {
-            ResetLayout();
+            this.ResetLayout();
 
-            MakeColumnsAndRows();
+            this.MakeColumnsAndRows();
 
-            AddColumnHeaders();
+            this.AddColumnHeaders();
 
-            AddRowHeadersAndData();
+            this.AddRowHeadersAndData();
         }
 
         private void MakeColumnsAndRows()
         {
             // For each NumberOfColumns add a column definition.
-            for (int i = 0; i < NumberOfColumns; i++)
+            for (int i = 0; i < this.NumberOfColumns; i++)
             {
-                gridLayout.ColumnDefinitions.Add(new ColumnDefinition()
-                {
-                    Width = new GridLength(0, GridUnitType.Auto),
-                    MinWidth = 75
-                });
+                this.gridLayout.ColumnDefinitions.Add(new ColumnDefinition
+                                                      {
+                                                          Width =
+                                                              new GridLength(0, GridUnitType.Auto),
+                                                          MinWidth = 75
+                                                      });
             }
 
             // for each NumberOfRows add a row definition.
-            for (int i = 0; i < NumberOfRows; i++)
+            for (int i = 0; i < this.NumberOfRows; i++)
             {
-                gridLayout.RowDefinitions.Add(new RowDefinition()
-                {
-                    Height = new GridLength(0, GridUnitType.Auto)
-                });
+                this.gridLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(0, GridUnitType.Auto) });
             }
 
             // This adds alternating color to each row
-            for (int i = 0; i < gridLayout.RowDefinitions.Count; i++)
+            for (int i = 0; i < this.gridLayout.RowDefinitions.Count; i++)
             {
                 if (i % 2 != 0)
                 {
-                    var rectangle = new Rectangle()
-                    {
-                        Fill = new SolidColorBrush(Colors.WhiteSmoke),
-                        VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
-                        HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch
-                    };
+                    var rectangle = new Rectangle
+                                    {
+                                        Fill = new SolidColorBrush(Colors.WhiteSmoke),
+                                        VerticalAlignment = VerticalAlignment.Stretch,
+                                        HorizontalAlignment = HorizontalAlignment.Stretch
+                                    };
                     rectangle.SetValue(Grid.RowProperty, i);
-                    rectangle.SetValue(Grid.ColumnSpanProperty, NumberOfColumns);
-                    gridLayout.Children.Add(rectangle);
+                    rectangle.SetValue(Grid.ColumnSpanProperty, this.NumberOfColumns);
+                    this.gridLayout.Children.Add(rectangle);
                 }
             }
         }
@@ -943,34 +677,40 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             return string.Format("{0}{1}{2}", RowIndex, ROW_COLUMN_KEY_SEPARATOR, ColumnIndex);
         }
 
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler h = this.PropertyChanged;
+            if (h == null)
+            {
+                return;
+            }
+            h(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private string ParseGridLength(GridLength obj)
         {
             if (obj.IsAuto)
             {
                 return "Auto";
             }
-            if (obj.IsStar)
-            {
-                return "Star";
-            }
-            return obj.Value.ToString();
+            return obj.IsStar ? "Star" : obj.Value.ToString();
         }
 
         private void ResetLayout()
         {
             // Remove all previous handlers
-            foreach (var cbo in ColumnHeaderComboBoxCollection)
+            foreach (var cbo in this.ColumnHeaderComboBoxCollection)
             {
-                cbo.RemoveHandler(ComboBox.SelectionChangedEvent,
-                    new SelectionChangedEventHandler(cboColumnHeader_SelectionChanged));
+                cbo.RemoveHandler(Selector.SelectionChangedEvent,
+                                  new SelectionChangedEventHandler(this.cboColumnHeader_SelectionChanged));
             }
 
-            ColumnHeaderTextBlockCollection.Clear();
-            RowHeaderTextBlockCollection.Clear();
-            ColumnHeaderComboBoxCollection.Clear();
-            gridLayout.Children.Clear();
-            gridLayout.ColumnDefinitions.Clear();
-            gridLayout.RowDefinitions.Clear();
+            this.ColumnHeaderTextBlockCollection.Clear();
+            this.RowHeaderTextBlockCollection.Clear();
+            this.ColumnHeaderComboBoxCollection.Clear();
+            this.gridLayout.Children.Clear();
+            this.gridLayout.ColumnDefinitions.Clear();
+            this.gridLayout.RowDefinitions.Clear();
         }
 
         private bool RightSizeRowsOrColumns(int index, bool DoRows)
@@ -981,15 +721,15 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
 
             if (DoRows)
             {
-                numberOfItems = NumberOfRows;
-                itemsCollection = RowHeightsCollection;
-                defaultSize = RowDefaultSize;
+                numberOfItems = this.NumberOfRows;
+                itemsCollection = this.RowHeightsCollection;
+                defaultSize = this.RowDefaultSize;
             }
             else
             {
-                numberOfItems = NumberOfColumns;
-                itemsCollection = ColumnWidthsCollection;
-                defaultSize = ColumnDefaultSize;
+                numberOfItems = this.NumberOfColumns;
+                itemsCollection = this.ColumnWidthsCollection;
+                defaultSize = this.ColumnDefaultSize;
             }
 
             index++;
@@ -998,75 +738,97 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
             if (index < numberOfItems)
             {
                 var removeList = new List<string>();
-                foreach (var s in GridCellCollection.Keys)
+                foreach (var s in this.GridCellCollection.Keys)
                 {
-                    if (GetIntFromKey(s) > index)
+                    if (this.GetIntFromKey(s) > index)
+                    {
                         removeList.Add(s);
+                    }
                 }
                 foreach (var s in removeList)
                 {
-                    GridCellCollection.Remove(s);
+                    this.GridCellCollection.Remove(s);
                 }
                 itemsCollection.RemoveRange(index, numberOfItems - index);
             }
             if (DoRows)
             {
-                NumberOfRows = index;
+                this.NumberOfRows = index;
             }
             else
             {
-                NumberOfColumns = index;
+                this.NumberOfColumns = index;
             }
             while (itemsCollection.Count < index)
             {
                 itemsCollection.Add(defaultSize);
             }
-            LayoutGrid();
+            this.LayoutGrid();
             return true;
+        }
+
+        private void RowTextBlock_MouseRightButtonDownEvent(object sender, MouseButtonEventArgs e)
+        {
+            var tb = sender as TextBlock;
+            this.RowSizePopUp = this.FindResource("rowPopUp") as Popup;
+
+            this.RowSizePopUp.Tag = tb.Tag;
+            this.RowSizePopUp.StaysOpen = true;
+            this.RowSizePopUp.PlacementTarget = tb;
+            this.RowSizePopUp.VerticalOffset = -5;
+            this.RowSizePopUp.IsOpen = true;
+
+            this.RowSizePopupTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 1) };
+            this.RowSizePopupTimer.Start();
         }
 
         private void SetAllColumnWidths(int length, GridUnitType defaultType)
         {
-            ColumnDefaultSize = new GridLength(length, defaultType);
+            this.ColumnDefaultSize = new GridLength(length, defaultType);
 
-            for (int i = 1; i < gridLayout.ColumnDefinitions.Count; i++)
+            for (int i = 1; i < this.gridLayout.ColumnDefinitions.Count; i++)
             {
-                ColumnWidthsCollection[i] = ColumnDefaultSize;
-                ColumnHeaderTextBlockCollection[i - 1].Text = ParseGridLength(ColumnDefaultSize);
+                this.ColumnWidthsCollection[i] = this.ColumnDefaultSize;
+                this.ColumnHeaderTextBlockCollection[i - 1].Text = this.ParseGridLength(this.ColumnDefaultSize);
             }
 
-            txtColumnSize.Text = string.Empty;
+            this.txtColumnSize.Text = string.Empty;
         }
 
         private void SetAllRowsHeights(int height, GridUnitType defaultType)
         {
-            RowDefaultSize = new GridLength(height, defaultType);
+            this.RowDefaultSize = new GridLength(height, defaultType);
 
-            for (int i = 1; i < gridLayout.RowDefinitions.Count; i++)
+            for (int i = 1; i < this.gridLayout.RowDefinitions.Count; i++)
             {
-                RowHeightsCollection[i] = RowDefaultSize;
-                RowHeaderTextBlockCollection[i - 1].Text = ParseGridLength(RowDefaultSize);
+                this.RowHeightsCollection[i] = this.RowDefaultSize;
+                this.RowHeaderTextBlockCollection[i - 1].Text = this.ParseGridLength(this.RowDefaultSize);
             }
 
-            txtRowSize.Text = string.Empty;
+            this.txtRowSize.Text = string.Empty;
         }
 
         private void SetDimension(TextBox txt, bool doRow)
         {
             int index;
             if (txt.Text.IsNullOrWhiteSpace())
+            {
                 return;
+            }
 
             int dimension;
             if (!(int.TryParse(txt.Text, out dimension) && dimension >= 0))
             {
-                MessageBox.Show("The dimention must be an integer greater than or equal to zero, please reenter.", "Invalid Data", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("The dimention must be an integer greater than or equal to zero, please reenter.",
+                                "Invalid Data",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
                 return;
             }
 
             if (txt.Tag == null)
             {
-                for (int i = 0; i < NumberOfRows - 1; i++)
+                for (int i = 0; i < this.NumberOfRows - 1; i++)
                 {
                     txt.Tag = i;
                     this.SetDimension(txt, doRow);
@@ -1074,23 +836,20 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
                 txt.Tag = null;
                 return;
             }
-            else
-            {
-                index = (int)txt.Tag;
-            }
+            index = (int)txt.Tag;
 
             List<TextBlock> TextBlockCollection;
             List<GridLength> GridLengthCollection;
 
             if (doRow)
             {
-                TextBlockCollection = RowHeaderTextBlockCollection;
-                GridLengthCollection = RowHeightsCollection;
+                TextBlockCollection = this.RowHeaderTextBlockCollection;
+                GridLengthCollection = this.RowHeightsCollection;
             }
             else
             {
-                TextBlockCollection = ColumnHeaderTextBlockCollection;
-                GridLengthCollection = ColumnWidthsCollection;
+                TextBlockCollection = this.ColumnHeaderTextBlockCollection;
+                GridLengthCollection = this.ColumnWidthsCollection;
             }
 
             TextBlockCollection[index].Text = dimension.ToString();
@@ -1101,36 +860,292 @@ namespace XamlHelpmeet.UI.CreateBusinessForm
 
         private bool SetRowOrColumnNumber(TextBox tb)
         {
-            bool? DoRows = tb.Name.Contains("Rows") ? true :
-                tb.Name.Contains("Columns") ? false : (bool?)null;
+            bool? DoRows = tb.Name.Contains("Rows") ? true : tb.Name.Contains("Columns") ? false : (bool?)null;
 
             if (DoRows == null)
             {
                 return false;
             }
 
-            var index = -1;
+            int index = -1;
             if (int.TryParse(tb.Text, out index) == false || index < 1 || index > 50)
             {
-                MessageBox.Show("Row count and column count must be entered between 1 and 50. Please reenter and try again.",
-                    "Invalid Data", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show(
+                                "Row count and column count must be entered between 1 and 50. Please reenter and try again.",
+                                "Invalid Data",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
                 return true;
             }
 
-            if (!((bool)DoRows && NumberOfColumns < 2))
-                return RightSizeRowsOrColumns(index, (bool)DoRows);
+            if (!((bool)DoRows && this.NumberOfColumns < 2))
+            {
+                return this.RightSizeRowsOrColumns(index, (bool)DoRows);
+            }
 
             tb.Text = string.Empty;
-            MessageBox.Show("Column count must be configured before rows. Please enter a column count between 1 and 50 first, and press ENTER. A row count may then be specified.",
-                "Workflow Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            MessageBox.Show(
+                            "Column count must be configured before rows. Please enter a column count between 1 and 50 first, and press ENTER. A row count may then be specified.",
+                            "Workflow Error",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Exclamation);
             return true;
         }
 
-        #endregion
+        private void UpdateAllRowsOrColumns(object sender, KeyEventArgs e, bool RowUpdate)
+        {
+            if (e.Key != Key.Enter)
+            {
+                return;
+            }
+            e.Handled = true;
 
-        #region INotifyPropertyChanged Members
+            List<GridLength> gridLengthCollection;
+            List<TextBlock> textBlockCollection;
+            int definitionCount;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+            if (RowUpdate)
+            {
+                gridLengthCollection = this.RowHeightsCollection;
+                textBlockCollection = this.RowHeaderTextBlockCollection;
+                definitionCount = this.gridLayout.RowDefinitions.Count - 1;
+            }
+            else
+            {
+                gridLengthCollection = this.ColumnWidthsCollection;
+                textBlockCollection = this.ColumnHeaderTextBlockCollection;
+                definitionCount = this.gridLayout.ColumnDefinitions.Count - 1;
+            }
+
+            string warning = RowUpdate ? "row height" : "column width";
+            var tb = sender as TextBox;
+            int length;
+
+            if (!int.TryParse(tb.Text, out length) || length < 0)
+            {
+                MessageBox.Show(
+                                String.Format(
+                                              "The {0} must be an integer greater than or equal to zero, please reenter.",
+                                              warning),
+                                "Invalid Data",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                return;
+            }
+
+            var defaultSize = new GridLength(length, GridUnitType.Pixel);
+
+            if (RowUpdate)
+            {
+                this.RowDefaultSize = defaultSize;
+            }
+            else
+            {
+                this.ColumnDefaultSize = defaultSize;
+            }
+
+            for (int i = 0; i < definitionCount; i++)
+            {
+                gridLengthCollection[i] = defaultSize;
+                textBlockCollection[i].Text = this.ParseGridLength(defaultSize);
+            }
+        }
+
+        private void btnAllColumnsAuto_Click(object sender, RoutedEventArgs e)
+        {
+            this.SetAllColumnWidths(0, GridUnitType.Auto);
+        }
+
+        private void btnAllColumnsStar_Click(object sender, RoutedEventArgs e)
+        {
+            this.SetAllColumnWidths(1, GridUnitType.Star);
+        }
+
+        private void btnAllRowsAuto_Click(object sender, RoutedEventArgs e)
+        {
+            this.SetAllRowsHeights(0, GridUnitType.Auto);
+        }
+
+        private void btnAllRowsStar_Click(object sender, RoutedEventArgs e)
+        {
+            this.SetAllRowsHeights(1, GridUnitType.Star);
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            // BUG: Investigate exception: DialogResult can be set only after
+            // a window has been opened as a dialog.
+            this.DialogResult = false;
+        }
+
+        private void btnCreate_Click(object sender, RoutedEventArgs e)
+        {
+            var sb = new StringBuilder(10240);
+            sb.AppendLine("<Grid>");
+            sb.AppendLine("\t<Grid.RowDefinitions>");
+
+            bool skipFirst = true;
+
+            foreach (var obj in this.RowHeightsCollection)
+            {
+                if (skipFirst)
+                {
+                    skipFirst = false;
+                    continue;
+                }
+                string height = obj.IsStar ? "*" : obj.IsAuto ? "Auto" : obj.Value.ToString();
+                sb.AppendFormat("\t\t<RowDefinition Height=\"{0}\" />\r\n", height);
+            }
+
+            sb.AppendLine("\t</Grid.RowDefinitions>");
+            sb.AppendLine("\t<Grid.ColumnDefinitions>");
+
+            skipFirst = true;
+            foreach (var obj in this.ColumnWidthsCollection)
+            {
+                if (skipFirst)
+                {
+                    skipFirst = false;
+                    continue;
+                }
+                string width = obj.IsStar ? "*" : obj.IsAuto ? "Auto" : obj.Value.ToString();
+                sb.AppendFormat("\t\t<ColumnDefinition Width=\"{0}\" />\r\n", width);
+            }
+
+            sb.AppendLine("\t</Grid.ColumnDefinitions>\r\n");
+
+            for (int columnIndex = 0; columnIndex < this.gridLayout.ColumnDefinitions.Count; columnIndex++)
+            {
+                for (int rowIndex = 0; rowIndex < this.gridLayout.RowDefinitions.Count; rowIndex++)
+                {
+                    if (this.GridCellCollection.ContainsKey(this.MakeKey(rowIndex, columnIndex))
+                        && this.GridCellCollection[this.MakeKey(rowIndex, columnIndex)].ControlType != ControlType.None)
+                    {
+                        CellContent obj = this.GridCellCollection[this.MakeKey(rowIndex, columnIndex)];
+
+                        if (ClassEntity != null && ClassEntity.IsSilverlight && obj.StringFormat.IsNotNullOrEmpty())
+                        {
+                            sb.AppendFormat("\t<!-- TODO - Add formatting converter for format: {0} -->",
+                                            obj.StringFormat);
+                        }
+                        sb.AppendLine(this.ControlFactory(obj));
+                    }
+                }
+                sb.AppendLine();
+            }
+
+            sb.Replace(" >", ">");
+            sb.Replace("    ", " ");
+            sb.Replace("   ", " ");
+            sb.Replace("  ", " ");
+            sb.AppendLine("</Grid>");
+            this.BusinessForm = sb.ToString();
+
+            if (this.BusinessForm.IndexOf("CHAGEME") > -1)
+            {
+                this.BusinessForm = string.Concat("\r\n\t<!-- Search for and change all instances of CHANGEME -->\r\n",
+                                                  this.BusinessForm);
+            }
+            this.DialogResult = true;
+        }
+
+        private void btnPopupColumnAutoSize_Click(object sender, RoutedEventArgs e)
+        {
+            int columnIndex = int.Parse(this.ColumnSizePopUp.Tag.ToString());
+            this.ColumnWidthsCollection[columnIndex] = new GridLength(0, GridUnitType.Auto);
+            this.ColumnHeaderTextBlockCollection[columnIndex].Text =
+                this.ParseGridLength(this.ColumnWidthsCollection[columnIndex]);
+            this.ColumnSizePopUp.IsOpen = false;
+        }
+
+        private void btnPopupColumnStarSize_Click(object sender, RoutedEventArgs e)
+        {
+            int columnIndex = int.Parse(this.ColumnSizePopUp.Tag.ToString());
+            this.ColumnWidthsCollection[columnIndex] = new GridLength(1, GridUnitType.Star);
+            this.ColumnHeaderTextBlockCollection[columnIndex].Text =
+                this.ParseGridLength(this.ColumnWidthsCollection[columnIndex]);
+            this.ColumnSizePopUp.IsOpen = false;
+        }
+
+        private void btnPopupRowAutoSize_Click(object sender, RoutedEventArgs e)
+        {
+            int rowIndex = int.Parse(this.RowSizePopUp.Tag.ToString());
+            this.RowHeightsCollection[rowIndex] = new GridLength(0, GridUnitType.Auto);
+            this.RowHeaderTextBlockCollection[rowIndex].Text = this.ParseGridLength(this.RowHeightsCollection[rowIndex]);
+            this.RowSizePopUp.IsOpen = false;
+        }
+
+        private void btnPopupRowStarSize_Click(object sender, RoutedEventArgs e)
+        {
+            int rowIndex = int.Parse(this.RowSizePopUp.Tag.ToString());
+            this.RowHeightsCollection[rowIndex] = new GridLength(1, GridUnitType.Star);
+            this.RowHeaderTextBlockCollection[rowIndex].Text = this.ParseGridLength(this.RowHeightsCollection[rowIndex]);
+            this.RowSizePopUp.IsOpen = false;
+        }
+
+        private void cboColumnHeader_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var cbo = sender as ComboBox;
+            var columnIndex = (int)cbo.Tag;
+
+            if (cbo.SelectedValue.ToString() == "Select")
+            {
+                return;
+            }
+
+            var controlType = (ControlType)Enum.Parse(typeof(ControlType), cbo.SelectedValue.ToString());
+
+            for (int rowIndex = 1; rowIndex < this.NumberOfRows; rowIndex++)
+            {
+                this.GridCellCollection[this.MakeKey(rowIndex, columnIndex)].ControlType = controlType;
+            }
+
+            this.LayoutGrid();
+        }
+
+        private void txtAllColumnsWidth_KeyPress(object sender, KeyEventArgs e)
+        {
+            this.UpdateAllRowsOrColumns(sender, e, false);
+        }
+
+        private void txtAllRowsHeight_KeyPress(object sender, KeyEventArgs e)
+        {
+            this.UpdateAllRowsOrColumns(sender, e, true);
+        }
+
+        private void txtNumberOfRowsOrColumns_KeyPress(object sender, KeyEventArgs e)
+        {
+            if (!(sender is TextBox) || e.Key != Key.Enter)
+            {
+                return;
+            }
+            if (this.SetRowOrColumnNumber(sender as TextBox))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtPopupColumnWidth_KeyPress(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter)
+            {
+                return;
+            }
+
+            this.SetDimension(sender as TextBox, false);
+            this.ColumnSizePopUp.IsOpen = false;
+        }
+
+        private void txtPopupRowHeight_KeyPress(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter)
+            {
+                return;
+            }
+            e.Handled = true;
+            this.SetDimension(sender as TextBox, true);
+            this.RowSizePopUp.IsOpen = false;
+        }
 
         #endregion
     }

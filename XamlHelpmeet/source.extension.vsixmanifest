@@ -1,25 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="37b68c5c-8ac0-436c-8483-0947379cffe9" Version="0.5" Language="en-US" Publisher="YoderTools" />
-    <DisplayName>Xaml Helpmeet</DisplayName>
-    <Description xml:space="preserve">Xaml Helpmeet is an extension to Visual Studio 2012 designed to help developers create and edit Xaml documents.</Description>
-    <MoreInfo >http://xamlhelpmeet.codeplex.com/</MoreInfo>
-    <License>XamlHelpmeet.rtf</License>
-    <GettingStartedGuide>http://xamlhelpmeet.codeplex.com/wikipage?title=Getting%20Started</GettingStartedGuide>
-    <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
-    <Icon>Resources\XamlPageControl.ico</Icon>
-    <PreviewImage>XamlHelpmeet.png</PreviewImage>
-    <Tags>XAML, Utilties, WPF, Silverlight, Visual Studio 2012</Tags>
-  </Metadata>
-  <Installation InstalledByMsi="false">
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="11.0" />
-  </Installation>
-  <Dependencies>
-    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />
-    <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="11.0" />
-  </Dependencies>
-  <Assets>
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-  </Assets>
+    <Metadata>
+        <Identity Id="37b68c5c-8ac0-436c-8483-0947379cffe9" Version="0.6" Language="en-US" Publisher="YoderTools" />
+        <DisplayName>Xaml Helpmeet</DisplayName>
+        <Description xml:space="preserve">Xaml Helpmeet is an extension to Visual Studio 2012 designed to help developers create and edit Xaml documents.</Description>
+        <MoreInfo >http://xamlhelpmeet.codeplex.com/</MoreInfo>
+        <License>XamlHelpmeet.rtf</License>
+        <GettingStartedGuide>http://xamlhelpmeet.codeplex.com/wikipage?title=Getting%20Started</GettingStartedGuide>
+        <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
+        <Icon>Resources\XamlPageControl.ico</Icon>
+        <PreviewImage>XamlHelpmeet.png</PreviewImage>
+        <Tags>XAML, Utilties, WPF, Silverlight, Visual Studio 2012</Tags>
+    </Metadata>
+    <Installation InstalledByMsi="false">
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="11.0" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />
+        <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="11.0" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    </Assets>
 </PackageManifest>

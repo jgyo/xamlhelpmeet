@@ -1,15 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace XamlHelpmeet.Utility
 {
-	public enum NarrowSelectionResult
-	{
-		SelectionIsEmpty,
-		InconsistentSelectionEnds,
-		PartialTagSelected,
-		Success
-	}
+    /// <summary>
+    ///     Values that represent NarrowSelectionResult.
+    /// </summary>
+    public enum NarrowSelectionResult
+    {
+        /// <summary>
+        ///     The current selection is empty.
+        /// </summary>
+        SelectionIsEmpty,
+
+        /// <summary>
+        ///     The end tags were inconsistent.
+        /// </summary>
+        InconsistentSelectionEnds,
+
+        /// <summary>
+        ///     The starting selection was less than a complete tag.
+        /// </summary>
+        PartialTagSelected,
+
+        /// <summary>
+        ///     The narrow selection command succeeded.
+        /// </summary>
+        Success
+    }
 }

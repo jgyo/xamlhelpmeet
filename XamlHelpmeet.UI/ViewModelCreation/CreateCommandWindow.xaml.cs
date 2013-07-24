@@ -1,291 +1,290 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
- using XamlHelpmeet.Extensions;
-using XamlHelpmeet.UI.Commands;
-
-namespace XamlHelpmeet.UI.ViewModelCreation
+﻿namespace XamlHelpmeet.UI.ViewModelCreation
 {
-	/// <summary>
-	/// Interaction logic for CreateCommandWindow.xaml
-	/// </summary>
-	public partial class CreateCommandWindow : Window, INotifyPropertyChanged
-	{
-		#region Fields
+    #region Imports
 
-		private bool _autoAppendExecute;
-		private string _canExecuteMethodName;
-		private string _commandName;
-		private string _commandParameterType;
-		private ICommand _createCommand;
-		private CreateCommandSource _createCommandSource;
-		private string _executeMethodName;
-		private string _fieldName;
-		private bool _isVB;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
+    using System.Windows.Input;
+    using XamlHelpmeet.Extensions;
+    using XamlHelpmeet.UI.Commands;
+    using XamlHelpmeet.UI.UIControlFactory;
 
-		#endregion Fields
+    #endregion
 
-		#region Properties
+    /// <summary>
+    ///     Interaction logic for CreateCommandWindow.xaml
+    /// </summary>
+    public partial class CreateCommandWindow : Window, INotifyPropertyChanged
+    {
+        #region Fields
 
-		public bool AutoAppendExecute
-		{
-			get
-			{
-				return _autoAppendExecute;
-			}
-			set
-			{
-				_autoAppendExecute = value;
-				OnPropertyChanged("AutoAppendExecute");
-				UIControlFactory.UIControlFactory.Instance.UIControls.AutoAppendExecute = _autoAppendExecute;
-			}
-		}
+        private readonly bool _isVB;
 
-		public string CanExecuteMethodName
-		{
-			get
-			{
-				return _canExecuteMethodName;
-			}
-			set
-			{
-				_canExecuteMethodName = value;
-				OnPropertyChanged("CanExecuteMethodName");
-			}
-		}
+        private bool _autoAppendExecute;
 
-		public string CommandName
-		{
-			get
-			{
-				return _commandName;
-			}
-			set
-			{
-				_commandName = value;
-				OnPropertyChanged("CommandName");
-				SetCommandMethodNames();
-			}
-		}
+        private string _canExecuteMethodName;
 
-		public string CommandParameterType
-		{
-			get
-			{
-				return _commandParameterType;
-			}
-			set
-			{
-				_commandParameterType = value;
-				OnPropertyChanged("CommandParameterType");
-			}
-		}
+        private string _commandName;
 
-		public ICommand CreateCommand
-		{
-			get
-			{
-				if (_createCommand == null)
-					_createCommand = new RelayCommand(CreateExecute, CanCreateExecute);
-				return _createCommand;
-			}
-			set
-			{
-				_createCommand = value;
-			}
-		}
+        private string _commandParameterType;
 
-		public CreateCommandSource CreateCommandSource
-		{
-			get
-			{
-				return _createCommandSource;
-			}
-			set
-			{
-				_createCommandSource = value;
-				OnPropertyChanged("CreateCommandSource");
-			}
-		}
+        private ICommand _createCommand;
 
-		public string ExecuteMethodName
-		{
-			get
-			{
-				return _executeMethodName;
-			}
-			set
-			{
-				_executeMethodName = value;
-				OnPropertyChanged("ExecuteMethodName");
-			}
-		}
+        private CreateCommandSource _createCommandSource;
 
-		public string FieldName
-		{
-			get
-			{
-				return _fieldName;
-			}
-			set
-			{
-				_fieldName = value;
-				OnPropertyChanged("FieldName");
-			}
-		}
+        private string _executeMethodName;
 
-		public bool IsVB
-		{
-			get
-			{
-				return _isVB;
-			}
-		}
+        private string _fieldName;
 
-		#endregion Properties
+        #endregion
 
-		#region Methods
+        #region Constructors
 
-		private void btnCancel_Click(object sender, RoutedEventArgs e)
-		{
-			DialogResult = false;
-		}
+        public CreateCommandWindow(bool isVB)
+        {
+            this._isVB = isVB;
 
-		private bool CanCreateExecute(object obj)
-		{
-			if (_commandName.IsNullOrEmpty())
-				return false;
+            if (isVB)
+            {
+                this._commandParameterType = "Object";
+            }
+            else
+            {
+                this._commandParameterType = "object";
+            }
 
-			if (_fieldName.IsNullOrEmpty())
-				return false;
+            this._autoAppendExecute = UIControlFactory.Instance.UIControls.AutoAppendExecute;
+            this.DataContext = this;
+            this.InitializeComponent();
+        }
 
-			if (_executeMethodName == null)
-				return false;
+        public CreateCommandWindow() { this.InitializeComponent(); }
 
-			if ((chkIncludeCanExecuteMethod.IsChecked == true) && _canExecuteMethodName.IsNullOrEmpty())
-				return false;
+        #endregion
 
-			return true;
-		}
+        #region Properties and Indexers
 
-		private void cboCommandName_Loaded(object sender, RoutedEventArgs e)
-		{
-			cboCommandName.RemoveHandler(ComboBox.SelectionChangedEvent, new 
-				SelectionChangedEventHandler(cboCommandNameSelectionChanged));
-			cboCommandName.ItemsSource = GetCommandNames();
-			cboCommandName.SelectedIndex = -1;
-			cboCommandName.AddHandler(ComboBox.SelectionChangedEvent, new
-				SelectionChangedEventHandler(cboCommandNameSelectionChanged));
-		}
+        public bool AutoAppendExecute
+        {
+            get { return this._autoAppendExecute; }
+            set
+            {
+                this._autoAppendExecute = value;
+                this.OnPropertyChanged("AutoAppendExecute");
+                UIControlFactory.Instance.UIControls.AutoAppendExecute = this._autoAppendExecute;
+            }
+        }
 
-		private void CreateExecute(object obj)
-		{
-			UIControlFactory.UIControlFactory.Instance.Save(false);
-			CreateCommandSource = new CreateCommandSource(rdoCanExecuteUseAddressOf
-				.IsChecked.Value, rdoExecuteUseAddressOf.IsChecked.Value,
-				chkIncludeCanExecuteMethod.IsChecked.Value, rdoRelayCommand
-				.IsChecked.Value, CanExecuteMethodName, CommandName,
-				CommandParameterType, ExecuteMethodName, FieldName);
-			DialogResult = true;
-		}
+        public string CanExecuteMethodName
+        {
+            get { return this._canExecuteMethodName; }
+            set
+            {
+                this._canExecuteMethodName = value;
+                this.OnPropertyChanged("CanExecuteMethodName");
+            }
+        }
 
-		private IList<string> GetCommandNames()
-		{
-			var obj = new List<string>();
-			obj.Add("New");
-			obj.Add("Save");
-			obj.Add("Update");
-			obj.Add("Delete");
-			obj.Add("Insert");
-			obj.Add("Select");
-			obj.Add("Remove");
-			obj.Add("Add");
-			obj.Add("Lookup");
-			obj.Add("Create");
-			obj.Add("Modify");
-			obj.Add("Extract");
-			obj.Add("Next");
-			obj.Add("Last");
-			obj.Add("Previous");
-			obj.Add("First");
-			obj.Add("Stop");
-			obj.Add("Cancel");
-			obj.Sort();
-			return obj;
-		}
+        public string CommandName
+        {
+            get { return this._commandName; }
+            set
+            {
+                this._commandName = value;
+                this.OnPropertyChanged("CommandName");
+                this.SetCommandMethodNames();
+            }
+        }
 
-		private void SetCommandMethodNames()
-		{
-			var commandName = CommandName;
+        public string CommandParameterType
+        {
+            get { return this._commandParameterType; }
+            set
+            {
+                this._commandParameterType = value;
+                this.OnPropertyChanged("CommandParameterType");
+            }
+        }
 
-			if (IsVB)
-				FieldName = String.Format("_cmd{0}", commandName);
-			else
-				FieldName = String.Format("_{0}{1}", commandName.ToLower()[0], commandName.Substring(1));
+        public ICommand CreateCommand
+        {
+            get
+            {
+                if (this._createCommand == null)
+                {
+                    this._createCommand = new RelayCommand(this.CreateExecute, this.CanCreateExecute);
+                }
+                return this._createCommand;
+            }
+            set { this._createCommand = value; }
+        }
 
-			commandName = commandName.Replace("Command", string.Empty);
+        public CreateCommandSource CreateCommandSource
+        {
+            get { return this._createCommandSource; }
+            set
+            {
+                this._createCommandSource = value;
+                this.OnPropertyChanged("CreateCommandSource");
+            }
+        }
 
-			if (AutoAppendExecute)
-			{
-				ExecuteMethodName = String.Format("{0}Execute", commandName);
-				CanExecuteMethodName = String.Format("Can{0}Execute", commandName);
-			}
-			else
-			{
-				ExecuteMethodName = commandName;
-				CanExecuteMethodName = String.Format("Can{0}", commandName);
-			}
-		}
+        public string ExecuteMethodName
+        {
+            get { return this._executeMethodName; }
+            set
+            {
+                this._executeMethodName = value;
+                this.OnPropertyChanged("ExecuteMethodName");
+            }
+        }
 
-		#endregion Methods
+        public string FieldName
+        {
+            get { return this._fieldName; }
+            set
+            {
+                this._fieldName = value;
+                this.OnPropertyChanged("FieldName");
+            }
+        }
 
-		#region Constructors
+        public bool IsVB { get { return this._isVB; } }
 
-		public CreateCommandWindow(bool isVB)
-		{
-			_isVB = isVB;
+        #endregion
 
-			if (isVB)
-				_commandParameterType = "Object";
-			else
-				_commandParameterType = "object";
+        #region INotifyPropertyChanged Members
 
-			_autoAppendExecute = UIControlFactory.UIControlFactory.Instance.UIControls.AutoAppendExecute;
-			DataContext = this;
-			InitializeComponent();
-		}
+        public event PropertyChangedEventHandler PropertyChanged;
 
-		public CreateCommandWindow()
-		{
-			InitializeComponent();
-		}
+        #endregion
 
-		#endregion Constructors
+        #region Methods (private)
 
-		#region INotifyPropertyChanged Members
+        private bool CanCreateExecute(object obj)
+        {
+            if (this._commandName.IsNullOrEmpty())
+            {
+                return false;
+            }
 
-		public event PropertyChangedEventHandler PropertyChanged;
+            if (this._fieldName.IsNullOrEmpty())
+            {
+                return false;
+            }
 
-		private void OnPropertyChanged(string propertyName)
-		{
-			var h=PropertyChanged;
-			if (h == null)
-				return;
+            if (this._executeMethodName == null)
+            {
+                return false;
+            }
 
-			h(this, new PropertyChangedEventArgs(propertyName));
-		}
+            return (this.chkIncludeCanExecuteMethod.IsChecked != true) || !this._canExecuteMethodName.IsNullOrEmpty();
+        }
 
-		#endregion INotifyPropertyChanged Members
+        private void CreateExecute(object obj)
+        {
+            UIControlFactory.Instance.Save(false);
+            this.CreateCommandSource = new CreateCommandSource(this.rdoCanExecuteUseAddressOf.IsChecked.Value,
+                                                               this.rdoExecuteUseAddressOf.IsChecked.Value,
+                                                               this.chkIncludeCanExecuteMethod.IsChecked.Value,
+                                                               this.rdoRelayCommand.IsChecked.Value,
+                                                               this.CanExecuteMethodName,
+                                                               this.CommandName,
+                                                               this.CommandParameterType,
+                                                               this.ExecuteMethodName,
+                                                               this.FieldName);
+            this.DialogResult = true;
+        }
 
-		private void cboCommandNameSelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			if (cboCommandName.SelectedItem == null || cboCommandName.SelectedIndex == -1)
-				return;
+        private IList<string> GetCommandNames()
+        {
+            var obj = new List<string>();
+            obj.Add("New");
+            obj.Add("Save");
+            obj.Add("Update");
+            obj.Add("Delete");
+            obj.Add("Insert");
+            obj.Add("Select");
+            obj.Add("Remove");
+            obj.Add("Add");
+            obj.Add("Lookup");
+            obj.Add("Create");
+            obj.Add("Modify");
+            obj.Add("Extract");
+            obj.Add("Next");
+            obj.Add("Last");
+            obj.Add("Previous");
+            obj.Add("First");
+            obj.Add("Stop");
+            obj.Add("Cancel");
+            obj.Sort();
+            return obj;
+        }
 
-			CommandName = String.Format("{0}Command", cboCommandName.SelectedItem);
-		}
-	}
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler h = this.PropertyChanged;
+            if (h == null)
+            {
+                return;
+            }
+
+            h(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void SetCommandMethodNames()
+        {
+            string commandName = this.CommandName;
+
+            if (this.IsVB)
+            {
+                this.FieldName = String.Format("_cmd{0}", commandName);
+            }
+            else
+            {
+                this.FieldName = String.Format("_{0}{1}", commandName.ToLower()[0], commandName.Substring(1));
+            }
+
+            commandName = commandName.Replace("Command", string.Empty);
+
+            if (this.AutoAppendExecute)
+            {
+                this.ExecuteMethodName = String.Format("{0}Execute", commandName);
+                this.CanExecuteMethodName = String.Format("Can{0}Execute", commandName);
+            }
+            else
+            {
+                this.ExecuteMethodName = commandName;
+                this.CanExecuteMethodName = String.Format("Can{0}", commandName);
+            }
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e) { this.DialogResult = false; }
+
+        private void cboCommandNameSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.cboCommandName.SelectedItem == null || this.cboCommandName.SelectedIndex == -1)
+            {
+                return;
+            }
+
+            this.CommandName = String.Format("{0}Command", this.cboCommandName.SelectedItem);
+        }
+
+        private void cboCommandName_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.cboCommandName.RemoveHandler(Selector.SelectionChangedEvent,
+                                              new SelectionChangedEventHandler(this.cboCommandNameSelectionChanged));
+            this.cboCommandName.ItemsSource = this.GetCommandNames();
+            this.cboCommandName.SelectedIndex = -1;
+            this.cboCommandName.AddHandler(Selector.SelectionChangedEvent,
+                                           new SelectionChangedEventHandler(this.cboCommandNameSelectionChanged));
+        }
+
+        #endregion
+    }
 }

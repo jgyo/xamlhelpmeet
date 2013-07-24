@@ -34,7 +34,7 @@
         /// <param name="ExecuteMethod">
         ///     The execute method.
         /// </param>
-        public RelayCommand(Action<object> ExecuteMethod) : this(ExecuteMethod, null) { }
+        public RelayCommand(Action<object> ExecuteMethod) : this(ExecuteMethod, null) {}
 
         /// <summary>
         ///     Initializes a new instance of the RelayCommand class.
@@ -74,12 +74,7 @@
         /// </returns>
         public bool CanExecute(object parameter)
         {
-            if (this._canExecuteMethod == null)
-            {
-                return true;
-            }
-
-            return this._canExecuteMethod(parameter);
+            return this._canExecuteMethod == null || this._canExecuteMethod(parameter);
         }
 
         /// <summary>
@@ -110,7 +105,10 @@
         /// <param name="parameter">
         ///     The parameter.
         /// </param>
-        public void Execute(object parameter) { this._executeMethod(parameter); }
+        public void Execute(object parameter)
+        {
+            this._executeMethod(parameter);
+        }
 
         #endregion
 
@@ -160,7 +158,7 @@
         /// <param name="ExecuteMethod">
         ///     The execute method.
         /// </param>
-        public RelayCommand(Action<T> ExecuteMethod) : this(ExecuteMethod, null) { }
+        public RelayCommand(Action<T> ExecuteMethod) : this(ExecuteMethod, null) {}
 
         /// <summary>
         ///     Initializes a new instance of the RelayCommand class.
@@ -200,12 +198,7 @@
         /// </returns>
         public bool CanExecute(object parameter)
         {
-            if (this._canExecuteMethod == null)
-            {
-                return true;
-            }
-
-            return this._canExecuteMethod((T)parameter);
+            return this._canExecuteMethod == null || this._canExecuteMethod((T)parameter);
         }
 
         /// <summary>
@@ -236,7 +229,10 @@
         /// <param name="parameter">
         ///     The parameter.
         /// </param>
-        public void Execute(object parameter) { this._executeMethod((T)parameter); }
+        public void Execute(object parameter)
+        {
+            this._executeMethod((T)parameter);
+        }
 
         #endregion
 

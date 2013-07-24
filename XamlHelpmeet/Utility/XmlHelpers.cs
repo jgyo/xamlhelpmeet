@@ -4,28 +4,29 @@
 // <author>Gil Yoder</author>
 // <date>3/7/2013</date>
 // <summary>Implements the xml helpers class</summary>
-using System;
-using System.Text.RegularExpressions;
-using EnvDTE;
-using XamlHelpmeet.Extensions;
-using XamlHelpmeet.UI.Utilities;
-
 namespace XamlHelpmeet.Utility
 {
+    #region Imports
+
+    using System;
+    using System.Text.RegularExpressions;
+    using EnvDTE;
+    using XamlHelpmeet.Extensions;
+
+    #endregion
+
     /// <summary>
     ///     Xml helpers.
     /// </summary>
     public static class XmlHelpers
     {
-        private static string _documentText;
-        private static XamlNode _rootNode;
-
-        #region Regular Expression Public Constants
+        #region Constants
 
         /// <summary>
         ///     A pattern specifying an attribute.
         /// </summary>
-        public const string ATTRIBUTE_PATTERN = @"(?:\s+(?<Attribute>(?<AttribName>\w+?(?::\w+?)?)=""(?<AttribValue>.*?)""))";
+        public const string ATTRIBUTE_PATTERN =
+            @"(?:\s+(?<Attribute>(?<AttribName>\w+?(?::\w+?)?)=""(?<AttribValue>.*?)""))";
 
         /// <summary>
         ///     A pattern specifying a comment.
@@ -66,6 +67,16 @@ namespace XamlHelpmeet.Utility
 
         #endregion
 
+        #region Fields
+
+        private static string _documentText;
+
+        private static XamlNode _rootNode;
+
+        #endregion
+
+        #region Methods (public)
+
         /// <summary>
         ///     A TextSelection extension method that determine if we are siblings
         ///     selected.
@@ -78,92 +89,15 @@ namespace XamlHelpmeet.Utility
         /// </returns>
         public static bool AreSiblingsSelected(this TextSelection selection)
         {
-            var ep = GetEditorPoints(selection);
+            EditorPoints ep = GetEditorPoints(selection);
             if (ep.IsInvalid)
+            {
                 return false;
+            }
             //ep.RestoreSelectedText(selection);
-            var firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(ep.TopPoint - 1, ep.BottomPoint - 1);
+            Tuple<XamlNode, XamlNode> firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(ep.TopPoint - 1,
+                                                                                              ep.BottomPoint - 1);
             return firstAndLast.Item1.Parent == firstAndLast.Item2.Parent;
-        }
-
-        /// <summary>
-        ///     A TextSelection extension method that queries if 'selection' is node
-        ///     selected.
-        /// </summary>
-        /// <param name="selection">
-        ///     The target to act on.
-        /// </param>
-        /// <param name="name">
-        ///     (optional) the name.
-        /// </param>
-        /// <returns>
-        ///     true if node selected, otherwise false.
-        /// </returns>
-        public static bool IsNodeSelected(this TextSelection selection, string name = "")
-        {
-            var ep = GetEditorPoints(selection);
-            if (ep.IsInvalid)
-                return false;
-            ep.RestoreSelectedText(selection);
-            var firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(ep.TopPoint - 1, ep.BottomPoint - 1);
-            if (firstAndLast.Item1 != firstAndLast.Item2)
-                return false;
-            if (name == string.Empty)
-                return true;
-            return Regex.IsMatch(selection.Text, string.Format(@"<(?<StartTagName>{0})(?=[\s/>])", name));
-        }
-
-        /// <summary>
-        ///     A TextSelection extension method that expand selection.
-        /// </summary>
-        /// <param name="selection">
-        ///     The target to act on.
-        /// </param>
-        /// <returns>
-        ///     .
-        /// </returns>
-        public static WiddenSelectionResult ExpandSelection(this TextSelection selection)
-        {
-            var ep = selection.GetEditorPoints();
-
-            // If nothing is selected, select the closest node.
-            if (ep.IsEmpty)
-            {
-                selection.ResetSelection(ep);
-                if (selection.SelectNode())
-                {
-                    return WiddenSelectionResult.Success;
-                }
-                return WiddenSelectionResult.NodeSelectError;
-            }
-            // If a node or nodes are selected, select the parent.
-            if (selection.IsNodeSelected() || selection.AreSiblingsSelected())
-            {
-                if (selection.SelectParent())
-                    return WiddenSelectionResult.Success;
-                return WiddenSelectionResult.ParentSelectError;
-            }
-            return WiddenSelectionResult.LogicError;
-        }
-
-        /// <summary>
-        ///     A TextSelection extension method that select parent.
-        /// </summary>
-        /// <param name="selection">
-        ///     The target to act on.
-        /// </param>
-        /// <returns>
-        ///     true if it succeeds, otherwise false.
-        /// </returns>
-        public static bool SelectParent(this TextSelection selection)
-        {
-            var ep = selection.GetEditorPoints();
-            var nodes = _rootNode.GetSelectedNodes(ep);
-            if (nodes == null || nodes == null)
-                return false;
-            var parent = nodes[0].Parent;
-            selection.SetSelection(parent.BottomPoint + 1, parent.TopPoint + 1);
-            return true;
         }
 
         /// <summary>
@@ -178,7 +112,9 @@ namespace XamlHelpmeet.Utility
         public static NarrowSelectionResult ContractSelection(this TextSelection selection)
         {
             if (selection.IsEmpty)
+            {
                 return NarrowSelectionResult.SelectionIsEmpty;
+            }
 
             //! If the selection begins or ends other than at the beginning and
             //! ending of a node, narrow the selection to include only the node.
@@ -189,22 +125,28 @@ namespace XamlHelpmeet.Utility
             //! If neither of the above, report a failure.
 
             // Get the original end points of the selection
-            var origEndPoints = GetEditorPoints(selection);
+            EditorPoints origEndPoints = GetEditorPoints(selection);
 
             // Get the first and last selected nodes.
-            var firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(origEndPoints.TopPoint - 1, origEndPoints.BottomPoint - 1);
+            Tuple<XamlNode, XamlNode> firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(
+                                                                                              origEndPoints.TopPoint - 1,
+                                                                                              origEndPoints.BottomPoint
+                                                                                              - 1);
 
             //+ Case: No nodes are returned
             //  Means that the selection nodes were not within one parent
             if (firstAndLast == null)
+            {
                 return NarrowSelectionResult.InconsistentSelectionEnds;
+            }
 
             //+ Case: one node is returned.
             if (firstAndLast.Item1 == firstAndLast.Item2)
             {
-                if (firstAndLast.Item1.IsNodeWithin(origEndPoints.TopPoint - 1, origEndPoints.BottomPoint - 1) && !firstAndLast.Item1.IsSelfClosing)
+                if (firstAndLast.Item1.IsNodeWithin(origEndPoints.TopPoint - 1, origEndPoints.BottomPoint - 1)
+                    && !firstAndLast.Item1.IsSelfClosing)
                 {
-                    var contentEndPoints = firstAndLast.Item1.GetContentEndPoints();
+                    EditorPoints contentEndPoints = firstAndLast.Item1.GetContentEndPoints();
                     contentEndPoints.RestoreSelectedText(selection);
                 }
                 else
@@ -251,6 +193,66 @@ namespace XamlHelpmeet.Utility
         }
 
         /// <summary>
+        ///     A TextSelection extension method that expand selection.
+        /// </summary>
+        /// <param name="selection">
+        ///     The target to act on.
+        /// </param>
+        /// <returns>
+        ///     .
+        /// </returns>
+        public static WiddenSelectionResult ExpandSelection(this TextSelection selection)
+        {
+            EditorPoints ep = selection.GetEditorPoints();
+
+            // If nothing is selected, select the closest node.
+            if (ep.IsEmpty)
+            {
+                selection.ResetSelection(ep);
+                return selection.SelectNode() ? WiddenSelectionResult.Success : WiddenSelectionResult.NodeSelectError;
+            }
+            // If a node or nodes are selected, select the parent.
+            if (selection.IsNodeSelected() || selection.AreSiblingsSelected())
+            {
+                return selection.SelectParent()
+                           ? WiddenSelectionResult.Success
+                           : WiddenSelectionResult.ParentSelectError;
+            }
+            return WiddenSelectionResult.LogicError;
+        }
+
+        /// <summary>
+        ///     A TextSelection extension method that queries if 'selection' is node
+        ///     selected.
+        /// </summary>
+        /// <param name="selection">
+        ///     The target to act on.
+        /// </param>
+        /// <param name="name">
+        ///     (optional) the name.
+        /// </param>
+        /// <returns>
+        ///     true if node selected, otherwise false.
+        /// </returns>
+        public static bool IsNodeSelected(this TextSelection selection, string name = "")
+        {
+            EditorPoints ep = GetEditorPoints(selection);
+            if (ep.IsInvalid)
+            {
+                return false;
+            }
+            ep.RestoreSelectedText(selection);
+            Tuple<XamlNode, XamlNode> firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(ep.TopPoint - 1,
+                                                                                              ep.BottomPoint - 1);
+            if (firstAndLast.Item1 != firstAndLast.Item2)
+            {
+                return false;
+            }
+            return name == string.Empty
+                   || Regex.IsMatch(selection.Text, string.Format(@"<(?<StartTagName>{0})(?=[\s/>])", name));
+        }
+
+        /// <summary>
         ///     A TextSelection extension method that selects a single node.
         /// </summary>
         /// <param name="selection">
@@ -263,13 +265,15 @@ namespace XamlHelpmeet.Utility
         {
             // Works only when the selected text is empty.
             if (!selection.IsEmpty)
+            {
                 return false;
+            }
 
             // This has to be done here primarily to prime the data
             // needed by called methods. Othwerwise we could just
             // reference the offsets directly.
-            var ep = GetEditorPoints(selection);
-            var node = _rootNode.GetNodeWithOffset(ep.ActivePoint - 1);
+            EditorPoints ep = GetEditorPoints(selection);
+            XamlNode node = _rootNode.GetNodeWithOffset(ep.ActivePoint - 1);
             if (node == null)
             {
                 return false;
@@ -290,10 +294,11 @@ namespace XamlHelpmeet.Utility
         /// </returns>
         public static bool SelectNodes(this TextSelection selection)
         {
-            var ep = GetEditorPoints(selection);
+            EditorPoints ep = GetEditorPoints(selection);
 
             // Find the nodes that are within or that contain the ends of the selection.
-            var firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(ep.TopPoint - 1, ep.BottomPoint - 1);
+            Tuple<XamlNode, XamlNode> firstAndLast = _rootNode.GetFirstLastNodesBetweenPoints(ep.TopPoint - 1,
+                                                                                              ep.BottomPoint - 1);
             // Null is returned if one end of the selection is outside the root node.
             if (firstAndLast.Item1 == null || firstAndLast.Item2 == null)
             {
@@ -309,22 +314,49 @@ namespace XamlHelpmeet.Utility
             return true;
         }
 
+        /// <summary>
+        ///     A TextSelection extension method that select parent.
+        /// </summary>
+        /// <param name="selection">
+        ///     The target to act on.
+        /// </param>
+        /// <returns>
+        ///     true if it succeeds, otherwise false.
+        /// </returns>
+        public static bool SelectParent(this TextSelection selection)
+        {
+            EditorPoints ep = selection.GetEditorPoints();
+            XamlNode[] nodes = _rootNode.GetSelectedNodes(ep);
+            if (nodes == null || nodes == null)
+            {
+                return false;
+            }
+            XamlNode parent = nodes[0].Parent;
+            selection.SetSelection(parent.BottomPoint + 1, parent.TopPoint + 1);
+            return true;
+        }
+
+        #endregion
+
+        #region Methods (private)
+
         private static EditorPoints GetEditorPoints(Tuple<XamlNode, XamlNode> firstAndLast)
         {
-            var ep = EditorPoints.GetEditorPoints(firstAndLast.Item1.TopPoint + 1,
-                firstAndLast.Item2.BottomPoint + 1, _documentText);
+            EditorPoints ep = EditorPoints.GetEditorPoints(firstAndLast.Item1.TopPoint + 1,
+                                                           firstAndLast.Item2.BottomPoint + 1,
+                                                           _documentText);
             return ep;
         }
 
-
         private static EditorPoints GetEditorPoints(TextSelection sel, bool handleExceptions = true)
         {
-
-            var ep = sel.GetEditorPoints();
+            EditorPoints ep = sel.GetEditorPoints();
             try
             {
                 if (_documentText == ep.DocumentText)
+                {
                     return ep;
+                }
 
                 _documentText = ep.DocumentText;
                 _rootNode = new XamlNode(_documentText);
@@ -336,5 +368,7 @@ namespace XamlHelpmeet.Utility
                 return EditorPoints.GetInvalidEditorPoints();
             }
         }
+
+        #endregion
     }
 }

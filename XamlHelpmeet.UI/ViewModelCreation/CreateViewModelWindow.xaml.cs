@@ -455,7 +455,7 @@
         /// </summary>
         private void CreateCSharpViewModelText()
         {
-            // NOTE: This method uses multiline string literals.
+            // NOTE: This method uses multi-line string literals.
             //
             // Modify VB code
             this.PropertyType = this.TranslateVBPropertyToCSharp(this.PropertyType);
@@ -687,7 +687,7 @@ Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.Component
                 sb.AppendFormat("ICommand {0};", obj.FieldName);
             }
 
-            // NOTE: The following uses a multiline string literal.
+            // NOTE: The following uses a multi-line string literal.
             return string.Format(@"#region Declarations
 
 {0}

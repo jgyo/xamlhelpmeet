@@ -1,7 +1,7 @@
-﻿RELEASE NOTES FOR XAML HELPMEET 0.5 Beta
+﻿RELEASE NOTES FOR XAML HELPMEET 0.6 Beta
 Copyright (c) Gil Yoder 2013
 
-This software is an early beta version and may contains
+This software is a beta version and may (likely, does) contain
 software bugs. While many hours have been spent searcning for
 and correcting software errors, some errors inevitably still
 exist and may prevent successful use on some occasions.
@@ -39,3 +39,4 @@ Gil Yoder
 Pearland, TX 77584
 
 gil.yoder@oabs.org
+http://yoderzone.com/
