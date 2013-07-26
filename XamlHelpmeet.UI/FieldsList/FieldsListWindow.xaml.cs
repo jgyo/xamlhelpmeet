@@ -14,17 +14,26 @@
     #endregion
 
     /// <summary>
-    ///     Interaction logic for FieldsListWindow.xaml.
+    /// Interaction logic for FieldsListWindow.xaml.
     /// </summary>
-    /// <seealso cref="T:System.Windows.Window" />
+    /// <seealso cref="T:System.Windows.Window"/>
     public partial class FieldsListWindow : Window
     {
         #region Fields
 
+        /// <summary>
+        /// The class entity.
+        /// </summary>
         private readonly ClassEntity _classEntity;
 
+        /// <summary>
+        /// The data object.
+        /// </summary>
         private DataObject _dataObject;
 
+        /// <summary>
+        /// Height of the save.
+        /// </summary>
         private double _saveHeight;
 
         #endregion
@@ -32,10 +41,10 @@
         #region Constructors
 
         /// <summary>
-        ///     Initializes a new instance of the FieldsListWindow class.
+        /// Initializes a new instance of the FieldsListWindow class.
         /// </summary>
         /// <param name="ClassEntity">
-        ///     The class entity.
+        /// The class entity.
         /// </param>
         public FieldsListWindow(ClassEntity ClassEntity)
         {
@@ -45,12 +54,27 @@
             this._classEntity = ClassEntity;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the FieldsListWindow class.
+        /// </summary>
         public FieldsListWindow() { this.InitializeComponent(); }
 
         #endregion
 
         #region Methods (private)
 
+        /// <summary>
+        /// Gets controls for field.
+        /// </summary>
+        /// <exception cref="InvalidProgramException">
+        /// Thrown when an Invalid Program error condition occurs.
+        /// </exception>
+        /// <param name="pi">
+        /// The pi.
+        /// </param>
+        /// <returns>
+        /// The controls for field.
+        /// </returns>
         private string GetControlsForField(PropertyInformation pi)
         {
             var uiPlatform = UIPlatform.WPF;
@@ -63,7 +87,7 @@
             int? columnIndex = null;
             int? rowIndex = null;
 
-            if (pi.FieldListIncludGridAttachedProperties)
+            if (pi.FieldListIncludeGridAttachedProperties)
             {
                 columnIndex = 0;
                 rowIndex = 0;
@@ -74,27 +98,21 @@
 
             if ((this.rdoLabelAndControl.IsChecked ?? false) || (this.rdoLabelOnly.IsChecked ?? false))
             {
-                resultString = this.rdoLabelAndControl.IsChecked ?? false
-                                   ? string.Concat(
-                                                   UIControlFactory.UIControlFactory.Instance.MakeLabelWithoutBinding(
-                                                                                                                      uiPlatform,
-                                                                                                                      columnIndex,
-                                                                                                                      rowIndex,
-                                                                                                                      pi
-                                                                                                                          .LabelText),
-                                                   Environment.NewLine)
-                                   : UIControlFactory.UIControlFactory.Instance.MakeLabelWithoutBinding(uiPlatform,
-                                                                                                        columnIndex,
-                                                                                                        rowIndex,
-                                                                                                        pi.LabelText);
+                resultString = UIControlFactory.UIControlFactory.Instance.MakeLabelWithoutBinding(uiPlatform,
+                                                                                                  columnIndex,
+                                                                                                  rowIndex,
+                                                                                                  pi.LabelText);
+                if (this.rdoLabelAndControl.IsChecked ?? false)
+                {
+                    resultString += Environment.NewLine;
+                }
             }
 
-            if (!((this.rdoLabelAndControl.IsChecked ?? false) || (this.rdoControlOnly.IsChecked ?? false)))
+            if ((!(this.rdoLabelAndControl.IsChecked ?? false)) && (!(this.rdoControlOnly.IsChecked ?? false)))
             {
                 return resultString;
             }
 
-            // Construct xaml for the control type.
             switch (pi.FieldListControlType)
             {
                 case ControlType.CheckBox:
@@ -164,12 +182,22 @@
                                                                                                    pi.Name,
                                                                                                    null));
                 default:
-                    throw new ArgumentOutOfRangeException("pi.FieldListControlType",
-                                                          "Sorry, but the program does not know the current value of the parameter.");
+                    throw new InvalidProgramException("Sorry, but the program does not know the current value of pi.FieldListControlType.");
             }
         }
 
-        // Watchs the MouseDown events and initializes the data object for a drag and drop operation.
+        // TODO: Why doesn't the combo box get set??
+
+        /// <summary>
+        /// Watchs the MouseDown events and initializes the data object for a drag
+        /// and drop operation.
+        /// </summary>
+        /// <param name="sender">
+        /// Source of the event.
+        /// </param>
+        /// <param name="e">
+        /// Mouse button event information.
+        /// </param>
         private void TextBlockDrag_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -178,8 +206,17 @@
             }
         }
 
-        // While the mouse is pressed down watches the MouseMove event to handle dragging effects.
-        // Stops if the mouse is released, and will not run if the data object is null.
+        /// <summary>
+        /// While the mouse is pressed down watches the MouseMove event to handle
+        /// dragging effects. Stops if the mouse is released, and will not run if the
+        /// data object is null.
+        /// </summary>
+        /// <param name="sender">
+        /// Source of the event.
+        /// </param>
+        /// <param name="e">
+        /// Mouse button event information.
+        /// </param>
         private void TextBlockDrag_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Released || this._dataObject != null)
@@ -193,6 +230,15 @@
             DragDrop.DoDragDrop(tb, this._dataObject, DragDropEffects.Copy);
         }
 
+        /// <summary>
+        /// Event handler. Called by btnCollapseExpand for click events.
+        /// </summary>
+        /// <param name="sender">
+        /// Source of the event.
+        /// </param>
+        /// <param name="e">
+        /// Mouse button event information.
+        /// </param>
         private void btnCollapseExpand_click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -206,10 +252,19 @@
             else
             {
                 this.Height = this._saveHeight;
-                this.Content = "Collapse";
+                btn.Content = "Collapse";
             }
         }
 
+        /// <summary>
+        /// Event handler. Called by cboControlType for loaded events.
+        /// </summary>
+        /// <param name="sender">
+        /// Source of the event.
+        /// </param>
+        /// <param name="e">
+        /// Mouse button event information.
+        /// </param>
         private void cboControlType_Loaded(object sender, RoutedEventArgs e)
         {
             var cbo = sender as ComboBox;
@@ -218,8 +273,43 @@
                                where d.ToString() != "None"
                                orderby d.ToString()
                                select d.ToString()).ToArray<string>();
+
+            // In the C# implementation of these to Loaded event handlers
+            // the FieldListControlType was not being set right when initialized.
+            // Window_Loaded ran first. It had a loop with the IF construct below
+            // to set the value, but because the cbo was created later, the cbo
+            // did not have any membmers, so the selected item was set to -1.
+            // Once the query ran, the selected item became the first item,
+            // and this set the FieldListControlType of the bound item to be
+            // a checkbox no matter what type it was.
+            
+            var item = cbo.DataContext as PropertyInformation;
+            if (item.TypeName.Contains("Boolean"))
+            {
+                cbo.SelectedValue = "CheckBox";
+                // item.FieldListControlType = ControlType.CheckBox;
+            }
+            else if (item.TypeName.Contains("Date"))
+            {
+                cbo.SelectedValue = "DatePicker";
+                // item.FieldListControlType = ControlType.DatePicker;
+            }
+            else
+            {
+                cbo.SelectedValue = "TextBox";
+                // item.FieldListControlType = ControlType.TextBox;
+            }
         }
 
+
+
         #endregion
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Title = string.Format("Fields List for Class: {0}", this._classEntity.ClassName);
+            this.lbFields.ItemsSource = _classEntity.PropertyInformation;
+        }
+
     }
 }

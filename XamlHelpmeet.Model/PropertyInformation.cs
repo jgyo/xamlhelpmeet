@@ -9,6 +9,7 @@ namespace XamlHelpmeet.Model
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Text;
     using XamlHelpmeet.Extensions;
 
@@ -27,7 +28,7 @@ namespace XamlHelpmeet.Model
 
         private ControlType _fieldListControlType;
 
-        private bool _fieldListIncludGridAttachedProperties;
+        private bool _fieldListIncludeGridAttachedProperties;
 
         private string _fullName;
 
@@ -176,13 +177,13 @@ namespace XamlHelpmeet.Model
         /// <value>
         ///     true if field list includ grid attached properties, false if not.
         /// </value>
-        public bool FieldListIncludGridAttachedProperties
+        public bool FieldListIncludeGridAttachedProperties
         {
-            get { return this._fieldListIncludGridAttachedProperties; }
+            get { return this._fieldListIncludeGridAttachedProperties; }
             set
             {
-                this._fieldListIncludGridAttachedProperties = value;
-                this.OnPropertyChanged("FieldListIncludGridAttachedProperties");
+                this._fieldListIncludeGridAttachedProperties = value;
+                this.OnPropertyChanged("FieldListIncludeGridAttachedProperties");
             }
         }
 
@@ -337,9 +338,20 @@ namespace XamlHelpmeet.Model
             get { return this._name; }
             set
             {
+                if (this._name == value)
+                {
+                    return;
+                }
+
                 this._name = value;
                 this.OnPropertyChanged("Name");
+                UpdateFullName();
             }
+        }
+
+        private void UpdateFullName()
+        {
+            FullName = string.Format("{0} - {1}", this.NameAndWritable, this.TypeName);
         }
 
         /// <summary>
@@ -348,7 +360,7 @@ namespace XamlHelpmeet.Model
         /// <value>
         ///     The name and writeable.
         /// </value>
-        public string NameAndWriteable
+        public string NameAndWritable
         {
             get { return this.CanWrite ? this.Name : String.Format("{0}  (r)", this.Name); }
         }
@@ -412,8 +424,14 @@ namespace XamlHelpmeet.Model
             get { return this._typeName; }
             set
             {
+                if (this._typeName == value)
+                {
+                    return;
+                }
+
                 this._typeName = value;
                 this.OnPropertyChanged("TypeName");
+                UpdateFullName();
             }
         }
 

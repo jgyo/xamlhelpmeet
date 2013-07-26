@@ -287,7 +287,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
 
 			if (uiPlatform == UIPlatform.WPF || SilverlightVersion.StartsWith("3"))
 			{
-				if (StringFormat.IsNullOrEmpty())
+				if (StringFormat.IsNotNullOrEmpty())
 				{
 					AppendFormat(sb, STR_ContentBindingAndStringFormatFormat,
 						Content, StringFormat.Replace(STR_BRACEOPEN, STR_BRACEOPENESCAPED).

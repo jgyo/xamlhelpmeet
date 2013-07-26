@@ -133,6 +133,7 @@
 		<!--  Column Controls Top of Window  -->
 		<StackPanel Grid.Row="1"
 		            Grid.ColumnSpan="2"
+		            Grid.Column="0"
 		            Margin="10"
 		            HorizontalAlignment="Center"
 		            Orientation="Horizontal">
@@ -215,6 +216,7 @@
 
 		<!--  Number of Rows Control Upper Left  -->
 		<StackPanel Grid.Row="2"
+		            Grid.Column="0"
 		            Margin="10"
 		            VerticalAlignment="Top">
 
