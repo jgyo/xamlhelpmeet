@@ -1,4 +1,8 @@
-﻿namespace XamlHelpmeet.UI.ViewModelCreation
+﻿// file:	ViewModelCreation\CreateViewModelWindow.xaml.cs
+//
+// summary:	Implements the create view model window.xaml class
+
+namespace XamlHelpmeet.UI.ViewModelCreation
 {
     #region Imports
 
@@ -7,6 +11,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
@@ -20,110 +25,96 @@
 
     #endregion
 
-    /// <summary>
-    ///     Interaction logic for CreateViewModelWindow.xaml.
-    /// </summary>
+    /// <summary>Interaction logic for CreateViewModelWindow.xaml.</summary>
+    /// <remarks>Yoder, 7/27/2013.</remarks>
+    /// <seealso cref="T:System.Windows.Window" />
+    /// <seealso cref="T:System.ComponentModel.INotifyPropertyChanged" />
     public partial class CreateViewModelWindow : INotifyPropertyChanged
     {
         #region Fields
 
-        /// <summary>
-        ///     The class entity.
-        /// </summary>
+        /// <summary>The class entity.</summary>
         private readonly ClassEntity _classEntity;
 
-        /// <summary>
-        ///     Collection of commands.
-        /// </summary>
+        /// <summary>Collection of commands.</summary>
         private readonly ObservableCollection<CreateCommandSource> _commandsCollection =
             new ObservableCollection<CreateCommandSource>();
 
-        /// <summary>
-        ///     true if this CreateViewModelWindow is VB.
-        /// </summary>
+        /// <summary>true if this CreateViewModelWindow is VB.</summary>
         private readonly bool _isVB;
 
-        /// <summary>
-        ///     The create command.
-        /// </summary>
+        /// <summary>all properties selected.</summary>
+        private bool? allPropertiesSelected;
+
+        /// <summary>true if this object is property list in extended mode.</summary>
+        private bool isPropertyListInExtendedMode;
+
+        /// <summary>The properties selection mode.</summary>
+        private SelectionMode propertiesSelectionMode;
+
+        /// <summary>The create command.</summary>
         private ICommand _createCommand;
 
-        /// <summary>
-        ///     Name of the field.
-        /// </summary>
+        /// <summary>Name of the field.</summary>
         private string _fieldName = string.Empty;
 
-        /// <summary>
-        ///     true if this CreateViewModelWindow has private setter.
-        /// </summary>
+        /// <summary>true if this CreateViewModelWindow has private setter.</summary>
         private bool _hasPrivateSetter;
 
-        /// <summary>
-        ///     true to include, false to exclude the on property changed.
-        /// </summary>
+        /// <summary>true to include, false to exclude the on property changed.</summary>
         private bool _includeOnPropertyChanged;
 
         /// <summary>
-        ///     true to include, false to exclude the on property changed event handler.
+        ///     true to include, false to exclude the on property changed event
+        ///     handler.
         /// </summary>
         private bool _includeOnPropertyChangedEventHandler = true;
 
-        /// <summary>
-        ///     true if this CreateViewModelWindow is property public.
-        /// </summary>
+        /// <summary>true if this CreateViewModelWindow is property public.</summary>
         private bool _isPropertyPublic = true;
 
-        /// <summary>
-        ///     true if this CreateViewModelWindow is property read only.
-        /// </summary>
+        /// <summary>true if this CreateViewModelWindow is property read only.</summary>
         private bool _isPropertyReadOnly;
 
-        /// <summary>
-        ///     Name of the on property changed method.
-        /// </summary>
+        /// <summary>Name of the on property changed method.</summary>
         private string _onPropertyChangedMethodName = "RaisePropertyChanged";
 
-        /// <summary>
-        ///     Name of the property.
-        /// </summary>
+        /// <summary>Name of the property.</summary>
         private string _propertyName = string.Empty;
 
-        /// <summary>
-        ///     The property signature.
-        /// </summary>
+        /// <summary>The property signature.</summary>
         private string _propertySignature = "Public Property";
 
-        /// <summary>
-        ///     Type of the property.
-        /// </summary>
+        /// <summary>Type of the property.</summary>
         private string _propertyType = string.Empty;
 
-        /// <summary>
-        ///     true to use hungarian notation for private fields.
-        /// </summary>
+        /// <summary>true to use hungarian notation for private fields.</summary>
         private bool _useHungarianNotationForPrivateFields;
 
-        /// <summary>
-        ///     The view model text.
-        /// </summary>
+        /// <summary>The view model text.</summary>
         private string _viewModelText = string.Empty;
+
+        private bool deleteCommandEnabled;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        ///     Initializes a new instance of the CreateViewModelWindow class.
-        /// </summary>
-        /// <param name="ClassEntity">
-        ///     The class entity.
-        /// </param>
-        /// <param name="IsVisualBasic">
-        ///     true if this CreateViewModelWindow is visual basic.
-        /// </param>
+        /// <summary>Initializes a new instance of the CreateViewModelWindow class.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="ClassEntity">  The class entity.</param>
+        /// <param name="IsVisualBasic">true if this CreateViewModelWindow is visual basic.</param>
         public CreateViewModelWindow(ClassEntity ClassEntity, bool IsVisualBasic)
         {
             this._classEntity = ClassEntity;
+            if (ClassEntity.PropertyInformation != null)
+            {
+                foreach (var item in ClassEntity.PropertyInformation)
+                {
+                    item.PropertyChanged += this.Item_PropertyChanged;
+                }
+            }
+
             this._isVB = IsVisualBasic;
 
             string className = ClassEntity.ClassName;
@@ -142,34 +133,54 @@
 
         #region Properties and Indexers
 
-        /// <summary>
-        ///     Gets the class entity.
-        /// </summary>
-        /// <value>
-        ///     The class entity.
-        /// </value>
+        /// <summary>Gets or sets all properties selected.</summary>
+        /// <value>all properties selected.</value>
+        public bool? AllPropertiesSelected
+        {
+            // BMK: AllPropertiesSelected (07/27/2013 09:36:40.AM)
+            get { return this.allPropertiesSelected; }
+            set
+            {
+                if (this.allPropertiesSelected == value)
+                {
+                    return;
+                }
+
+                this.allPropertiesSelected = value;
+                if (value == null)
+                {
+                    this.OnPropertyChanged("AllPropertiesSelected");
+                    return;
+                }
+
+                this.IgnoreSelectionChanges = true;
+                foreach (var item in this.ClassEntity.PropertyInformation)
+                {
+                    item.IsSelected = (bool)value;
+                }
+
+                this.IgnoreSelectionChanges = false;
+                this.OnPropertyChanged("AllPropertiesSelected");
+            }
+        }
+
+        /// <summary>Gets the class entity.</summary>
+        /// <value>The class entity.</value>
         public ClassEntity ClassEntity
         {
+            // BMK: ClassEntity (07/27/2013 09:41:09.AM)
             get { return this._classEntity; }
         }
 
-        /// <summary>
-        ///     Gets a collection of commands.
-        /// </summary>
-        /// <value>
-        ///     A Collection of commands.
-        /// </value>
+        /// <summary>Gets a collection of commands.</summary>
+        /// <value>A Collection of commands.</value>
         public ObservableCollection<CreateCommandSource> CommandsCollection
         {
             get { return this._commandsCollection; }
         }
 
-        /// <summary>
-        ///     Gets the create command.
-        /// </summary>
-        /// <value>
-        ///     The create command.
-        /// </value>
+        /// <summary>Gets the create command.</summary>
+        /// <value>The create command.</value>
         public ICommand CreateCommand
         {
             get
@@ -182,23 +193,15 @@
             }
         }
 
-        /// <summary>
-        ///     Gets a value indicating whether the expose properties on view model.
-        /// </summary>
-        /// <value>
-        ///     true if expose properties on view model, otherwise false.
-        /// </value>
+        /// <summary>Gets a value indicating whether the expose properties on view model.</summary>
+        /// <value>true if expose properties on view model, otherwise false.</value>
         private bool ExposePropertiesOnViewModel
         {
-            get { return this.lbProperteis.SelectedItems.Count > 0; }
+            get { return this.lbProperties.SelectedItems.Count > 0; }
         }
 
-        /// <summary>
-        ///     Gets or sets the name of the field.
-        /// </summary>
-        /// <value>
-        ///     The name of the field.
-        /// </value>
+        /// <summary>Gets or sets the name of the field.</summary>
+        /// <value>The name of the field.</value>
         public string FieldName
         {
             get { return this._fieldName; }
@@ -213,9 +216,7 @@
         ///     Gets or sets a value indicating whether this CreateViewModelWindow has
         ///     private setter.
         /// </summary>
-        /// <value>
-        ///     true if this CreateViewModelWindow has private setter, otherwise false.
-        /// </value>
+        /// <value>true if this CreateViewModelWindow has private setter, otherwise false.</value>
         public bool HasPrivateSetter
         {
             get { return this._hasPrivateSetter; }
@@ -226,13 +227,15 @@
             }
         }
 
+        /// <summary>Gets or sets a value indicating whether the ignore selection changes.</summary>
+        /// <value>true if ignore selection changes, false if not.</value>
+        private bool IgnoreSelectionChanges { get; set; }
+
         /// <summary>
         ///     Gets or sets a value indicating whether the include on property was
         ///     changed.
         /// </summary>
-        /// <value>
-        ///     true if include on property changed, otherwise false.
-        /// </value>
+        /// <value>true if include on property changed, otherwise false.</value>
         public bool IncludeOnPropertyChanged
         {
             get { return this._includeOnPropertyChanged; }
@@ -245,11 +248,10 @@
 
         /// <summary>
         ///     Gets or sets a value indicating whether the on property changed event
-        ///     handler should be included.
+        ///     handler should
+        ///     be included.
         /// </summary>
-        /// <value>
-        ///     true if include on property changed event handler, otherwise false.
-        /// </value>
+        /// <value>true if include on property changed event handler, otherwise false.</value>
         public bool IncludeOnPropertyChangedEventHandler
         {
             get { return this._includeOnPropertyChangedEventHandler; }
@@ -261,12 +263,32 @@
         }
 
         /// <summary>
+        ///     Gets or sets a value indicating whether this object is property list in
+        ///     extended
+        ///     mode.
+        /// </summary>
+        /// <value>true if this object is property list in extended mode, false if not.</value>
+        public bool IsPropertyListInExtendedMode
+        {
+            get { return this.isPropertyListInExtendedMode; }
+            set
+            {
+                if (this.isPropertyListInExtendedMode == value)
+                {
+                    return;
+                }
+
+                this.isPropertyListInExtendedMode = value;
+                this.PropertiesSelectionMode = value ? SelectionMode.Extended : SelectionMode.Multiple;
+                this.OnPropertyChanged("IsPropertyListInExtendedMode");
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether this CreateViewModelWindow is
         ///     property public.
         /// </summary>
-        /// <value>
-        ///     true if this CreateViewModelWindow is property public, otherwise false.
-        /// </value>
+        /// <value>true if this CreateViewModelWindow is property public, otherwise false.</value>
         public bool IsPropertyPublic
         {
             get { return this._isPropertyPublic; }
@@ -280,10 +302,12 @@
 
         /// <summary>
         ///     Gets or sets a value indicating whether this CreateViewModelWindow is
-        ///     property read only.
+        ///     property read
+        ///     only.
         /// </summary>
         /// <value>
-        ///     true if this CreateViewModelWindow is property read only, otherwise false.
+        ///     true if this CreateViewModelWindow is property read only, otherwise
+        ///     false.
         /// </value>
         public bool IsPropertyReadOnly
         {
@@ -296,23 +320,15 @@
             }
         }
 
-        /// <summary>
-        ///     Gets a value indicating whether this CreateViewModelWindow is VB.
-        /// </summary>
-        /// <value>
-        ///     true if this CreateViewModelWindow is vb, otherwise false.
-        /// </value>
+        /// <summary>Gets a value indicating whether this CreateViewModelWindow is VB.</summary>
+        /// <value>true if this CreateViewModelWindow is vb, otherwise false.</value>
         public bool IsVB
         {
             get { return this._isVB; }
         }
 
-        /// <summary>
-        ///     Gets or sets the name of the on property changed method.
-        /// </summary>
-        /// <value>
-        ///     The name of the on property changed method.
-        /// </value>
+        /// <summary>Gets or sets the name of the on property changed method.</summary>
+        /// <value>The name of the on property changed method.</value>
         public string OnPropertyChangedMethodName
         {
             get { return this._onPropertyChangedMethodName; }
@@ -323,12 +339,25 @@
             }
         }
 
-        /// <summary>
-        ///     Gets or sets the name of the property.
-        /// </summary>
-        /// <value>
-        ///     The name of the property.
-        /// </value>
+        /// <summary>Gets or sets the properties selection mode.</summary>
+        /// <value>The properties selection mode.</value>
+        public SelectionMode PropertiesSelectionMode
+        {
+            get { return this.propertiesSelectionMode; }
+            set
+            {
+                if (this.propertiesSelectionMode == value)
+                {
+                    return;
+                }
+
+                this.propertiesSelectionMode = value;
+                this.OnPropertyChanged("PropertiesSelectionMode");
+            }
+        }
+
+        /// <summary>Gets or sets the name of the property.</summary>
+        /// <value>The name of the property.</value>
         public string PropertyName
         {
             get { return this._propertyName; }
@@ -339,12 +368,8 @@
             }
         }
 
-        /// <summary>
-        ///     Gets or sets the property signature.
-        /// </summary>
-        /// <value>
-        ///     The property signature.
-        /// </value>
+        /// <summary>Gets or sets the property signature.</summary>
+        /// <value>The property signature.</value>
         public string PropertySignature
         {
             get { return this._propertySignature; }
@@ -355,12 +380,8 @@
             }
         }
 
-        /// <summary>
-        ///     Gets or sets the type of the property.
-        /// </summary>
-        /// <value>
-        ///     The type of the property.
-        /// </value>
+        /// <summary>Gets or sets the type of the property.</summary>
+        /// <value>The type of the property.</value>
         public string PropertyType
         {
             get { return this._propertyType; }
@@ -371,23 +392,15 @@
             }
         }
 
-        /// <summary>
-        ///     Gets the selected property information collection.
-        /// </summary>
-        /// <value>
-        ///     A Collection of selected property informations.
-        /// </value>
+        /// <summary>Gets the selected property information collection.</summary>
+        /// <value>A Collection of selected property informations.</value>
         private IEnumerable<PropertyInformation> SelectedPropertyInformationCollection
         {
             get { return from p in this.ClassEntity.PropertyInformation where p.IsSelected orderby p.Name select p; }
         }
 
-        /// <summary>
-        ///     Gets the name of the type.
-        /// </summary>
-        /// <value>
-        ///     The name of the type.
-        /// </value>
+        /// <summary>Gets the name of the type.</summary>
+        /// <value>The name of the type.</value>
         public string TypeName
         {
             get { return this.ClassEntity.ClassName; }
@@ -395,11 +408,10 @@
 
         /// <summary>
         ///     Gets or sets a value indicating whether this CreateViewModelWindow use
-        ///     hungarian notation for private fields.
+        ///     hungarian
+        ///     notation for private fields.
         /// </summary>
-        /// <value>
-        ///     true if use hungarian notation for private fields, otherwise false.
-        /// </value>
+        /// <value>true if use hungarian notation for private fields, otherwise false.</value>
         public bool UseHungarianNotationForPrivateFields
         {
             get { return this._useHungarianNotationForPrivateFields; }
@@ -410,49 +422,149 @@
             }
         }
 
-        /// <summary>
-        ///     Gets the view model text.
-        /// </summary>
-        /// <value>
-        ///     The view model text.
-        /// </value>
+        /// <summary>Gets the view model text.</summary>
+        /// <value>The view model text.</value>
         public string ViewModelText
         {
             get { return this._viewModelText; }
+        }
+
+        /// <summary>Gets or sets a value indicating whether the delete command button is enabled.</summary>
+        ///
+        /// <value>true if delete command button enabled, false if not.</value>
+        public bool DeleteCommandEnabled
+        {
+            get
+            {
+                return deleteCommandEnabled;
+            }
+            set
+            {
+                if (deleteCommandEnabled==value)
+                {
+                    return;
+                }
+                deleteCommandEnabled = value;
+                OnPropertyChanged("DeleteCommandEnabled");
+            }
         }
 
         #endregion
 
         #region INotifyPropertyChanged Members
 
-        /// <summary>
-        ///     Event inherited from the INotifyPropertyChanged interface.
-        /// </summary>
+        /// <summary>Event inherited from the INotifyPropertyChanged interface.</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
         #region Methods (private)
 
-        /// <summary>
-        ///     Determine if we can create execute.
-        /// </summary>
-        /// <param name="param">
-        ///     The parameter.
-        /// </param>
-        /// <returns>
-        ///     true if we can create execute, otherwise false.
-        /// </returns>
+        /// <summary>Event handler. Called by btnAddCommand for click events.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">     Routed event information.</param>
+        private void BtnAddCommand_Click(object sender, RoutedEventArgs e)
+        {
+            var frm = new CreateCommandWindow(this.IsVB);
+
+            if (frm.ShowDialog() == true)
+            {
+                this.CommandsCollection.Add(frm.CreateCommandSource);
+            }
+        }
+
+        /// <summary>Event handler. Called by btnCancel for click events.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">     Routed event information.</param>
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+        }
+
+        /// <summary>Determine if we can create execute.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="param">The parameter.</param>
+        /// <returns>true if we can create execute, otherwise false.</returns>
         private bool CanCreateExecute(object param)
         {
+            // Returns true if the property name, property type, and field name have values.
             return
                 !(this.PropertyName.IsNullOrEmpty() || this.PropertyType.IsNullOrEmpty()
                   || this.FieldName.IsNullOrEmpty());
         }
 
         /// <summary>
-        ///     Creates c sharp view model text.
+        ///     Event handler. Called by cboPropertyChangedMethodNames for loaded
+        ///     events.
         /// </summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">     Routed event information.</param>
+        private void CboPropertyChangedMethodNames_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.cboPropertyChangedMethodNames.RemoveHandler(Selector.SelectionChangedEvent,
+                                                             new SelectionChangedEventHandler(
+                                                                 this.CboPropertyType_SelectionChanged));
+            this.cboPropertyChangedMethodNames.Items.Add("RaisePropertyChanged");
+            this.cboPropertyChangedMethodNames.Items.Add("OnPropertyChanged");
+            this.cboPropertyChangedMethodNames.Items.Add("NotifyPropertyChanged");
+            this.cboPropertyChangedMethodNames.Items.Add("FirePropertyChanged");
+            this.cboPropertyChangedMethodNames.SelectedIndex = -1;
+            this.cboPropertyChangedMethodNames.AddHandler(Selector.SelectionChangedEvent,
+                                                          new SelectionChangedEventHandler(
+                                                              this.CboPropertyType_SelectionChanged));
+        }
+
+        /// <summary>
+        ///     Event handler. Called by cboPropertyChangedMethodNames for selection
+        ///     changed events.
+        /// </summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">     Routed event information.</param>
+        private void CboPropertyChangedMethodNames_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.cboPropertyChangedMethodNames.SelectedValue == null
+                || this.cboPropertyChangedMethodNames.SelectedIndex == -1)
+            {
+                return;
+            }
+
+            this.OnPropertyChangedMethodName = this.cboPropertyChangedMethodNames.SelectedValue.ToString();
+        }
+
+        /// <summary>Event handler. Called by cboPropertyType for loaded events.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">     Routed event information.</param>
+        private void CboPropertyType_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.cboPropertyType.RemoveHandler(Selector.SelectionChangedEvent,
+                                               new SelectionChangedEventHandler(this.CboPropertyType_SelectionChanged));
+            this.cboPropertyType.ItemsSource = this.GetPropertyTypes();
+            this.cboPropertyType.SelectedIndex = -1;
+            this.cboPropertyType.AddHandler(Selector.SelectionChangedEvent,
+                                            new SelectionChangedEventHandler(this.CboPropertyType_SelectionChanged));
+        }
+
+        /// <summary>Event handler. Called by cboPropertyType for selection changed events.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">     Routed event information.</param>
+        private void CboPropertyType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.cboPropertyType.SelectedItem == null || this.cboPropertyType.SelectedIndex == -1)
+            {
+                return;
+            }
+
+            this.PropertyType = this.cboPropertyType.SelectedItem.ToString();
+        }
+
+        /// <summary>Creates C# view model text.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
         private void CreateCSharpViewModelText()
         {
             // NOTE: This method uses multi-line string literals.
@@ -503,12 +615,9 @@ public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
             this._viewModelText = sb.ToString();
         }
 
-        /// <summary>
-        ///     Creates an execute.
-        /// </summary>
-        /// <param name="param">
-        ///     The parameter.
-        /// </param>
+        /// <summary>Executes the Create command.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="param">The parameter.</param>
         private void CreateExecute(object param)
         {
             if (this.CanCreateExecute(param) == false)
@@ -525,11 +634,11 @@ public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
                 this.CreateCSharpViewModelText();
             }
             this.DialogResult = true;
+            this.Close();
         }
 
-        /// <summary>
-        ///     Creates VB view model text.
-        /// </summary>
+        /// <summary>Creates VB view model text.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
         private void CreateVBViewModelText()
         {
             var sb = new StringBuilder(4096);
@@ -565,30 +674,33 @@ Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.Component
             this._viewModelText = sb.ToString();
         }
 
-        /// <summary>
-        ///     Event handler. Called by CreateViewModelWindow for unloaded events.
-        /// </summary>
-        /// <param name="sender">
-        ///     Source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     Routed event information.
-        /// </param>
-        private void CreateViewModelWindow_Unloaded(object sender, RoutedEventArgs e)
+        private void CreateViewModelWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            this.cboPropertyType.RemoveHandler(Selector.SelectionChangedEvent,
-                                               new SelectionChangedEventHandler(this.cboPropertyType_SelectionChanged));
-            this.cboPropertyChangedMethodNames.RemoveHandler(Selector.SelectionChangedEvent,
-                                                             new SelectionChangedEventHandler(
-                                                                 this.cboPropertyChangedMethodNames_SelectionChanged));
+            this.IsPropertyListInExtendedMode = true;
+            this.AllPropertiesSelected = false;
         }
 
-        /// <summary>
-        ///     Gets c sharp command properties.
-        /// </summary>
-        /// <returns>
-        ///     The c sharp command properties.
-        /// </returns>
+        /// <summary>Event handler. Called by CreateViewModelWindow for unloaded events.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">     Routed event information.</param>
+        private void CreateViewModelWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in this.ClassEntity.PropertyInformation)
+            {
+                item.PropertyChanged -= this.Item_PropertyChanged;
+            }
+
+            this.cboPropertyType.RemoveHandler(Selector.SelectionChangedEvent,
+                                               new SelectionChangedEventHandler(this.CboPropertyType_SelectionChanged));
+            this.cboPropertyChangedMethodNames.RemoveHandler(Selector.SelectionChangedEvent,
+                                                             new SelectionChangedEventHandler(
+                                                                 this.CboPropertyChangedMethodNames_SelectionChanged));
+        }
+
+        /// <summary>Gets C# command properties.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The C# command properties.</returns>
         private string GetCSharpCommandProperties()
         {
             var sb = new StringBuilder(4096);
@@ -655,12 +767,9 @@ Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.Component
 ", sb);
         }
 
-        /// <summary>
-        ///     Gets c sharp constructors.
-        /// </summary>
-        /// <returns>
-        ///     The c sharp constructors.
-        /// </returns>
+        /// <summary>Gets C# constructors.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The C# constructors.</returns>
         private string GetCSharpConstructors()
         {
             var sb = new StringBuilder(256);
@@ -673,12 +782,9 @@ Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.Component
             return sb.ToString();
         }
 
-        /// <summary>
-        ///     Gets c sharp declarations.
-        /// </summary>
-        /// <returns>
-        ///     The c sharp declarations.
-        /// </returns>
+        /// <summary>Gets C# declarations.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The C# declarations.</returns>
         private string GetCSharpDeclarations()
         {
             var sb = new StringBuilder(1024);
@@ -699,12 +805,9 @@ Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.Component
 ", sb, this.PropertyType, this.FieldName);
         }
 
-        /// <summary>
-        ///     Gets c sharp exposed view model properties.
-        /// </summary>
-        /// <returns>
-        ///     The c sharp exposed view model properties.
-        /// </returns>
+        /// <summary>Gets C# exposed view model properties.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The C# exposed view model properties.</returns>
         private string GetCSharpExposedViewModelProperties()
         {
             var sb = new StringBuilder(4096);
@@ -712,18 +815,24 @@ Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.Component
             {
                 string typeName = this.TranslateVBPropertyToCSharp(pi.TypeName);
 
-                sb.AppendLine(pi.Name == "Item" && pi.PropertyParameters.Count == 1
+                int propertyParametersCount = pi.PropertyParameters == null ? 0 : pi.PropertyParameters.Count;
+                string firstParamName = string.Empty;
+                if (propertyParametersCount > 0)
+                {
+                    Debug.Assert(pi.PropertyParameters != null, "pi.PropertyParameters != null");
+                    firstParamName = pi.PropertyParameters[0].ParameterName;
+                }
+
+                sb.AppendLine(pi.Name == "Item" && propertyParametersCount == 1
                                   ? String.Format("public {0} this[{1}]", typeName, pi.CSParameterString)
-                                  : pi.PropertyParameters.Count > 0
+                                  : propertyParametersCount > 0
                                         ? String.Format("public {0} {1}[{2}]", typeName, pi.Name, pi.CSParameterString)
                                         : String.Format("public {0} {1}", typeName, pi.Name));
 
                 sb.AppendLine("{");
 
-                sb.AppendLine(pi.Name == "Item" && pi.PropertyParameters.Count == 1
-                                  ? String.Format("get {{ return {0}[{1}]; }}",
-                                                  this.FieldName,
-                                                  pi.PropertyParameters[0].ParameterName)
+                sb.AppendLine(pi.Name == "Item" && propertyParametersCount == 1
+                                  ? String.Format("get {{ return {0}[{1}]; }}", this.FieldName, firstParamName)
                                   : String.Format("get {{ return {0}.{1}; }}", this.FieldName, pi.Name));
 
                 if (pi.CanWrite)
@@ -745,12 +854,9 @@ Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.Component
             return sb.ToString();
         }
 
-        /// <summary>
-        ///     Gets c sharp inpc.
-        /// </summary>
-        /// <returns>
-        ///     The c sharp inpc.
-        /// </returns>
+        /// <summary>Gets C# inpc.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The C# inpc.</returns>
         [SuppressMessage("Microsoft.Usage", "CA2241:Provide correct arguments to formatting methods")]
         private string GetCSharpINPC()
         {
@@ -770,12 +876,9 @@ handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 ", this.OnPropertyChangedMethodName);
         }
 
-        /// <summary>
-        ///     Gets c sharp methods.
-        /// </summary>
-        /// <returns>
-        ///     The c sharp methods.
-        /// </returns>
+        /// <summary>Gets C# methods.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The C# methods.</returns>
         private string GetCSharpMethods()
         {
             var sb = new StringBuilder(4096);
@@ -818,12 +921,9 @@ handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 ", sb);
         }
 
-        /// <summary>
-        ///     Gets c sharp properties.
-        /// </summary>
-        /// <returns>
-        ///     The c sharp properties.
-        /// </returns>
+        /// <summary>Gets C# properties.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The C# properties.</returns>
         private string GetCSharpProperties()
         {
             // 0 - Visibility
@@ -877,12 +977,9 @@ get {{ return {3}; }}{4}
 ", propertyText, exposedProperties);
         }
 
-        /// <summary>
-        ///     Gets property types.
-        /// </summary>
-        /// <returns>
-        ///     The property types.
-        /// </returns>
+        /// <summary>Gets property types.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The property types.</returns>
         private IEnumerable GetPropertyTypes()
         {
             var propertyTypes = new List<string>();
@@ -897,12 +994,9 @@ get {{ return {3}; }}{4}
             return propertyTypes;
         }
 
-        /// <summary>
-        ///     Gets VB command properties.
-        /// </summary>
-        /// <returns>
-        ///     The VB command properties.
-        /// </returns>
+        /// <summary>Gets VB command properties.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The VB command properties.</returns>
         private string GetVBCommandProperties()
         {
             var sb = new StringBuilder();
@@ -976,12 +1070,9 @@ get {{ return {3}; }}{4}
             return sb.ToString();
         }
 
-        /// <summary>
-        ///     Gets VB constructors.
-        /// </summary>
-        /// <returns>
-        ///     The VB constructors.
-        /// </returns>
+        /// <summary>Gets VB constructors.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The VB constructors.</returns>
         private string GetVBConstructors()
         {
             var sb = new StringBuilder(1024);
@@ -1009,12 +1100,9 @@ get {{ return {3}; }}{4}
             return sb.ToString();
         }
 
-        /// <summary>
-        ///     Gets VB declarations.
-        /// </summary>
-        /// <returns>
-        ///     The VB declarations.
-        /// </returns>
+        /// <summary>Gets VB declarations.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The VB declarations.</returns>
         private string GetVBDeclarations()
         {
             var sb = new StringBuilder(1024);
@@ -1033,12 +1121,9 @@ Private {1} As {2}
 ", sb, this.FieldName, this.PropertyType);
         }
 
-        /// <summary>
-        ///     Gets VB exposed view model properties.
-        /// </summary>
-        /// <returns>
-        ///     The VB exposed view model properties.
-        /// </returns>
+        /// <summary>Gets VB exposed view model properties.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The VB exposed view model properties.</returns>
         private string GetVBExposedViewModelProperties()
         {
             var sb = new StringBuilder(4096);
@@ -1097,12 +1182,9 @@ Private {1} As {2}
             return sb.ToString();
         }
 
-        /// <summary>
-        ///     Gets the vbinpc.
-        /// </summary>
-        /// <returns>
-        ///     The vbinpc.
-        /// </returns>
+        /// <summary>Gets the vbinpc.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The vbinpc.</returns>
         private string GetVBINPC()
         {
             var sb = new StringBuilder();
@@ -1124,12 +1206,9 @@ Private {1} As {2}
             return sb.ToString();
         }
 
-        /// <summary>
-        ///     Gets VB methods.
-        /// </summary>
-        /// <returns>
-        ///     The VB methods.
-        /// </returns>
+        /// <summary>Gets VB methods.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The VB methods.</returns>
         private string GetVBMethods()
         {
             var sb = new StringBuilder(1024);
@@ -1185,12 +1264,9 @@ Private {1} As {2}
             return sb.ToString();
         }
 
-        /// <summary>
-        ///     Gets VB properties.
-        /// </summary>
-        /// <returns>
-        ///     The VB properties.
-        /// </returns>
+        /// <summary>Gets VB properties.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <returns>The VB properties.</returns>
         private string GetVBProperties()
         {
             // 0 - PropertySignature
@@ -1247,12 +1323,31 @@ End Set
 ", propertyText, exposedProperties);
         }
 
-        /// <summary>
-        ///     Executes the property changed action.
-        /// </summary>
-        /// <param name="PropertyName">
-        ///     Name of the property.
-        /// </param>
+        /// <summary>Event handler. Called by Item for property changed events.</summary>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">     Property changed event information.</param>
+        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsSelected")
+            {
+                if (this.IgnoreSelectionChanges)
+                {
+                    return;
+                }
+                int selectedCount = this.SelectedPropertyInformationCollection.Count();
+                if (selectedCount == 0 || selectedCount == this.ClassEntity.PropertyInformation.Count)
+                {
+                    this.AllPropertiesSelected = selectedCount > 0;
+                    return;
+                }
+
+                this.AllPropertiesSelected = null;
+            }
+        }
+
+        /// <summary>Executes the property changed action.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="PropertyName">Name of the property.</param>
         private void OnPropertyChanged(string PropertyName)
         {
             PropertyChangedEventHandler h = this.PropertyChanged;
@@ -1265,9 +1360,22 @@ End Set
             h(this, new PropertyChangedEventArgs(PropertyName));
         }
 
-        /// <summary>
-        ///     Sets property signature.
-        /// </summary>
+        /// <summary>Event handler. Called by SelectAllCheckBox for click events.</summary>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">     Routed event information.</param>
+        private void SelectAllCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+             if (this.AllPropertiesSelected ?? false)
+            {
+                this.AllPropertiesSelected = false;
+                return;
+            }
+
+            this.AllPropertiesSelected = true;
+        }
+
+        /// <summary>Sets property signature.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
         private void SetPropertySignature()
         {
             this.PropertySignature = string.Format("{0} {1}",
@@ -1275,15 +1383,10 @@ End Set
                                                    this.IsPropertyReadOnly ? "ReadOnly " : string.Empty);
         }
 
-        /// <summary>
-        ///     Translate VB property to c sharp.
-        /// </summary>
-        /// <param name="VBPropertyName">
-        ///     Name of the VB property.
-        /// </param>
-        /// <returns>
-        ///     .
-        /// </returns>
+        /// <summary>Translate VB property to C#.</summary>
+        /// <remarks>Yoder, 7/27/2013.</remarks>
+        /// <param name="VBPropertyName">Name of the VB property.</param>
+        /// <returns>.</returns>
         private string TranslateVBPropertyToCSharp(string VBPropertyName)
         {
             if (VBPropertyName.StartsWith("Nullable"))
@@ -1301,123 +1404,29 @@ End Set
             return VBPropertyName;
         }
 
-        /// <summary>
-        ///     Event handler. Called by btnAddCommand for click events.
-        /// </summary>
-        /// <param name="sender">
-        ///     Source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     Routed event information.
-        /// </param>
-        private void btnAddCommand_Click(object sender, RoutedEventArgs e)
-        {
-            var frm = new CreateCommandWindow(this.IsVB);
-
-            if (frm.ShowDialog() == true)
-            {
-                this.CommandsCollection.Add(frm.CreateCommandSource);
-            }
-        }
-
-        /// <summary>
-        ///     Event handler. Called by btnCancel for click events.
-        /// </summary>
-        /// <param name="sender">
-        ///     Source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     Routed event information.
-        /// </param>
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-        }
-
-        /// <summary>
-        ///     Event handler. Called by cboPropertyChangedMethodNames for loaded
-        ///     events.
-        /// </summary>
-        /// <param name="sender">
-        ///     Source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     Routed event information.
-        /// </param>
-        private void cboPropertyChangedMethodNames_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.cboPropertyChangedMethodNames.RemoveHandler(Selector.SelectionChangedEvent,
-                                                             new SelectionChangedEventHandler(
-                                                                 this.cboPropertyType_SelectionChanged));
-            this.cboPropertyChangedMethodNames.Items.Add("RaisePropertyChanged");
-            this.cboPropertyChangedMethodNames.Items.Add("OnPropertyChanged");
-            this.cboPropertyChangedMethodNames.Items.Add("NotifyPropertyChanged");
-            this.cboPropertyChangedMethodNames.Items.Add("FirePropertyChanged");
-            this.cboPropertyChangedMethodNames.SelectedIndex = -1;
-            this.cboPropertyChangedMethodNames.AddHandler(Selector.SelectionChangedEvent,
-                                                          new SelectionChangedEventHandler(
-                                                              this.cboPropertyType_SelectionChanged));
-        }
-
-        /// <summary>
-        ///     Event handler. Called by cboPropertyChangedMethodNames for selection
-        ///     changed events.
-        /// </summary>
-        /// <param name="sender">
-        ///     Source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     Routed event information.
-        /// </param>
-        private void cboPropertyChangedMethodNames_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (this.cboPropertyChangedMethodNames.SelectedValue == null
-                || this.cboPropertyChangedMethodNames.SelectedIndex == -1)
-            {
-                return;
-            }
-
-            this.OnPropertyChangedMethodName = this.cboPropertyChangedMethodNames.SelectedValue.ToString();
-        }
-
-        /// <summary>
-        ///     Event handler. Called by cboPropertyType for loaded events.
-        /// </summary>
-        /// <param name="sender">
-        ///     Source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     Routed event information.
-        /// </param>
-        private void cboPropertyType_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.cboPropertyType.RemoveHandler(Selector.SelectionChangedEvent,
-                                               new SelectionChangedEventHandler(this.cboPropertyType_SelectionChanged));
-            this.cboPropertyType.ItemsSource = this.GetPropertyTypes();
-            this.cboPropertyType.SelectedIndex = -1;
-            this.cboPropertyType.AddHandler(Selector.SelectionChangedEvent,
-                                            new SelectionChangedEventHandler(this.cboPropertyType_SelectionChanged));
-        }
-
-        /// <summary>
-        ///     Event handler. Called by cboPropertyType for selection changed events.
-        /// </summary>
-        /// <param name="sender">
-        ///     Source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     Routed event information.
-        /// </param>
-        private void cboPropertyType_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (this.cboPropertyType.SelectedItem == null || this.cboPropertyType.SelectedIndex == -1)
-            {
-                return;
-            }
-
-            this.PropertyType = this.cboPropertyType.SelectedItem.ToString();
-        }
-
         #endregion
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DeleteCommandEnabled = this.commandsList.SelectedItems.Count > 0;
+        }
+
+        private void BtnDeleteCommand_Click(object sender, RoutedEventArgs e)
+        {
+            var deleteList = new List<CreateCommandSource>();
+            foreach (var item in commandsList.SelectedItems)
+            {
+                var commandSource = item as CreateCommandSource;
+                if (this.CommandsCollection.Contains(commandSource))
+                {
+                    deleteList.Add(commandSource);
+                }
+            }
+
+            foreach (var item in deleteList)
+            {
+                this.CommandsCollection.Remove(item);
+            }
+        }
     }
 }
