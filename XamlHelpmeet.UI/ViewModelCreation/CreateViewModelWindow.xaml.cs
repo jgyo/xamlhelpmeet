@@ -23,7 +23,7 @@
     /// <summary>
     ///     Interaction logic for CreateViewModelWindow.xaml.
     /// </summary>
-    public partial class CreateViewModelWindow : Window, INotifyPropertyChanged
+    public partial class CreateViewModelWindow : INotifyPropertyChanged
     {
         #region Fields
 
@@ -543,7 +543,7 @@ public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
             sb.AppendLine(this.GetVBDeclarations());
 
-            sb.AppendLine(@"#Region "" Events ""
+            sb.AppendLine(@"#region "" Events ""
 
 Public Event PropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
@@ -831,7 +831,7 @@ handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             // 2 - Name
             // 3 - Field name
             // 4 - Set accessor
-            string propertyWrapper = @"region Properties
+            string propertyWrapper = @"#region Properties
 
 {0} {1} {2}
 {{

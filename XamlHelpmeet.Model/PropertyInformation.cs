@@ -9,7 +9,6 @@ namespace XamlHelpmeet.Model
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Text;
     using XamlHelpmeet.Extensions;
 

@@ -17,7 +17,7 @@
         <StackPanel.Resources>
 
             <CollectionViewSource x:Key="cvsProperties"
-                                  Source="{Binding Path=ClassEntity.PropertyInfomation}">
+                                  Source="{Binding Path=ClassEntity.PropertyInformation}">
                 <CollectionViewSource.SortDescriptions>
                     <scm:SortDescription PropertyName="Name" />
                 </CollectionViewSource.SortDescriptions>

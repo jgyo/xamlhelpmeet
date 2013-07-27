@@ -3,6 +3,7 @@
     #region Imports
 
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -17,7 +18,7 @@
     /// Interaction logic for FieldsListWindow.xaml.
     /// </summary>
     /// <seealso cref="T:System.Windows.Window"/>
-    public partial class FieldsListWindow : Window
+    public partial class FieldsListWindow
     {
         #region Fields
 
@@ -225,6 +226,7 @@
             }
 
             var tb = sender as TextBlock;
+            Debug.Assert(tb != null, "tb != null");
             this._dataObject = new DataObject(DataFormats.Text,
                                               this.GetControlsForField(tb.DataContext as PropertyInformation));
             DragDrop.DoDragDrop(tb, this._dataObject, DragDropEffects.Copy);
@@ -239,10 +241,12 @@
         /// <param name="e">
         /// Mouse button event information.
         /// </param>
+        // ReSharper disable once IdentifierTypo
         private void btnCollapseExpand_click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
 
+            Debug.Assert(btn != null, "btn != null");
             if (btn.Content.ToString() == "Collapse")
             {
                 this._saveHeight = this.Height;
@@ -269,6 +273,7 @@
         {
             var cbo = sender as ComboBox;
 
+            Debug.Assert(cbo != null, "cbo != null");
             cbo.ItemsSource = (from d in Enum.GetValues(typeof(ControlType)).OfType<ControlType>()
                                where d.ToString() != "None"
                                orderby d.ToString()
@@ -284,6 +289,7 @@
             // a checkbox no matter what type it was.
             
             var item = cbo.DataContext as PropertyInformation;
+            Debug.Assert(item != null, "item != null");
             if (item.TypeName.Contains("Boolean"))
             {
                 cbo.SelectedValue = "CheckBox";
