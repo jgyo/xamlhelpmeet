@@ -70,10 +70,6 @@
     <Reference Include="extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="logger, Version=2.0.0.6, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Resources\logger.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.Debugger.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -201,6 +197,11 @@
     <Compile Include="Commands\UI\FieldsListFromSelectedClassCommand.cs" />
     <Compile Include="Guid.cs" />
     <Compile Include="PkgCmdList.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssemblyInfo.tt</DependentUpon>
+    </Compile>
     <Compile Include="Utility\NarrowSelectionResult.cs" />
     <Compile Include="Utility\NodeEndMatches.cs" />
     <Compile Include="Utility\NodePosition.cs" />
@@ -227,7 +228,6 @@
     <Compile Include="Utility\XamlParts\XamlTagType.cs" />
     <Compile Include="Utility\XmlHelpers.cs" />
     <Compile Include="XamlHelpmeetPackage.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -242,13 +242,23 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ReleaseNotes.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
+    <None Include="source.extension.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>source.extension.vsixmanifest</LastGenOutput>
+    </None>
+    <Resource Include="ReleaseNotes.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReleaseNotes.tt</DependentUpon>
+    </Resource>
     <Content Include="Resources\Mono.Cecil.dll" />
     <Content Include="Resources\Mono.Cecil.pdb" />
     <Resource Include="Versioning.txt" />
+    <None Include="source.extension.vsixmanifest">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>source.extension.tt</DependentUpon>
+    </None>
     <Content Include="XamlHelpmeet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -262,8 +272,16 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="Mono.Cecil.License.rtf" />
-    <None Include="source.extension.vsixmanifest">
-      <SubType>Designer</SubType>
+    <None Include="Properties\AssemblyInfo.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
+      <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
+&lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
+      <TransformOnBuild>False</TransformOnBuild>
+    </None>
+    <None Include="ReleaseNotes.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReleaseNotes.txt</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -282,10 +300,6 @@
     <Content Include="GAC Hack\Microsoft.VisualStudio.Shell.Interop.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Recorder\Recorder.csproj">
-      <Project>{86cdf6aa-c283-4d84-a321-aabd171ae0d2}</Project>
-      <Name>Recorder</Name>
-    </ProjectReference>
     <ProjectReference Include="..\XamlHelpmeet.Model\XamlHelpmeet.Model.csproj">
       <Project>{c6eb8699-e5bc-4575-ac9a-e712ae58aaac}</Project>
       <Name>XamlHelpmeet.Model</Name>
@@ -302,6 +316,9 @@
       <Project>{51D8F5EF-2E44-450B-94A5-03895206FFD2}</Project>
       <Name>XamlHelpmeet.UI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

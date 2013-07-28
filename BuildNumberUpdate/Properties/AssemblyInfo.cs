@@ -8,16 +8,17 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Xaml Helpmeet Extentions")]
+[assembly: AssemblyTitle("Build Number update")]
 [assembly: AssemblyDescription("This is beta software and may have bugs. Use at your own risk.")]
 [assembly: AssemblyConfiguration("Debug")]
 [assembly: AssemblyCompany("Yoder Zone")]
-[assembly: AssemblyProduct("Xaml Helpmeet Extentions")]
+[assembly: AssemblyProduct("Build Number update")]
 [assembly: AssemblyCopyright("Copyright © Yoder Zone 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: ComVisible(false)]
+[assembly: ComVisible(true)]
+[assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US")]
 
 //In order to begin building localizable applications, set 
@@ -39,6 +40,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.7.4.1304")]
-[assembly: AssemblyFileVersion("0.7.4.1304")]
-[assembly: GuidAttribute("a3e46b5c-b620-48e7-8b08-d39b24dfd28d")]
+[assembly: AssemblyVersion("0.7.5.1304")]
+[assembly: AssemblyFileVersion("0.7.5.1304")]
+[assembly: GuidAttribute("ABF6BEC4-8035-4714-AF7E-987F09949FA8")]

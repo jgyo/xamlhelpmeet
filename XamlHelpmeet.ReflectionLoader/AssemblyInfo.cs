@@ -8,11 +8,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Xaml Helpmeet Extentions")]
+[assembly: AssemblyTitle("Xaml Helpmeet Model")]
 [assembly: AssemblyDescription("This is beta software and may have bugs. Use at your own risk.")]
 [assembly: AssemblyConfiguration("Debug")]
 [assembly: AssemblyCompany("Yoder Zone")]
-[assembly: AssemblyProduct("Xaml Helpmeet Extentions")]
+[assembly: AssemblyProduct("Xaml Helpmeet Model")]
 [assembly: AssemblyCopyright("Copyright © Yoder Zone 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -39,6 +39,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.7.4.1304")]
-[assembly: AssemblyFileVersion("0.7.4.1304")]
-[assembly: GuidAttribute("a3e46b5c-b620-48e7-8b08-d39b24dfd28d")]
+[assembly: AssemblyVersion("0.7.1.1304")]
+[assembly: AssemblyFileVersion("0.7.1.1304")]
+[assembly: GuidAttribute("dbf0c855-a62a-489c-a0f9-3d5da5da41f8")]

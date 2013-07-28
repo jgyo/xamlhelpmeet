@@ -277,11 +277,10 @@
                             CornerRadius="5"
                             DockPanel.Dock="Top">
                         <ListBox x:Name="lbProperties"
-                                 Height="262"
                                  BorderBrush="{x:Null}"
                                  FontSize="12"
                                  ItemsSource="{Binding Source={StaticResource cvsProperties}}"
-                                 SelectionMode="{Binding PropertiesSelectionMode}">
+                                 SelectionMode="{Binding PropertiesSelectionMode}" Initialized="lbProperties_Initialized">
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="{x:Type ListBoxItem}">
                                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />

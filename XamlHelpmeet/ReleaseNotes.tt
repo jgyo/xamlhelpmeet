@@ -1,6 +1,45 @@
-﻿ 
-RELEASE NOTES FOR XAML HELPMEET 0.7.4 Beta Debug
-Copyright (c) Gil Yoder 2013
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".txt" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#
+	int BuildNumber;
+	int MajorVersion;
+	int MinorVersion;
+	string Configuration;
+	string CopyrightYear;
+	string VersionString;
+
+	string templateDirectory = Path.GetDirectoryName(this.Host.ResolvePath("..\\."));
+	
+	string buildFilePath = Path.Combine(templateDirectory, "version.txt");
+	if (!File.Exists(buildFilePath))
+    {
+        BuildNumber = 1;
+        MajorVersion = 0;
+        MinorVersion = 1;
+    }
+	else
+	{
+		var contents = File.ReadAllLines(buildFilePath);
+        MajorVersion = Convert.ToInt32(contents[0]);
+        MinorVersion = Convert.ToInt32(contents[1]);
+		BuildNumber = Convert.ToInt32(contents[2]);
+		//File.Delete(buildFilePath);
+	}
+//	File.AppendAllText(buildFilePath, (++BuildNumber).ToString());
+	CopyrightYear = DateTime.UtcNow.Year.ToString();
+	VersionString = string.Format("{0}.{1}.{2}", MajorVersion, MinorVersion, BuildNumber);
+#if DEBUG
+	Configuration = "Debug";
+#else
+	Configuration = "Release";
+#endif
+#>RELEASE NOTES FOR XAML HELPMEET <#= VersionString #> Beta <#= Configuration #>
+Copyright (c) Gil Yoder <#= CopyrightYear #>
 
 This software is a beta version and may (likely, does) contain
 software bugs. While many hours have been spent searcning for

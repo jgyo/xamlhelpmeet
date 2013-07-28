@@ -46,6 +46,8 @@ namespace XamlHelpmeet.UI.ViewModelCreation
         /// <summary>all properties selected.</summary>
         private bool? allPropertiesSelected;
 
+        private bool deleteCommandEnabled;
+
         /// <summary>true if this object is property list in extended mode.</summary>
         private bool isPropertyListInExtendedMode;
 
@@ -93,8 +95,6 @@ namespace XamlHelpmeet.UI.ViewModelCreation
 
         /// <summary>The view model text.</summary>
         private string _viewModelText = string.Empty;
-
-        private bool deleteCommandEnabled;
 
         #endregion
 
@@ -190,6 +190,25 @@ namespace XamlHelpmeet.UI.ViewModelCreation
                     this._createCommand = new RelayCommand(this.CreateExecute, this.CanCreateExecute);
                 }
                 return this._createCommand;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether the delete command button is
+        ///     enabled.
+        /// </summary>
+        /// <value>true if delete command button enabled, false if not.</value>
+        public bool DeleteCommandEnabled
+        {
+            get { return this.deleteCommandEnabled; }
+            set
+            {
+                if (this.deleteCommandEnabled == value)
+                {
+                    return;
+                }
+                this.deleteCommandEnabled = value;
+                this.OnPropertyChanged("DeleteCommandEnabled");
             }
         }
 
@@ -429,26 +448,6 @@ namespace XamlHelpmeet.UI.ViewModelCreation
             get { return this._viewModelText; }
         }
 
-        /// <summary>Gets or sets a value indicating whether the delete command button is enabled.</summary>
-        ///
-        /// <value>true if delete command button enabled, false if not.</value>
-        public bool DeleteCommandEnabled
-        {
-            get
-            {
-                return deleteCommandEnabled;
-            }
-            set
-            {
-                if (deleteCommandEnabled==value)
-                {
-                    return;
-                }
-                deleteCommandEnabled = value;
-                OnPropertyChanged("DeleteCommandEnabled");
-            }
-        }
-
         #endregion
 
         #region INotifyPropertyChanged Members
@@ -483,6 +482,24 @@ namespace XamlHelpmeet.UI.ViewModelCreation
             this.DialogResult = false;
         }
 
+        private void BtnDeleteCommand_Click(object sender, RoutedEventArgs e)
+        {
+            var deleteList = new List<CreateCommandSource>();
+            foreach (var item in this.commandsList.SelectedItems)
+            {
+                var commandSource = item as CreateCommandSource;
+                if (this.CommandsCollection.Contains(commandSource))
+                {
+                    deleteList.Add(commandSource);
+                }
+            }
+
+            foreach (var item in deleteList)
+            {
+                this.CommandsCollection.Remove(item);
+            }
+        }
+
         /// <summary>Determine if we can create execute.</summary>
         /// <remarks>Yoder, 7/27/2013.</remarks>
         /// <param name="param">The parameter.</param>
@@ -507,10 +524,7 @@ namespace XamlHelpmeet.UI.ViewModelCreation
             this.cboPropertyChangedMethodNames.RemoveHandler(Selector.SelectionChangedEvent,
                                                              new SelectionChangedEventHandler(
                                                                  this.CboPropertyType_SelectionChanged));
-            this.cboPropertyChangedMethodNames.Items.Add("RaisePropertyChanged");
-            this.cboPropertyChangedMethodNames.Items.Add("OnPropertyChanged");
-            this.cboPropertyChangedMethodNames.Items.Add("NotifyPropertyChanged");
-            this.cboPropertyChangedMethodNames.Items.Add("FirePropertyChanged");
+            this.cboPropertyChangedMethodNames.ItemsSource = this.GetMethodNames();
             this.cboPropertyChangedMethodNames.SelectedIndex = -1;
             this.cboPropertyChangedMethodNames.AddHandler(Selector.SelectionChangedEvent,
                                                           new SelectionChangedEventHandler(
@@ -977,19 +991,37 @@ get {{ return {3}; }}{4}
 ", propertyText, exposedProperties);
         }
 
+        /// <summary>Gets the method names in this collection.</summary>
+        ///
+        /// <returns>An enumerator that allows foreach to be used to get the method names in this
+        ///     collection.</returns>
+
+        private IEnumerable<string> GetMethodNames()
+        {
+            var names = new List<string>
+                        {
+                            "RaisePropertyChanged",
+                            "OnPropertyChanged",
+                            "NotifyPropertyChanged",
+                            "FirePropertyChanged"
+                        };
+            return names;
+        }
+
         /// <summary>Gets property types.</summary>
         /// <remarks>Yoder, 7/27/2013.</remarks>
         /// <returns>The property types.</returns>
         private IEnumerable GetPropertyTypes()
         {
-            var propertyTypes = new List<string>();
-
-            propertyTypes.Add(this.TypeName);
-            propertyTypes.Add(String.Format("List(Of {0})", this.TypeName));
-            propertyTypes.Add(String.Format("ObservableCollection(Of {0})", this.TypeName));
-            propertyTypes.Add(String.Format("ReadOnlyObservableCollection(Of {0})", this.TypeName));
-            propertyTypes.Add(String.Format("IEnumerable(Of {0})", this.TypeName));
-            propertyTypes.Add(String.Format("IList(Of {0})", this.TypeName));
+            var propertyTypes = new List<string>
+                                {
+                                    this.TypeName,
+                                    String.Format("List(Of {0})", this.TypeName),
+                                    String.Format("ObservableCollection(Of {0})", this.TypeName),
+                                    String.Format("ReadOnlyObservableCollection(Of {0})", this.TypeName),
+                                    String.Format("IEnumerable(Of {0})", this.TypeName),
+                                    String.Format("IList(Of {0})", this.TypeName)
+                                };
 
             return propertyTypes;
         }
@@ -1345,6 +1377,11 @@ End Set
             }
         }
 
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.DeleteCommandEnabled = this.commandsList.SelectedItems.Count > 0;
+        }
+
         /// <summary>Executes the property changed action.</summary>
         /// <remarks>Yoder, 7/27/2013.</remarks>
         /// <param name="PropertyName">Name of the property.</param>
@@ -1365,7 +1402,7 @@ End Set
         /// <param name="e">     Routed event information.</param>
         private void SelectAllCheckBox_Click(object sender, RoutedEventArgs e)
         {
-             if (this.AllPropertiesSelected ?? false)
+            if (this.AllPropertiesSelected ?? false)
             {
                 this.AllPropertiesSelected = false;
                 return;
@@ -1406,27 +1443,9 @@ End Set
 
         #endregion
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void lbProperties_Initialized(object sender, EventArgs e)
         {
-            DeleteCommandEnabled = this.commandsList.SelectedItems.Count > 0;
-        }
-
-        private void BtnDeleteCommand_Click(object sender, RoutedEventArgs e)
-        {
-            var deleteList = new List<CreateCommandSource>();
-            foreach (var item in commandsList.SelectedItems)
-            {
-                var commandSource = item as CreateCommandSource;
-                if (this.CommandsCollection.Contains(commandSource))
-                {
-                    deleteList.Add(commandSource);
-                }
-            }
-
-            foreach (var item in deleteList)
-            {
-                this.CommandsCollection.Remove(item);
-            }
+            this.AllPropertiesSelected = false;
         }
     }
 }

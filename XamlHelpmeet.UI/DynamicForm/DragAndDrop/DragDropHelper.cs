@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -7,7 +6,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using XamlHelpmeet.Model;
 using XamlHelpmeet.UI.Editors;
-using YoderTools;
 
 namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 {

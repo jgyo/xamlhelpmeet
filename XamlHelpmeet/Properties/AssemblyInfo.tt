@@ -1,0 +1,104 @@
+<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="System.Windows.Forms" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#
+	string templateDirectory = Path.GetDirectoryName(this.Host.ResolvePath("..\\..\\."));
+	
+	string buildFilePath = Path.Combine(templateDirectory, "version.txt");
+	if (!File.Exists(buildFilePath))
+    {
+        BuildNumber = 1;
+        MajorVersion = 0;
+        MinorVersion = 1;
+    }
+	else
+	{
+		var contents = File.ReadAllLines(buildFilePath);
+        MajorVersion = Convert.ToInt32(contents[0]);
+        MinorVersion = Convert.ToInt32(contents[1]);
+		BuildNumber = Convert.ToInt32(contents[2]);
+		//File.Delete(buildFilePath);
+	}
+//	File.AppendAllText(buildFilePath, (++BuildNumber).ToString());
+	CopyrightYear = DateTime.UtcNow.Year.ToString();
+	VersionString = string.Format("{0}.{1}.{2}.{3}", MajorVersion, MinorVersion, BuildNumber, RevisionNumber);
+#if DEBUG
+	Configuration = "Debug";
+#else
+	Configuration = "Release";
+#endif
+
+#>
+using System;
+using System.Reflection;
+using System.Resources;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Windows;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("<#= this.Title #>")]
+[assembly: AssemblyDescription("<#= string.Format(this.Description, DateTime.UtcNow) #>")]
+[assembly: AssemblyConfiguration("<#= this.Configuration #>")]
+[assembly: AssemblyCompany("<#= this.Company #>")]
+[assembly: AssemblyProduct("<#= this.Title #>")]
+[assembly: AssemblyCopyright("Copyright © <#= this.Company #> <#= this.CopyrightYear #>")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+[assembly: ComVisible(<#= this.IsComVisible.ToString().ToLower() #>)]
+[assembly: CLSCompliant(<#= this.CLSCompliant.ToString().ToLower() #>)]
+[assembly: NeutralResourcesLanguage("<#= this.Language #>")]
+
+//In order to begin building localizable applications, set 
+//<UICulture>CultureYouAreCodingWith</UICulture> in your .csproj file
+//inside a <PropertyGroup>.  For example, if you are using US english
+//in your source files, set the <UICulture> to en-US.  Then uncomment
+//the NeutralResourceLanguage attribute below.  Update the "en-US" in
+//the line below to match the UICulture setting in the project file.
+
+//[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("<#= VersionString #>")]
+[assembly: AssemblyFileVersion("<#= VersionString #>")]
+[assembly: GuidAttribute("<#= this.assemblyGuid #>")]
+<#+
+	int MajorVersion = 0;
+	int MinorVersion = 7;
+	int BuildNumber;
+	int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2010,1,1)).TotalDays;
+
+	string Title = "Xaml Helpmeet";
+	string Description ="This is beta software and may have bugs. Use at your own risk.";
+	string Company = "Yoder Zone";
+
+	string CopyrightYear;
+	string VersionString;
+	string Configuration;
+	// Setting ComVisible to false makes the types in this assembly not visible 
+	// to COM components.  If you need to access a type in this assembly from 
+	// COM, set the ComVisible attribute to true on that type.
+	bool IsComVisible = true;
+    bool CLSCompliant = false;
+    string Language= "en-US";
+    string assemblyGuid= "86321992-D1FB-4338-8C97-A8C686BF4FCA";
+#>

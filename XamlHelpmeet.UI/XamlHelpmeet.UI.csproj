@@ -261,6 +261,11 @@
     <Compile Include="GridColumnAndRowEditor\GridRowColumnEditWindow.xaml.cs">
       <DependentUpon>GridRowColumnEditWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <DependentUpon>AssemblyInfo.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="SelectClass\SelectClassFromAssembliesWindow.xaml.cs">
       <DependentUpon>SelectClassFromAssembliesWindow.xaml</DependentUpon>
     </Compile>
@@ -278,9 +283,6 @@
     <Compile Include="ValidationRules\PositiveIntegerValidationRule.cs" />
     <Compile Include="ValidationRules\RequiredEntryValidationRule.cs" />
     <Compile Include="ViewModelCreation\CreateCommandSource.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -303,6 +305,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Key.snk" />
+    <None Include="Properties\AssemblyInfo.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -310,10 +316,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Recorder\Recorder.csproj">
-      <Project>{86cdf6aa-c283-4d84-a321-aabd171ae0d2}</Project>
-      <Name>Recorder</Name>
-    </ProjectReference>
     <ProjectReference Include="..\XamlHelpmeet.Model\XamlHelpmeet.Model.csproj">
       <Project>{C6EB8699-E5BC-4575-AC9A-E712AE58AAAC}</Project>
       <Name>XamlHelpmeet.Model</Name>
@@ -332,7 +334,9 @@
   <ItemGroup>
     <Resource Include="Resources\application16x16.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
