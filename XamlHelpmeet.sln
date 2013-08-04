@@ -1,12 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.20623.1 VSUPREVIEW
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8D5E61F6-FD74-42B7-8320-68D4D55CA18B}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlHelpmeet", "XamlHelpmeet\XamlHelpmeet.csproj", "{5BEFB447-5239-4A56-A99E-AB88B43E0EE3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DEFA35E3-021F-45E8-9866-6566BDBFCC42} = {DEFA35E3-021F-45E8-9866-6566BDBFCC42}
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8D5E61F6-FD74-42B7-8320-68D4D55CA18B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlHelpmeet.Model", "XamlHelpmeet.Model\XamlHelpmeet.Model.csproj", "{C6EB8699-E5BC-4575-AC9A-E712AE58AAAC}"
 	ProjectSection(ProjectDependencies) = postProject
