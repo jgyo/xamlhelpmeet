@@ -1,5 +1,5 @@
 ﻿ 
-RELEASE NOTES FOR XAML HELPMEET 0.7.8 Beta Debug
+RELEASE NOTES FOR XAML HELPMEET 0.7.9 Beta Debug
 Copyright (c) Gil Yoder 2013
 
 This software is a beta version and may (likely, does) contain

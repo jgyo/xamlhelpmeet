@@ -35,7 +35,7 @@
 	}
 //	File.AppendAllText(buildFilePath, (++BuildNumber).ToString());
 	CopyrightYear = DateTime.UtcNow.Year.ToString();
-	VersionString = string.Format("{0}.{1}", MajorVersion, MinorVersion);
+	VersionString = string.Format("{0}.{1}.{2}", MajorVersion, MinorVersion, BuildNumber);
 #if DEBUG
 	Configuration = "Debug";
 #else
@@ -61,7 +61,7 @@
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />
-        <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="11.0" />
+        <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="[11.0,12.0)" />
     </Dependencies>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
