@@ -49,7 +49,7 @@ using System.Windows;
 [assembly: AssemblyTitle("<#= this.Title #>")]
 [assembly: AssemblyDescription("<#= string.Format(this.Description, DateTime.UtcNow) #>")]
 [assembly: AssemblyConfiguration("<#= this.Configuration #>")]
-[assembly: AssemblyCompany("<#= this.Company #>")]
+[assembly: AssemblyCompany("<#= this.Product #>")]
 [assembly: AssemblyProduct("<#= this.Title #>")]
 [assembly: AssemblyCopyright("Copyright © <#= this.Company #> <#= this.CopyrightYear #>")]
 [assembly: AssemblyTrademark("")]
@@ -87,8 +87,10 @@ using System.Windows;
 	int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2010,1,1)).TotalDays;
 
 	string Title = "Xaml Helpmeet Reflection Loader";
+    // Product name be the same in all assemblies.
+    private string Product = "Xaml Helpmeet 2012";
 	string Description ="This is beta software and may have bugs. Use at your own risk.";
-	string Company = "Yoder Zone";
+	string Company = "The Yoder Zone";
 
 	string CopyrightYear;
 	string VersionString;

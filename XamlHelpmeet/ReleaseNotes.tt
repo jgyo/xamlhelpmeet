@@ -12,7 +12,7 @@
 	string Configuration;
 	string CopyrightYear;
 	string VersionString;
-
+    string Product;
 	string templateDirectory = Path.GetDirectoryName(this.Host.ResolvePath("..\\."));
 	
 	string buildFilePath = Path.Combine(templateDirectory, "version.txt");
@@ -32,17 +32,18 @@
 	}
 //	File.AppendAllText(buildFilePath, (++BuildNumber).ToString());
 	CopyrightYear = DateTime.UtcNow.Year.ToString();
+    Product = "Xaml Helpmeet 2012";
 	VersionString = string.Format("{0}.{1}.{2}", MajorVersion, MinorVersion, BuildNumber);
 #if DEBUG
 	Configuration = "Debug";
 #else
 	Configuration = "Release";
 #endif
-#>RELEASE NOTES FOR XAML HELPMEET <#= VersionString #> Beta <#= Configuration #>
+#>RELEASE NOTES FOR <#= Product.ToUpper() #> <#= VersionString #> Beta <#= Configuration #>
 Copyright (c) Gil Yoder <#= CopyrightYear #>
 
-This software is a beta version and may (likely, does) contain
-software bugs. While many hours have been spent searcning for
+This software is a beta version and may contain software
+bugs. While many hours have been spent searcning for
 and correcting software errors, some errors inevitably still
 exist and may prevent successful use on some occasions.
 It is not likely that the remaining errors will cause

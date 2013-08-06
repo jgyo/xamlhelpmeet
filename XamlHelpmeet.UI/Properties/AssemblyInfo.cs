@@ -11,9 +11,9 @@ using System.Windows;
 [assembly: AssemblyTitle("Xaml Helpmeet Reflection Loader")]
 [assembly: AssemblyDescription("This is beta software and may have bugs. Use at your own risk.")]
 [assembly: AssemblyConfiguration("Debug")]
-[assembly: AssemblyCompany("Yoder Zone")]
+[assembly: AssemblyCompany("Xaml Helpmeet 2012")]
 [assembly: AssemblyProduct("Xaml Helpmeet Reflection Loader")]
-[assembly: AssemblyCopyright("Copyright © Yoder Zone 2013")]
+[assembly: AssemblyCopyright("Copyright © The Yoder Zone 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -39,6 +39,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.7.11.1311")]
-[assembly: AssemblyFileVersion("0.7.11.1311")]
+[assembly: AssemblyVersion("0.7.17.1313")]
+[assembly: AssemblyFileVersion("0.7.17.1313")]
 [assembly: GuidAttribute("4db0c72e-772c-41d8-ad2c-9ffbfc255b8d")]

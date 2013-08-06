@@ -11,9 +11,9 @@ using System.Windows;
 [assembly: AssemblyTitle("Xaml Helpmeet User Interface")]
 [assembly: AssemblyDescription("This is beta software and may have bugs. Use at your own risk.")]
 [assembly: AssemblyConfiguration("Debug")]
-[assembly: AssemblyCompany("Yoder Zone")]
-[assembly: AssemblyProduct("Xaml Helpmeet User Interface")]
-[assembly: AssemblyCopyright("Copyright © Yoder Zone 2013")]
+[assembly: AssemblyCompany("The Yoder Zone")]
+[assembly: AssemblyProduct("Xaml Helpmeet 2012")]
+[assembly: AssemblyCopyright("Copyright © The Yoder Zone 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -39,6 +39,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.7.11.1311")]
-[assembly: AssemblyFileVersion("0.7.11.1311")]
+[assembly: AssemblyVersion("0.7.16.1313")]
+[assembly: AssemblyFileVersion("0.7.16.1313")]
 [assembly: GuidAttribute("B51CEF5C-5E7C-4FFD-A1C6-D0BD7FCC64E0")]

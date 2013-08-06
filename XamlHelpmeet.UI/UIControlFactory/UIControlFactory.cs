@@ -50,6 +50,7 @@ namespace XamlHelpmeet.UI.UIControlFactory
 
 		#region Declarations
 
+        // Todo: Check these folders for validity
 		private static readonly string _saveSettingsFilename = Path.Combine(Environment.GetEnvironmentVariable("APPDATA"), @"YoderTools\Xaml Helpmeet\xhmDefault.Settings");
 		private static readonly string _saveSettingsFolderName = Path.Combine(Environment.GetEnvironmentVariable("APPDATA"), @"YoderTools\Xaml Helpmeet\");
 		private static UIControlFactory _instance;

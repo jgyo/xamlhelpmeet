@@ -242,6 +242,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="source.extension.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>source.extension.vsixmanifest</LastGenOutput>
+    </None>
     <Resource Include="ReleaseNotes.txt">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
