@@ -8,7 +8,7 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Xaml Helpmeet")]
+[assembly: AssemblyTitle("Xaml Helpmeet 2012")]
 [assembly: AssemblyDescription("This is beta software and may have bugs. Use at your own risk.")]
 [assembly: AssemblyConfiguration("Debug")]
 [assembly: AssemblyCompany("The Yoder Zone")]
@@ -40,6 +40,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.7.17.1313")]
-[assembly: AssemblyFileVersion("0.7.17.1313")]
+[assembly: AssemblyVersion("0.7.86.1329")]
+[assembly: AssemblyFileVersion("0.7.86.1329")]
 [assembly: GuidAttribute("86321992-D1FB-4338-8C97-A8C686BF4FCA")]

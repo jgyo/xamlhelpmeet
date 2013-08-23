@@ -21,6 +21,7 @@ using System.Windows;
 [assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US")]
 
+//Version Directory: C:\Users\Yoder\Documents\Visual Studio 2012\Projects\XamlHelpMeet\BuildNumberUpdate\Properties\..\..
 //In order to begin building localizable applications, set 
 //<UICulture>CultureYouAreCodingWith</UICulture> in your .csproj file
 //inside a <PropertyGroup>.  For example, if you are using US english
@@ -40,6 +41,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.7.17.1313")]
-[assembly: AssemblyFileVersion("0.7.17.1313")]
+[assembly: AssemblyVersion("0.7.87.1329")]
+[assembly: AssemblyFileVersion("0.7.87.1329")]
 [assembly: GuidAttribute("ABF6BEC4-8035-4714-AF7E-987F09949FA8")]

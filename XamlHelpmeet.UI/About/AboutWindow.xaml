@@ -4,10 +4,11 @@
         Title="About Xaml Helpmeet"
         Width="616"
         Height="320"
-        Background="Black"
-        BorderBrush="#FFEDB343"
+        xmlns:shell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.11.0"
+        Background="{DynamicResource {x:Static shell:VsBrushes.ToolWindowBackgroundKey}}"
+        BorderBrush="{DynamicResource {x:Static shell:VsBrushes.ToolWindowBorderKey}}"
+        Foreground="{DynamicResource {x:Static shell:VsBrushes.ToolWindowTextKey}}"
         BorderThickness="10"
-        Foreground="#FFFEF7D7"
         Loaded="Window_Loaded_1"
         MouseDown="Window_MouseDown"
         ResizeMode="NoResize"
@@ -29,7 +30,7 @@
             <TextBlock Margin="0,0,10,0"
                        FontSize="24"
                        FontWeight="Bold"
-                       Text="Xaml Helpmeet for Visual Studio 2012" />
+                       Text="Xaml Helpmeet 2012" />
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="0,5,5,0"
                            FontSize="14">
@@ -45,20 +46,16 @@
             <TextBlock Margin="0,12,5,0"
                        FontSize="14"
                        TextWrapping="Wrap">
-                Xaml Helpmeet is a Visual Studio 2012
+                Xaml Helpmeet 2012 is a Visual Studio 2012
                 extension designed to help programmers write and manage xaml files.
                 It is a translation and update of XAML Power Tools, written by
                 Karl Shifflett in Visual Basic. You can find Xaml Helpmeet at
                 <Hyperlink Click="Hyperlink_Click_1"
-                           Foreground="#FFFDFDFD"
+                           Foreground="{DynamicResource {x:Static shell:VsBrushes.ControlLinkTextKey}}"
                            ToolTip="http://xamlhelpmeet.codeplex.com/">
                     xamlhelpmeet.codeplex.com
-                </Hyperlink>
-                .
-                <!--
-                    and install the binary
-                    in Visual Studio 2012 from the Visual Studio Galary.
-                -->
+                </Hyperlink>.
+
             </TextBlock>
             <TextBlock Margin="0,6,5,0"
                        FontSize="14"
@@ -70,15 +67,15 @@
             <TextBlock Margin="0,6,0,0">
                 <Hyperlink Click="Hyperlink_Click_1"
                            FontSize="14"
-                           Foreground="#FFFDFDFD"
-                           ToolTip="http://www.opensource.org/licenses/mit-license.html"><Run FontSize="14"
-                         Text="http://www.opensource.org/licenses/mit-license.html" />
+                           Foreground="{DynamicResource {x:Static shell:VsBrushes.ControlLinkTextKey}}"
+                           ToolTip="https://xamlhelpmeet2013.codeplex.com/license"><Run FontSize="14"
+                         Text="xamlhelpmeet.codeplex.com/license" />
                 </Hyperlink>
             </TextBlock>
             <TextBlock Margin="0,12,5,0"
                        FontSize="18"
                        TextWrapping="Wrap">
-                Copyright © Gil Yoder 2013
+                Copyright © The Yoder Zone 2013
             </TextBlock>
 
         </StackPanel>

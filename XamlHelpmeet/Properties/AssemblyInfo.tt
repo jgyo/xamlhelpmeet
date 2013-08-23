@@ -87,7 +87,7 @@ using System.Windows;
 	int BuildNumber;
 	int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2010,1,1)).TotalDays;
 
-	string Title = "Xaml Helpmeet";
+	string Title = "Xaml Helpmeet 2012";
     // Product name be the same in all assemblies.
     private string Product = "Xaml Helpmeet 2012";
 	string Description ="This is beta software and may have bugs. Use at your own risk.";
