@@ -1,42 +1,52 @@
-﻿// file:	Converters\BindingModeEnumConverter.cs
+﻿// file:    Converters\BindingModeEnumConverter.cs
 //
-// summary:	Implements the binding mode enum converter class
+// summary: Implements the binding mode enum converter class
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Data;
 
 namespace XamlHelpmeet.UI.Converters
 {
+using NLog;
+
+using YoderZone.Extensions.NLog;
+
+/// <summary>
+///     Binding mode enum converter.
+/// </summary>
+/// <seealso cref="T:System.Windows.Data.IValueConverter"/>
+[ValueConversion(typeof(BindingMode), typeof(string))]
+public class BindingModeEnumConverter
+    : IValueConverter
+{
     /// <summary>
-    ///     Binding mode enum converter.
+    /// The logger.
     /// </summary>
-    /// <seealso cref="T:System.Windows.Data.IValueConverter"/>
-	[ValueConversion(typeof(BindingMode), typeof(string))]
-	public class BindingModeEnumConverter
-		: IValueConverter
-	{
-		#region IValueConverter Members
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
 
-        /// <summary>
-        ///     Converts a BindingMode value to a string.
-        /// </summary>
-        /// <seealso cref="M:System.Windows.Data.IValueConverter.Convert(object,Type,object,System.Globalization.CultureInfo)"/>
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			return ((BindingMode)value).ToString();
-		}
+    #region IValueConverter Members
 
-        /// <summary>
-        ///     Converts a string value to a BindingMode enumeration.
-        /// </summary>
-        /// <seealso cref="M:System.Windows.Data.IValueConverter.ConvertBack(object,Type,object,System.Globalization.CultureInfo)"/>
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			return Enum.Parse(typeof(BindingMode),
-			                  value.ToString());
-		}
+    /// <summary>
+    ///     Converts a BindingMode value to a string.
+    /// </summary>
+    /// <seealso cref="M:System.Windows.Data.IValueConverter.Convert(object,Type,object,System.Globalization.CultureInfo)"/>
+    public object Convert(object value, Type targetType, object parameter,
+                          System.Globalization.CultureInfo culture)
+    {
+        return ((BindingMode)value).ToString();
+    }
 
-		#endregion
-	}
+    /// <summary>
+    ///     Converts a string value to a BindingMode enumeration.
+    /// </summary>
+    /// <seealso cref="M:System.Windows.Data.IValueConverter.ConvertBack(object,Type,object,System.Globalization.CultureInfo)"/>
+    public object ConvertBack(object value, Type targetType, object parameter,
+                              System.Globalization.CultureInfo culture)
+    {
+        return Enum.Parse(typeof(BindingMode),
+                          value.ToString());
+    }
+
+    #endregion
+}
 }

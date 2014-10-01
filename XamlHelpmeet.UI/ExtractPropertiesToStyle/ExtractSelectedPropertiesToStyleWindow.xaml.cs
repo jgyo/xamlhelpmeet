@@ -1,6 +1,6 @@
-﻿// file:	ExtractPropertiesToStyle\ExtractSelectedPropertiesToStyleWindow.xaml.cs
+﻿// file:    ExtractPropertiesToStyle\ExtractSelectedPropertiesToStyleWindow.xaml.cs
 //
-// summary:	Implements the extract selected properties to style window.xaml class
+// summary: Implements the extract selected properties to style window.xaml class
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -13,250 +13,276 @@ using XamlHelpmeet.UI.Utilities;
 
 // namespace: XamlHelpmeet.UI.ExtractPropertiesToStyle
 //
-// summary:	ExtractSelectedPropertiesToStyleWindow and supporting members.
+// summary: ExtractSelectedPropertiesToStyleWindow and supporting members.
 namespace XamlHelpmeet.UI.ExtractPropertiesToStyle
 {
-	/// <summary>
-	/// 	Interaction logic for ExtractSelectedPropertiesToStyleWindow.xaml.
-	/// </summary>
-	/// <seealso cref="T:System.Windows.Window"/>
-	public partial class ExtractSelectedPropertiesToStyleWindow : Window
-	{
-		#region Fields
+using NLog;
 
-		private RelayCommand _extractCommand;
-		#endregion Fields
+using YoderZone.Extensions.NLog;
 
-		#region Constructors
+/// <summary>
+///     Interaction logic for ExtractSelectedPropertiesToStyleWindow.xaml.
+/// </summary>
+/// <seealso cref="T:System.Windows.Window"/>
+public partial class ExtractSelectedPropertiesToStyleWindow : Window
+{
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
 
-		/// <summary>
-		/// 	Initializes a new instance of the ExtractSelectedPropertiesToStyleWindow
-		/// 	class.
-		/// </summary>
-		/// <param name="Document">
-		/// 	The document.
-		/// </param>
-		/// <param name="IsSilverlight">
-		/// 	true if this ExtractSelectedPropertiesToStyleWindow is silverlight.
-		/// </param>
-		/// <param name="SilverlightVersion">
-		/// 	The silverlight version.
-		/// </param>
-		public ExtractSelectedPropertiesToStyleWindow(System.Xml.XmlDocument Document, bool IsSilverlight, string SilverlightVersion)
-		{
-			HasStyleSet = false;
-			this.IsSilverlight = IsSilverlight;
-			this.SilverlightVersion = SilverlightVersion;
-			this.Document = Document;
-			ExtractedProperties = new List<ExtractProperty>();
+    #region Fields
 
-			GetProperties();
-			DataContext = this;
+    private RelayCommand _extractCommand;
+    #endregion Fields
 
-			InitializeComponent();
+    #region Constructors
 
-			if (!(IsSilverlight && SilverlightVersion.StartsWith("3")))
-				return;
+    /// <summary>
+    ///     Initializes a new instance of the ExtractSelectedPropertiesToStyleWindow
+    ///     class.
+    /// </summary>
+    /// <param name="Document">
+    ///     The document.
+    /// </param>
+    /// <param name="IsSilverlight">
+    ///     true if this ExtractSelectedPropertiesToStyleWindow is silverlight.
+    /// </param>
+    /// <param name="SilverlightVersion">
+    ///     The silverlight version.
+    /// </param>
+    public ExtractSelectedPropertiesToStyleWindow(System.Xml.XmlDocument
+            Document, bool IsSilverlight, string SilverlightVersion)
+    {
+        HasStyleSet = false;
+        this.IsSilverlight = IsSilverlight;
+        this.SilverlightVersion = SilverlightVersion;
+        this.Document = Document;
+        ExtractedProperties = new List<ExtractProperty>();
 
-			tbIsSilverlight3RequiredAstrick.Visibility = System.Windows.Visibility.Visible;
-			tbIsSilverlight3RequiredMessage.Visibility = System.Windows.Visibility.Visible;
-		}
+        GetProperties();
+        DataContext = this;
 
-		/// <summary>
-		/// 	Initializes a new instance of the ExtractSelectedPropertiesToStyleWindow
-		/// 	class.
-		/// </summary>
-		public ExtractSelectedPropertiesToStyleWindow()
-		{
-			InitializeComponent();
-		}
+        InitializeComponent();
 
-		#endregion Constructors
+        if (!(IsSilverlight && SilverlightVersion.StartsWith("3")))
+        { return; }
 
-		#region Properties
+        tbIsSilverlight3RequiredAstrick.Visibility =
+            System.Windows.Visibility.Visible;
+        tbIsSilverlight3RequiredMessage.Visibility =
+            System.Windows.Visibility.Visible;
+    }
 
-		/// <summary>
-		/// 	Gets the document.
-		/// </summary>
-		/// <value>
-		/// 	The document.
-		/// </value>
-		public XmlDocument Document
-		{
-			get;
-			private set;
-		}
+    /// <summary>
+    ///     Initializes a new instance of the ExtractSelectedPropertiesToStyleWindow
+    ///     class.
+    /// </summary>
+    public ExtractSelectedPropertiesToStyleWindow()
+    {
+        logger.Debug("Entered member.");
 
-		/// <summary>
-		/// 	Gets the extract command.
-		/// </summary>
-		/// <value>
-		/// 	The extract command.
-		/// </value>
-		public ICommand ExtractCommand
-		{
-			get
-			{
-				if (_extractCommand == null)
-					_extractCommand = new RelayCommand(ExtractExecute, CanExtractExecute);
+        InitializeComponent();
+    }
 
-				return _extractCommand;
-			}
-		}
+    #endregion Constructors
 
-		/// <summary>
-		/// 	Gets the extracted properties.
-		/// </summary>
-		/// <value>
-		/// 	The extracted properties.
-		/// </value>
-		public List<ExtractProperty> ExtractedProperties
-		{
-			get;
-			private set;
-		}
+    #region Properties
 
-		private bool HasStyleSet
-		{
-			get;
-			set;
-		}
+    /// <summary>
+    ///     Gets the document.
+    /// </summary>
+    /// <value>
+    ///     The document.
+    /// </value>
+    public XmlDocument Document
+    {
+        get;
+        private set;
+    }
 
-		/// <summary>
-		/// 	Gets a value indicating whether this ExtractSelectedPropertiesToStyleWindow is
-		/// 	silverlight.
-		/// </summary>
-		/// <value>
-		/// 	true if this ExtractSelectedPropertiesToStyleWindow is silverlight, otherwise
-		/// 	false.
-		/// </value>
-		public bool IsSilverlight
-		{
-			get;
-			private set;
-		}
+    /// <summary>
+    ///     Gets the extract command.
+    /// </summary>
+    /// <value>
+    ///     The extract command.
+    /// </value>
+    public ICommand ExtractCommand
+    {
+        get
+        {
+            if (_extractCommand == null)
+            { _extractCommand = new RelayCommand(ExtractExecute, CanExtractExecute); }
 
-		/// <summary>
-		/// 	Gets the silverlight version.
-		/// </summary>
-		/// <value>
-		/// 	The silverlight version.
-		/// </value>
-		public string SilverlightVersion
-		{
-			get;
-			private set;
-		}
+            return _extractCommand;
+        }
+    }
 
-		/// <summary>
-		/// 	Gets or sets the name of the style.
-		/// </summary>
-		/// <value>
-		/// 	The name of the style.
-		/// </value>
-		public string StyleName
-		{
-			get;
-			set;
-		}
+    /// <summary>
+    ///     Gets the extracted properties.
+    /// </summary>
+    /// <value>
+    ///     The extracted properties.
+    /// </value>
+    public List<ExtractProperty> ExtractedProperties
+    {
+        get;
+        private set;
+    }
 
-		/// <summary>
-		/// 	Gets the name of the type.
-		/// </summary>
-		/// <value>
-		/// 	The name of the type.
-		/// </value>
-		public string TypeName
-		{
-			get;
-			private set;
-		}
+    private bool HasStyleSet
+    {
+        get;
+        set;
+    }
 
-		#endregion Properties
+    /// <summary>
+    ///     Gets a value indicating whether this ExtractSelectedPropertiesToStyleWindow is
+    ///     silverlight.
+    /// </summary>
+    /// <value>
+    ///     true if this ExtractSelectedPropertiesToStyleWindow is silverlight, otherwise
+    ///     false.
+    /// </value>
+    public bool IsSilverlight
+    {
+        get;
+        private set;
+    }
 
-		#region Methods
+    /// <summary>
+    ///     Gets the silverlight version.
+    /// </summary>
+    /// <value>
+    ///     The silverlight version.
+    /// </value>
+    public string SilverlightVersion
+    {
+        get;
+        private set;
+    }
 
-		private void btnCancel_Click(object sender, RoutedEventArgs e)
-		{
-			DialogResult = false;
-		}
+    /// <summary>
+    ///     Gets or sets the name of the style.
+    /// </summary>
+    /// <value>
+    ///     The name of the style.
+    /// </value>
+    public string StyleName
+    {
+        get;
+        set;
+    }
 
-		private void GetProperties()
-		{
-			TypeName = Document.ChildNodes[0].Name;
+    /// <summary>
+    ///     Gets the name of the type.
+    /// </summary>
+    /// <value>
+    ///     The name of the type.
+    /// </value>
+    public string TypeName
+    {
+        get;
+        private set;
+    }
 
-			foreach (XmlAttribute atr in Document.ChildNodes[0].Attributes)
-			{
-				// First IF lists attributes or attribute characteristics that
-				// exist in properties that should not be extracted and placed
-				// in a style.
-				if (atr.Name.Contains(".") ||
-					atr.Name == "Name" ||
-					atr.Name == "x:Name" ||
-					atr.Name.StartsWith("xmlns") ||
-					atr.Name.StartsWith("Command") ||
-					atr.Name.StartsWith("Click"))
-				{
-					// Developers may add more checks here as desired, i.e.,
-					// to prevent an extraction.
-				}
-				else if (atr.Name != "Style")
-				{
-					ExtractedProperties.Add(new ExtractProperty(atr));
-				}
-				else
-				{
-					HasStyleSet = true;
-					UIUtilities.ShowInformationMessage("Root Element Has Style", "The selected root UI Element already has a style property. The style will not be set when Extract is executed.");
-				}
-			}
-		}
+    #endregion Properties
 
-		private void InsertStyleProperty()
-		{
-			if (!StyleName.IsNotNullOrEmpty() || HasStyleSet != false)
-				return;
+    #region Methods
 
-			var newAttribute = Document.CreateAttribute("Style");
-			newAttribute.Value = string.Format("{{StaticResource {0}}}", StyleName);
-			Document.ChildNodes[0].Attributes.Append(newAttribute);
-		}
+    private void btnCancel_Click(object sender, RoutedEventArgs e)
+    {
+        logger.Debug("Entered member.");
 
-		private void RemoveSelectedProperties()
-		{
-			foreach (var obj in ExtractedProperties)
-			{
-				if (obj.IsSelected == false)
-					continue;
+        DialogResult = false;
+    }
 
-				Document.ChildNodes[0].Attributes.Remove(obj.XmlAttribute);
-			}
-		}
+    private void GetProperties()
+    {
+        logger.Debug("Entered member.");
 
-		#endregion Methods
+        TypeName = Document.ChildNodes[0].Name;
 
-		#region Command Methods
+        foreach (XmlAttribute atr in Document.ChildNodes[0].Attributes)
+        {
+            // First IF lists attributes or attribute characteristics that
+            // exist in properties that should not be extracted and placed
+            // in a style.
+            if (atr.Name.Contains(".") ||
+                    atr.Name == "Name" ||
+                    atr.Name == "x:Name" ||
+                    atr.Name.StartsWith("xmlns") ||
+                    atr.Name.StartsWith("Command") ||
+                    atr.Name.StartsWith("Click"))
+            {
+                // Developers may add more checks here as desired, i.e.,
+                // to prevent an extraction.
+            }
+            else if (atr.Name != "Style")
+            {
+                ExtractedProperties.Add(new ExtractProperty(atr));
+            }
+            else
+            {
+                HasStyleSet = true;
+                UIUtilities.ShowInformationMessage("Root Element Has Style",
+                                                   "The selected root UI Element already has a style property. The style will not be set when Extract is executed.");
+            }
+        }
+    }
 
-		private bool CanExtractExecute(object obj)
-		{
-			if (IsSilverlight && SilverlightVersion == "3.0" && StyleName.IsNullOrEmpty())
-				return false;
+    private void InsertStyleProperty()
+    {
+        logger.Debug("Entered member.");
 
-			return (from x in ExtractedProperties
-					where x.IsSelected
-					select x).Count() > 0;
-		}
+        if (!StyleName.IsNotNullOrEmpty() || HasStyleSet != false)
+        { return; }
 
-		private void ExtractExecute(object obj)
-		{
-			if (!CanExtractExecute(obj))
-				return;
+        var newAttribute = Document.CreateAttribute("Style");
+        newAttribute.Value = string.Format("{{StaticResource {0}}}", StyleName);
+        Document.ChildNodes[0].Attributes.Append(newAttribute);
+    }
 
-			RemoveSelectedProperties();
-			InsertStyleProperty();
-			DialogResult = true;
-		}
+    private void RemoveSelectedProperties()
+    {
+        logger.Debug("Entered member.");
 
-		#endregion Command Methods
-	}
+        foreach (var obj in ExtractedProperties)
+        {
+            if (obj.IsSelected == false)
+            { continue; }
+
+            Document.ChildNodes[0].Attributes.Remove(obj.XmlAttribute);
+        }
+    }
+
+    #endregion Methods
+
+    #region Command Methods
+
+    private bool CanExtractExecute(object obj)
+    {
+        logger.Debug("Entered member.");
+
+        if (IsSilverlight && SilverlightVersion == "3.0" &&
+                StyleName.IsNullOrEmpty())
+        { return false; }
+
+        return (from x in ExtractedProperties
+                where x.IsSelected
+                select x).Count() > 0;
+    }
+
+    private void ExtractExecute(object obj)
+    {
+        logger.Debug("Entered member.");
+
+        if (!CanExtractExecute(obj))
+        { return; }
+
+        RemoveSelectedProperties();
+        InsertStyleProperty();
+        DialogResult = true;
+    }
+
+    #endregion Command Methods
+}
 }

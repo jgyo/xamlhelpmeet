@@ -1,11 +1,8 @@
-// file:	Commands\NoUI\GroupIntoViewBox.cs
+// file:    Commands\NoUI\GroupIntoViewBox.cs
 //
-// summary:	Implements the group into view box class
+// summary: Implements the group into view box class
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using EnvDTE80;
 using EnvDTE;
 using XamlHelpmeet.UI.Utilities;
@@ -13,78 +10,96 @@ using System.ComponentModel.Design;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
-	/// <summary>
-	/// 	Group into view box.
-	/// </summary>
-	/// <seealso cref="T:XamlHelpmeet.Commands.CommandBase"/>
-	public class GroupIntoViewBox : CommandBase
-	{
+using NLog;
 
-		#region Constructors
+using YoderZone.Extensions.NLog;
 
-		/// <summary>
-		/// Initializes a new instance of the GroupIntoViewBox class.
-		/// </summary>
-		/// <param name="application">The application.</param>
-		/// <param name="id">The id.</param>
-		public GroupIntoViewBox(DTE2 application, CommandID id)
-			: base(application, id)
-		{
-			Caption = "Viewbox";
-			CommandName = "GroupIntoViewBox";
-			ToolTip = "Group selection into a Viewbox.";
-		}
+/// <summary>
+///     Group into view box.
+/// </summary>
+/// <seealso cref="T:XamlHelpmeet.Commands.CommandBase"/>
+public class GroupIntoViewBox : CommandBase
+{
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
 
-		#endregion
+    #region Constructors
 
-		#region Methods
+    /// <summary>
+    /// Initializes a new instance of the GroupIntoViewBox class.
+    /// </summary>
+    /// <param name="application">The application.</param>
+    /// <param name="id">The id.</param>
+    public GroupIntoViewBox(DTE2 application, CommandID id)
+    : base(application, id)
+    {
+        logger.Debug("Entered member.");
 
-		/// <summary>
-		/// 	Determine if we can execute.
-		/// </summary>
-		/// <param name="executeOption">
-		/// 	The execute option.
-		/// </param>
-		/// <returns>
-		/// 	true if we can execute, otherwise false.
-		/// </returns>
-		public override bool CanExecute(vsCommandExecOption executeOption)
-		{
-			return base.CanExecute(executeOption) && IsTextSelected();
-		}
+        Caption = "Viewbox";
+        CommandName = "GroupIntoViewBox";
+        ToolTip = "Group selection into a Viewbox.";
+    }
 
-		/// <summary>
-		/// 	Executes this GroupIntoViewBox.
-		/// </summary>
-		public override void Execute()
-		{
-			try
-			{
-				GroupInto("<Viewbox>\r\n", "</Viewbox>\r\n");
-			}
-			catch (Exception ex)
-			{
-				UIUtilities.ShowExceptionMessage("Group Into " + Caption, ex.Message, String.Empty, ex.ToString());
-			}
-		}
+    #endregion
 
-		/// <summary>
-		/// 	Gets the status.
-		/// </summary>
-		/// <returns>
-		/// 	The status.
-		/// </returns>
-		public override vsCommandStatus GetStatus()
-		{
-			// This will add vsCommandStatusEnabled to vsCommandStatusSupported,
-			// if IsTextSelected() returns true. Otherwise or'ing with
-			// vsCommandStatusUnsupported leaves vsCommandStatusSupported
-			// unchanged.
-			return vsCommandStatus.vsCommandStatusSupported | (IsTextSelected() ? vsCommandStatus.vsCommandStatusEnabled : vsCommandStatus.vsCommandStatusUnsupported);
-		}
+    #region Methods
 
-		#endregion
+    /// <summary>
+    ///     Determine if we can execute.
+    /// </summary>
+    /// <param name="executeOption">
+    ///     The execute option.
+    /// </param>
+    /// <returns>
+    ///     true if we can execute, otherwise false.
+    /// </returns>
+    public override bool CanExecute(vsCommandExecOption executeOption)
+    {
+        logger.Debug("Entered member.");
 
-	}
+        return base.CanExecute(executeOption) && IsTextSelected();
+    }
+
+    /// <summary>
+    ///     Executes this GroupIntoViewBox.
+    /// </summary>
+    public override void Execute()
+    {
+        logger.Debug("Entered member.");
+
+        try
+        {
+            GroupInto("<Viewbox>\r\n", "</Viewbox>\r\n");
+        }
+        catch (Exception ex)
+        {
+            UIUtilities.ShowExceptionMessage("Group Into " + this.Caption,
+                                             ex.Message);
+            logger.Error("An exception was raised in Execute().", ex);
+        }
+    }
+
+    /// <summary>
+    ///     Gets the status.
+    /// </summary>
+    /// <returns>
+    ///     The status.
+    /// </returns>
+    public override vsCommandStatus GetStatus()
+    {
+        logger.Debug("Entered member.");
+        // This will add vsCommandStatusEnabled to vsCommandStatusSupported,
+        // if IsTextSelected() returns true. Otherwise or'ing with
+        // vsCommandStatusUnsupported leaves vsCommandStatusSupported
+        // unchanged.
+        // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
+        return vsCommandStatus.vsCommandStatusSupported | (IsTextSelected() ?
+                vsCommandStatus.vsCommandStatusEnabled :
+                vsCommandStatus.vsCommandStatusUnsupported);
+    }
+
+    #endregion
+
+}
 }
 

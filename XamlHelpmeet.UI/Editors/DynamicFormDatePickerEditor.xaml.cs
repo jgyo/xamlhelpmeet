@@ -2,14 +2,23 @@
 
 namespace XamlHelpmeet.UI.Editors
 {
-	/// <summary>
-	/// Interaction logic for DynamicFormDatePickerEditor.xaml
-	/// </summary>
-	public partial class DynamicFormDatePickerEditor : UserControl
-	{
-		public DynamicFormDatePickerEditor()
-		{
-			InitializeComponent();
-		}
-	}
+using NLog;
+
+using YoderZone.Extensions.NLog;
+
+/// <summary>
+/// Interaction logic for DynamicFormDatePickerEditor.xaml
+/// </summary>
+public partial class DynamicFormDatePickerEditor : UserControl
+{
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
+
+    public DynamicFormDatePickerEditor()
+    {
+        logger.Debug("Entered member.");
+
+        InitializeComponent();
+    }
+}
 }

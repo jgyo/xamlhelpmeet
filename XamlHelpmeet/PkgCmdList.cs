@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace XamlHelpmeet
+﻿namespace XamlHelpmeet
 {
     internal static class PkgCmdList
     {
@@ -44,7 +42,7 @@ namespace XamlHelpmeet
 
         // ToolsMenu in ToolsMenuGroup
         public const int ControlDefaultsCommand                             = 0x05B1;
-        //             AboutCommand (duplicate in this menu)                       
+        //             AboutCommand (duplicate in this menu)
 
         // GroupIntoMenu in GroupIntoMenuGroup
         public const int GroupIntoCanvasCommand                             = 0x06B1;

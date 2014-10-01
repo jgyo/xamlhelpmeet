@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace XamlHelpmeet.UI.Enums
+﻿namespace XamlHelpmeet.UI.Enums
 {
 	public enum DynamicFormControlType
 	{

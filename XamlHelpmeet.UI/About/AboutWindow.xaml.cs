@@ -1,54 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace XamlHelpmeet.UI.About
+{
+using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace XamlHelpmeet.UI
+using NLog;
+
+using YoderZone.Extensions.NLog;
+
+/// <summary>
+/// Interaction logic for AboutWindow.xaml
+/// </summary>
+public partial class AboutWindow : Window
 {
-	/// <summary>
-	/// Interaction logic for AboutWindow.xaml
-	/// </summary>
-	public partial class AboutWindow : Window
-	{
-		public AboutWindow()
-		{
-			InitializeComponent();
-		}
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
 
-		private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-		{
-			if (!e.Handled)
-				Close();
-		}
+    public AboutWindow()
+    {
+        logger.Debug("Entered member.");
 
-		private string Version
-		{
-			get
-			{
-				var info = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+        InitializeComponent();
+    }
 
-				return String.Format("{0}.{1}.{2}.{3}",
-				                     info.FileMajorPart,
-				                     info.FileMinorPart,
-				                     info.FileBuildPart,
-				                     info.FilePrivatePart);
-			}
-		}
+    private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        logger.Debug("Entered member.");
 
-		private void Window_Loaded_1(object sender, RoutedEventArgs e)
-		{
-			VersionRun.Text = Version;
-		}
+        if (!e.Handled)
+        { this.Close(); }
+    }
 
-		private void Hyperlink_Click_1(object sender, RoutedEventArgs e)
-		{
-			Process.Start((sender as Hyperlink).ToolTip.ToString());
+    private string Version
+    {
+        get
+        {
+            var info = FileVersionInfo.GetVersionInfo(
+                           Assembly.GetExecutingAssembly().Location);
 
-		}
-	}
+            return String.Format("{0}.{1}.{2}.{3}",
+                                 info.FileMajorPart,
+                                 info.FileMinorPart,
+                                 info.FileBuildPart,
+                                 info.FilePrivatePart);
+        }
+    }
+
+    private void Window_Loaded_1(object sender, RoutedEventArgs e)
+    {
+        logger.Debug("Entered member.");
+
+        this.VersionRun.Text = this.Version;
+    }
+
+    private void Hyperlink_Click_1(object sender, RoutedEventArgs e)
+    {
+        logger.Debug("Entered member.");
+
+        Process.Start((sender as Hyperlink).ToolTip.ToString());
+
+    }
+}
 }

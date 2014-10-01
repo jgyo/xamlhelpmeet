@@ -1,52 +1,72 @@
-﻿// file:	Commands\UI\ControlDefaultsCommand.cs
+﻿// file:    Commands\UI\ControlDefaultsCommand.cs
 //
-// summary:	Implements the control defaults command class
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using EnvDTE80;
-using EnvDTE;
-using XamlHelpmeet.UI;
-using System.ComponentModel.Design;
+// summary: Implements the control defaults command class
 
 namespace XamlHelpmeet.Commands.UI
 {
-	/// <summary>
-	/// 	Control defaults command.
-	/// </summary>
-	/// <seealso cref="T:XamlHelpmeet.Commands.CommandBase"/>
-	public class ControlDefaultsCommand : CommandBase
-	{
+#region Imports
 
-		#region Constructors
+using System.ComponentModel.Design;
 
-		/// <summary>
-		/// Initializes a new instance of the ControlDefaultsCommand class.
-		/// </summary>
-		/// <param name="application">The application.</param>
-		/// <param name="id">The id.</param>
-		public ControlDefaultsCommand(DTE2 application, CommandID id)
-			: base(application, id)
-		{
-			Caption = "Set Control Defaults";
-			CommandName = "SetControlDefaultsCommand";
-			ToolTip = "Set control defaults for controls created by this software.";
-		}
+using EnvDTE80;
 
-		#endregion
+using NLog;
 
-		#region Methods
+using XamlHelpmeet.UI;
 
-		/// <summary>
-		/// 	Executes this ControlDefaultsCommand.
-		/// </summary>
-		public override void Execute()
-		{
-			var obj = new UIControlDefaultsWindow();
-			obj.ShowDialog();
-			obj = null;
-		}
-		
-		#endregion
-	}
+using YoderZone.Extensions.NLog;
+
+#endregion
+
+/// <summary>
+///     Control defaults command.
+/// </summary>
+/// <seealso cref="T:XamlHelpmeet.Commands.CommandBase" />
+public class ControlDefaultsCommand : CommandBase
+{
+    #region Static Fields
+
+    /// <summary>
+    ///     The logger.
+    /// </summary>
+    private static readonly Logger logger = SettingsHelper.CreateLogger();
+
+    #endregion
+
+    #region Constructors and Destructors
+
+    /// <summary>
+    ///     Initializes a new instance of the ControlDefaultsCommand class.
+    /// </summary>
+    /// <param name="application">The application.</param>
+    /// <param name="id">The id.</param>
+    public ControlDefaultsCommand(DTE2 application, CommandID id)
+    : base(application, id)
+    {
+        logger.Debug("Entered member.");
+
+        this.Caption = "Set Control Defaults";
+        this.CommandName = "SetControlDefaultsCommand";
+        this.ToolTip =
+            "Set control defaults for controls created by this software.";
+    }
+
+    #endregion
+
+    #region Public Methods and Operators
+
+    /// <summary>
+    ///     Executes this ControlDefaultsCommand.
+    /// </summary>
+    public override void Execute()
+    {
+        logger.Debug("Entered member.");
+
+        var obj = new UIControlDefaultsWindow();
+        obj.ShowDialog();
+        obj = null;
+    }
+
+    #endregion
+}
 }

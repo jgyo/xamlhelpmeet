@@ -4,81 +4,93 @@ using System.Runtime.Serialization;
 
 namespace XamlHelpmeet.UI.UIControlFactory
 {
-	[Serializable]
-	public class UIProperty : INotifyPropertyChanged, ISerializable
-	{
+using NLog;
 
-		public UIProperty()
-		{
-		}
+using YoderZone.Extensions.NLog;
 
-		public UIProperty(string PropertyName, string PropertyValue)
-		{
-			this.PropertyName = PropertyName;
-			this.PropertyValue = PropertyValue;
-		}
+[Serializable]
+public class UIProperty : INotifyPropertyChanged, ISerializable
+{
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
 
-		private string _propertyValue;
-		private string _propertyName;
-		public string PropertyName
-		{
-			get
-			{
-				return _propertyName;
-			}
-			set
-			{
-				_propertyName = value;
-				OnPropertyChanged("PropertyName");
-			}
-		}
 
-		public string PropertyValue
-		{
-			get
-			{
-				return _propertyValue;
-			}
-			set
-			{
-				_propertyValue = value;
-				OnPropertyChanged("PropertyValue");
-			}
-		}
+    public UIProperty()
+    {
+        logger.Debug("Entered member.");
 
-		#region INotifyPropertyChanged Members
+    }
 
-		public event PropertyChangedEventHandler PropertyChanged;
+    public UIProperty(string PropertyName, string PropertyValue)
+    {
+        logger.Debug("Entered member.");
 
-		protected void OnPropertyChanged(string PropertyName)
-		{
-			var h = PropertyChanged;
-			if (h == null)
-			{
-				return;
-			}
-			h(this, new PropertyChangedEventArgs(PropertyName));
-		}
+        this.PropertyName = PropertyName;
+        this.PropertyValue = PropertyValue;
+    }
 
-		#endregion INotifyPropertyChanged Members
+    private string _propertyValue;
+    private string _propertyName;
+    public string PropertyName
+    {
+        get
+        {
+            return _propertyName;
+        }
+        set
+        {
+            _propertyName = value;
+            OnPropertyChanged("PropertyName");
+        }
+    }
 
-		#region "ISerializable Interface Implementation"
+    public string PropertyValue
+    {
+        get
+        {
+            return _propertyValue;
+        }
+        set
+        {
+            _propertyValue = value;
+            OnPropertyChanged("PropertyValue");
+        }
+    }
 
-		/// <summary>
-		///     Method inherited from the ISerializable interface
-		/// </summary>
-		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			info.AddValue("PropertyValue", PropertyValue);
-			info.AddValue("PropertyName", PropertyName);
-		}
+    #region INotifyPropertyChanged Members
 
-		protected UIProperty(SerializationInfo info, StreamingContext context)
-		{
-			PropertyName = (string)info.GetValue("PropertyName", typeof(string));
-			PropertyValue = (string)info.GetValue("PropertyValue", typeof(string));
-		}
+    public event PropertyChangedEventHandler PropertyChanged;
 
-		#endregion "ISerializable Interface Implementation"
-	}
+    protected void OnPropertyChanged(string PropertyName)
+    {
+        var h = PropertyChanged;
+        if (h == null)
+        {
+            return;
+        }
+        h(this, new PropertyChangedEventArgs(PropertyName));
+    }
+
+    #endregion INotifyPropertyChanged Members
+
+    #region "ISerializable Interface Implementation"
+
+    /// <summary>
+    ///     Method inherited from the ISerializable interface
+    /// </summary>
+    public virtual void GetObjectData(SerializationInfo info,
+                                      StreamingContext context)
+    {
+        info.AddValue("PropertyValue", PropertyValue);
+        info.AddValue("PropertyName", PropertyName);
+    }
+
+    protected UIProperty(SerializationInfo info, StreamingContext context)
+    {
+        PropertyName = (string)info.GetValue("PropertyName", typeof(string));
+        PropertyValue = (string)info.GetValue("PropertyValue", typeof(string));
+    }
+
+    #endregion "ISerializable Interface Implementation"
+}
 }

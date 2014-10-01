@@ -1,9 +1,9 @@
 ﻿ 
-RELEASE NOTES FOR XAML HELPMEET 2012 0.7.43 Beta Debug
-Copyright (c) Gil Yoder 2013
+RELEASE NOTES FOR XAML HELPMEET 2013 1.1.3 Beta Debug
+Copyright (c) Gil Yoder 2014
 
-This software is a beta version and may contain software
-bugs. While many hours have been spent searcning for
+This software is a beta version and may (likely, does) contain
+software bugs. While many hours have been spent searcning for
 and correcting software errors, some errors inevitably still
 exist and may prevent successful use on some occasions.
 It is not likely that the remaining errors will cause
@@ -19,7 +19,7 @@ appreciated. Please report any issues with XHM that you find.
 Support for this software can be found at the following Internet
 address:
 
-http://xamlhelpmeet.codeplex.com/
+http://xamlhelpmeet2013.codeplex.com/
 
 There you may find source code used to compile this product, and
 some documentation, a forum to obtain help, and other information.

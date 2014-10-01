@@ -4,148 +4,160 @@ using System.Windows.Media;
 
 namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 {
-	public class InsertionAdorner : Adorner
-	{
-		#region Properties
+using NLog;
 
-		public bool IsInFirstHalf
-		{
-			get;
-			set;
-		}
+using YoderZone.Extensions.NLog;
 
-		public bool IsSeparatorHorizontal
-		{
-			get;
-			set;
-		}
+public class InsertionAdorner : Adorner
+{
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
 
-		private static Pen Pen
-		{
-			get;
-			set;
-		}
+    #region Properties
 
-		private static PathGeometry Triangle
-		{
-			get;
-			set;
-		}
+    public bool IsInFirstHalf
+    {
+        get;
+        set;
+    }
 
-		private AdornerLayer AdornerLayer
-		{
-			get;
-			set;
-		}
+    public bool IsSeparatorHorizontal
+    {
+        get;
+        set;
+    }
 
-		#endregion Properties
+    private static Pen Pen
+    {
+        get;
+        set;
+    }
 
-		#region Constructors
+    private static PathGeometry Triangle
+    {
+        get;
+        set;
+    }
 
-		static InsertionAdorner()
-		{
-			Pen = new Pen()
-			{
-				Brush = Brushes.Gray
-			};
-			Pen.Freeze();
+    private AdornerLayer AdornerLayer
+    {
+        get;
+        set;
+    }
 
-			var firstLine = new LineSegment(new Point(0, -5), false);
-			firstLine.Freeze();
+    #endregion Properties
 
-			var secondLine = new LineSegment(new Point(0, 5), false);
-			secondLine.Freeze();
+    #region Constructors
 
-			var figure = new PathFigure()
-			{
-				StartPoint = new Point(5, 0)
-			};
-			figure.Segments.Add(firstLine);
-			figure.Segments.Add(secondLine);
-			figure.Freeze();
-			Triangle = new PathGeometry();
-			Triangle.Figures.Add(figure);
-			Triangle.Freeze();
-		}
+    static InsertionAdorner()
+    {
+        Pen = new Pen()
+        {
+            Brush = Brushes.Gray
+        };
+        Pen.Freeze();
 
-		public InsertionAdorner(bool IsSeparatorHorizontal, bool IsInFirstHalf, UIElement AdornedElement, AdornerLayer AdornerLayer)
-			: base(AdornedElement)
-		{
-			this.IsSeparatorHorizontal = IsSeparatorHorizontal;
-			this.IsInFirstHalf = IsInFirstHalf;
-			this.AdornerLayer = AdornerLayer;
-			IsHitTestVisible = false;
-			AdornerLayer.Add(this);
-		}
+        var firstLine = new LineSegment(new Point(0, -5), false);
+        firstLine.Freeze();
 
-		#endregion Constructors
+        var secondLine = new LineSegment(new Point(0, 5), false);
+        secondLine.Freeze();
 
-		#region Methods
+        var figure = new PathFigure()
+        {
+            StartPoint = new Point(5, 0)
+        };
+        figure.Segments.Add(firstLine);
+        figure.Segments.Add(secondLine);
+        figure.Freeze();
+        Triangle = new PathGeometry();
+        Triangle.Figures.Add(figure);
+        Triangle.Freeze();
+    }
 
-		public void Detach()
-		{
-			AdornerLayer.Remove(this);
-		}
+    public InsertionAdorner(bool IsSeparatorHorizontal, bool IsInFirstHalf,
+                            UIElement AdornedElement, AdornerLayer AdornerLayer)
+    : base(AdornedElement)
+    {
+        this.IsSeparatorHorizontal = IsSeparatorHorizontal;
+        this.IsInFirstHalf = IsInFirstHalf;
+        this.AdornerLayer = AdornerLayer;
+        IsHitTestVisible = false;
+        AdornerLayer.Add(this);
+    }
 
-		protected override void OnRender(DrawingContext drawingContext)
-		{
-			Point startPoint;
-			Point endPoint;
+    #endregion Constructors
 
-			CalculateStartAndEndPoint(out startPoint, out endPoint);
-			drawingContext.DrawLine(InsertionAdorner.Pen, startPoint, endPoint);
+    #region Methods
 
-			if (IsSeparatorHorizontal)
-			{
-				DrawTriangle(drawingContext, startPoint, 0);
-				DrawTriangle(drawingContext, endPoint, 0);
-			}
-			else
-			{
-				DrawTriangle(drawingContext, startPoint, 90);
-				DrawTriangle(drawingContext, endPoint, -90);
-			}
-		}
+    public void Detach()
+    {
+        logger.Debug("Entered member.");
 
-		private void CalculateStartAndEndPoint(out Point StartPoint, out Point EndPoint)
-		{
-			StartPoint = new Point();
-			EndPoint = new Point();
+        AdornerLayer.Remove(this);
+    }
 
-			var width = base.AdornedElement.RenderSize.Width;
-			var height = base.AdornedElement.RenderSize.Height;
+    protected override void OnRender(DrawingContext drawingContext)
+    {
+        Point startPoint;
+        Point endPoint;
 
-			if (IsSeparatorHorizontal)
-			{
-				EndPoint.X = width;
+        CalculateStartAndEndPoint(out startPoint, out endPoint);
+        drawingContext.DrawLine(InsertionAdorner.Pen, startPoint, endPoint);
 
-				if (!IsInFirstHalf)
-				{
-					StartPoint.Y = Height;
-					EndPoint.Y = height;
-				}
-			}
-			else
-			{
-				EndPoint.Y = height;
+        if (IsSeparatorHorizontal)
+        {
+            DrawTriangle(drawingContext, startPoint, 0);
+            DrawTriangle(drawingContext, endPoint, 0);
+        }
+        else
+        {
+            DrawTriangle(drawingContext, startPoint, 90);
+            DrawTriangle(drawingContext, endPoint, -90);
+        }
+    }
 
-				if (IsInFirstHalf)
-					return;
+    private void CalculateStartAndEndPoint(out Point StartPoint,
+                                           out Point EndPoint)
+    {
+        StartPoint = new Point();
+        EndPoint = new Point();
 
-				StartPoint.X = width;
-				EndPoint.X = width;
-			}
-		}
+        var width = base.AdornedElement.RenderSize.Width;
+        var height = base.AdornedElement.RenderSize.Height;
 
-		private void DrawTriangle(DrawingContext DrawingContext, Point Origin, double Angle)
-		{
-			DrawingContext.PushTransform(new TranslateTransform(Origin.X, Origin.Y));
-			DrawingContext.PushTransform(new RotateTransform(Angle));
-			DrawingContext.DrawGeometry(InsertionAdorner.Pen.Brush, null, Triangle);
-			DrawingContext.Pop();
-			DrawingContext.Pop();
-		}
+        if (IsSeparatorHorizontal)
+        {
+            EndPoint.X = width;
 
-		#endregion Methods
-	}
+            if (!IsInFirstHalf)
+            {
+                StartPoint.Y = Height;
+                EndPoint.Y = height;
+            }
+        }
+        else
+        {
+            EndPoint.Y = height;
+
+            if (IsInFirstHalf)
+            { return; }
+
+            StartPoint.X = width;
+            EndPoint.X = width;
+        }
+    }
+
+    private void DrawTriangle(DrawingContext DrawingContext, Point Origin,
+                              double Angle)
+    {
+        DrawingContext.PushTransform(new TranslateTransform(Origin.X, Origin.Y));
+        DrawingContext.PushTransform(new RotateTransform(Angle));
+        DrawingContext.DrawGeometry(InsertionAdorner.Pen.Brush, null, Triangle);
+        DrawingContext.Pop();
+        DrawingContext.Pop();
+    }
+
+    #endregion Methods
+}
 }

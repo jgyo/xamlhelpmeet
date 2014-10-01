@@ -11,7 +11,10 @@ namespace XamlHelpmeet.Utility
 /// by unmanaged code.
 /// </summary>
 public static class PrjKind
-		{
+{
+    /// <summary>
+    /// VB Project Id.
+    /// </summary>
     public const string prjKindVBProject =
         "{F184B08F-C81C-45F6-A57F-5ABD9991F28F}";
 
@@ -26,5 +29,5 @@ public static class PrjKind
     /// </summary>
     public const string prjKindVSAProject =
         "{13B7A3EE-4614-11D3-9BC7-00C04F79DE25}";
-		}
+}
 }

@@ -4,35 +4,38 @@
 // <author>Gil Yoder</author>
 // <date>3/7/2013</date>
 // <summary>Implements the xaml white space class</summary>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace XamlHelpmeet.Utility.XamlParts
 {
-	/// <summary>
-	/// 	Xaml white space.
-	/// </summary>
-	/// <seealso cref="T:XamlHelpmeet.Utility.XamlParts.XamlPart"/>
-	public class XamlWhiteSpace : XamlPart
-	{
-		/// <summary>
-		/// 	Initializes a new instance of the XamlWhiteSpace class.
-		/// </summary>
-		/// <param name="text">
-		/// 	The text.
-		/// </param>
-		/// <param name="topPoint">
-		/// 	The top point.
-		/// </param>
-		/// <param name="bottomPoint">
-		/// 	The bottom point.
-		/// </param>
-		public XamlWhiteSpace(string text, int topPoint)
-			: base(text, topPoint)
-		{
+using NLog;
 
-		}
-	}
+using YoderZone.Extensions.NLog;
+
+/// <summary>
+/// Xaml white space.
+/// </summary>
+/// <seealso cref="T:XamlHelpmeet.Utility.XamlParts.XamlPart"/>
+public class XamlWhiteSpace : XamlPart
+{
+    /// <summary>
+    /// The logger.
+    /// </summary>
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
+
+    /// <summary>
+    /// Initializes a new instance of the XamlWhiteSpace class.
+    /// </summary>
+    /// <param name="text">
+    /// The text.
+    /// </param>
+    /// <param name="topPoint">
+    /// The top point.
+    /// </param>
+    public XamlWhiteSpace(string text, int topPoint)
+    : base(text, topPoint)
+    {
+        logger.Debug("Entered member.");
+    }
+}
 }

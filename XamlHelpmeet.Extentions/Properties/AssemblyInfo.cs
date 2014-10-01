@@ -1,25 +1,23 @@
-using System;
 using System.Reflection;
 using System.Resources;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Windows;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Xaml Helpmeet Extentions")]
-[assembly: AssemblyDescription("This is beta software and may have bugs. Use at your own risk.")]
+[assembly: AssemblyDescription("This is debug code and may have bugs. Use at your own risk. This software was compiled at 9/19/2014 10:38:04 PM UTC by Gil.")]
 [assembly: AssemblyConfiguration("Debug")]
-[assembly: AssemblyCompany("The Yoder Zone")]
-[assembly: AssemblyProduct("Xaml Helpmeet 2012")]
-[assembly: AssemblyCopyright("Copyright © The Yoder Zone 2014")]
+[assembly: AssemblyCompany("Gil Yoder")]
+[assembly: AssemblyProduct("Xaml Helpmeet Extentions")]
+[assembly: AssemblyCopyright("Copyright © Gil Yoder 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
 [assembly: NeutralResourcesLanguage("en-US")]
 
-[assembly: AssemblyVersion("0.8.5.1734")]
-[assembly: AssemblyFileVersion("0.8.5.1734")]
-[assembly: GuidAttribute("a3e46b5c-b620-48e7-8b08-d39b24dfd28d")]
+//Version Directory: D:\VS2013PROJECTS\xamlhelpmeet2013\XamlHelpmeet.Extentions\Properties\..\..
+[assembly: AssemblyVersion("1.1.3.1722")]
+[assembly: AssemblyFileVersion("1.1.3.1722")]
+[assembly: GuidAttribute("744689D6-A3E0-4C90-82CE-379073D1E2B6")]

@@ -1,6 +1,6 @@
-﻿// file:	UIControlFactory\UIControls.cs
+﻿// file:    UIControlFactory\UIControls.cs
 //
-// summary:	Implements the controls class
+// summary: Implements the controls class
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,164 +9,181 @@ using XamlHelpmeet.Model;
 
 namespace XamlHelpmeet.UI.UIControlFactory
 {
-	/// <summary>
-	/// 	Controls.
-	/// </summary>
-	/// <seealso cref="T:System.Collections.ObjectModel.ObservableCollection{XamlHelpmeet.UI.UIControlFactory.UIControl}"/>
-	[Serializable]
-	public class UIControls : ObservableCollection<UIControl>
-	{
-		#region Properties
+using NLog;
 
-		/// <summary>
-		/// 	Gets or sets a value indicating whether the automatic append execute.
-		/// </summary>
-		/// <value>
-		/// 	true if automatic append execute, otherwise false.
-		/// </value>
-		public bool AutoAppendExecute
-		{
-			get;
-			set;
-		}
+using YoderZone.Extensions.NLog;
 
-		#endregion Properties
+/// <summary>
+///     Controls.
+/// </summary>
+/// <seealso cref="T:System.Collections.ObjectModel.ObservableCollection{XamlHelpmeet.UI.UIControlFactory.UIControl}"/>
+[Serializable]
+public class UIControls : ObservableCollection<UIControl>
+{
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
 
-		#region Constructors
+    #region Properties
 
-		/// <summary>
-		/// 	Initializes a new instance of the UIControls class.
-		/// </summary>
-		/// <param name="list">
-		/// 	The list.
-		/// </param>
-		public UIControls(List<UIControl> list)
-			: base(list)
-		{
-			AutoAppendExecute = true;
-		}
+    /// <summary>
+    ///     Gets or sets a value indicating whether the automatic append execute.
+    /// </summary>
+    /// <value>
+    ///     true if automatic append execute, otherwise false.
+    /// </value>
+    public bool AutoAppendExecute
+    {
+        get;
+        set;
+    }
 
-		/// <summary>
-		/// 	Initializes a new instance of the UIControls class.
-		/// </summary>
-		/// <param name="collection">
-		/// 	The collection.
-		/// </param>
-		public UIControls(IEnumerable<UIControl> collection)
-			: base(collection)
-		{
-			AutoAppendExecute = true;
-		}
+    #endregion Properties
 
-		/// <summary>
-		/// 	Initializes a new instance of the UIControls class.
-		/// </summary>
-		public UIControls()
-		{
-			AutoAppendExecute = true;
-		}
+    #region Constructors
 
-		#endregion Constructors
+    /// <summary>
+    ///     Initializes a new instance of the UIControls class.
+    /// </summary>
+    /// <param name="list">
+    ///     The list.
+    /// </param>
+    public UIControls(List<UIControl> list)
+    : base(list)
+    {
+        logger.Debug("Entered member.");
 
-		#region Methods
+        AutoAppendExecute = true;
+    }
 
-		/// <summary>
-		/// 	Gets user interface control.
-		/// </summary>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// 	Thrown when one or more arguments are outside the required range.
-		/// </exception>
-		/// <param name="ControlType">
-		/// 	Type of the control.
-		/// </param>
-		/// <param name="uiPlatform">
-		/// 	The platform.
-		/// </param>
-		/// <returns>
-		/// 	The user interface control.
-		/// </returns>
-		public UIControl GetUIControl(ControlType ControlType, UIPlatform uiPlatform)
-		{
-			UIControlRole uiControlRole;
+    /// <summary>
+    ///     Initializes a new instance of the UIControls class.
+    /// </summary>
+    /// <param name="collection">
+    ///     The collection.
+    /// </param>
+    public UIControls(IEnumerable<UIControl> collection)
+    : base(collection)
+    {
+        logger.Debug("Entered member.");
 
-			switch (ControlType)
-			{
-				case ControlType.CheckBox:
-					uiControlRole = UIControlRole.CheckBox;
-					break;
+        AutoAppendExecute = true;
+    }
 
-				case ControlType.ComboBox:
-					uiControlRole = UIControlRole.ComboBox;
-					break;
+    /// <summary>
+    ///     Initializes a new instance of the UIControls class.
+    /// </summary>
+    public UIControls()
+    {
+        logger.Debug("Entered member.");
 
-				case ControlType.Image:
-					uiControlRole = UIControlRole.Image;
-					break;
+        AutoAppendExecute = true;
+    }
 
-				case ControlType.Label:
-					uiControlRole = UIControlRole.Label;
-					break;
+    #endregion Constructors
 
-				case ControlType.TextBlock:
-					uiControlRole = UIControlRole.TextBlock;
-					break;
+    #region Methods
 
-				case ControlType.TextBox:
-					uiControlRole = UIControlRole.TextBox;
-					break;
+    /// <summary>
+    ///     Gets user interface control.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when one or more arguments are outside the required range.
+    /// </exception>
+    /// <param name="ControlType">
+    ///     Type of the control.
+    /// </param>
+    /// <param name="uiPlatform">
+    ///     The platform.
+    /// </param>
+    /// <returns>
+    ///     The user interface control.
+    /// </returns>
+    public UIControl GetUIControl(ControlType ControlType,
+                                  UIPlatform uiPlatform)
+    {
+        UIControlRole uiControlRole;
 
-				case ControlType.DatePicker:
-					uiControlRole = UIControlRole.DatePicker;
-					break;
+        switch (ControlType)
+        {
+            case ControlType.CheckBox:
+                uiControlRole = UIControlRole.CheckBox;
+                break;
 
-				default:
-					throw new ArgumentOutOfRangeException("ControlType");
-			}
+            case ControlType.ComboBox:
+                uiControlRole = UIControlRole.ComboBox;
+                break;
 
-			return GetUIControl(uiControlRole, uiPlatform);
-		}
+            case ControlType.Image:
+                uiControlRole = UIControlRole.Image;
+                break;
 
-		/// <summary>
-		/// 	Gets user interface control.
-		/// </summary>
-		/// <param name="ControlRole">
-		/// 	The control role.
-		/// </param>
-		/// <param name="uiPlatform">
-		/// 	The platform.
-		/// </param>
-		/// <returns>
-		/// 	The user interface control.
-		/// </returns>
-		public UIControl GetUIControl(UIControlRole ControlRole, UIPlatform uiPlatform)
-		{
-			foreach (var ctrl in this)
-			{
-				if (ctrl.ControlRole == ControlRole && ctrl.Platform == uiPlatform)
-				{
-					return ctrl;
-				}
-			}
-			return null;
-		}
+            case ControlType.Label:
+                uiControlRole = UIControlRole.Label;
+                break;
 
-		/// <summary>
-		/// 	Gets user interface controls for platform.
-		/// </summary>
-		/// <param name="Platform">
-		/// 	The platform.
-		/// </param>
-		/// <returns>
-		/// 	The user interface controls for platform.
-		/// </returns>
-		public List<UIControl> GetUIControlsForPlatform(UIPlatform Platform)
-		{
-			return (from d in this
-					where d.Platform == Platform
-					orderby d.ControlRole.ToString()
-					select d).ToList();
-		}
+            case ControlType.TextBlock:
+                uiControlRole = UIControlRole.TextBlock;
+                break;
 
-		#endregion Methods
-	}
+            case ControlType.TextBox:
+                uiControlRole = UIControlRole.TextBox;
+                break;
+
+            case ControlType.DatePicker:
+                uiControlRole = UIControlRole.DatePicker;
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException("ControlType");
+        }
+
+        return GetUIControl(uiControlRole, uiPlatform);
+    }
+
+    /// <summary>
+    ///     Gets user interface control.
+    /// </summary>
+    /// <param name="ControlRole">
+    ///     The control role.
+    /// </param>
+    /// <param name="uiPlatform">
+    ///     The platform.
+    /// </param>
+    /// <returns>
+    ///     The user interface control.
+    /// </returns>
+    public UIControl GetUIControl(UIControlRole ControlRole,
+                                  UIPlatform uiPlatform)
+    {
+        foreach (var ctrl in this)
+        {
+            if (ctrl.ControlRole == ControlRole && ctrl.Platform == uiPlatform)
+            {
+                return ctrl;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    ///     Gets user interface controls for platform.
+    /// </summary>
+    /// <param name="Platform">
+    ///     The platform.
+    /// </param>
+    /// <returns>
+    ///     The user interface controls for platform.
+    /// </returns>
+    public List<UIControl> GetUIControlsForPlatform(UIPlatform Platform)
+    {
+        logger.Debug("Entered member.");
+
+        return (from d in this
+                where d.Platform == Platform
+                orderby d.ControlRole.ToString()
+                select d).ToList();
+    }
+
+    #endregion Methods
+}
 }

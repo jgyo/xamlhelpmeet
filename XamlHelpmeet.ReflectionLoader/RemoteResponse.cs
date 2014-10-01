@@ -1,142 +1,150 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
- using XamlHelpmeet.Extensions;
+
+using XamlHelpmeet.Extensions;
 using XamlHelpmeet.Model;
 
 namespace XamlHelpmeet.ReflectionLoader
 {
-	/**=========================================================================
-	 * <summary>
-	 *  Remote response.
-	 * </summary>
-	 * <remarks>
-	 *  This is used to carry a response from one application domain to another
-	 *  in order to reflect the properites of an assembly.
-	 * </remarks>
-	 * <typeparam name="T">	Generic type parameter.</typeparam>
-	 *-----------------------------------------------------------------------**/
+using NLog;
 
-	[Serializable]
-	public class RemoteResponse<T>
-	{
-		private readonly ResponseStatus _responseStatus = ResponseStatus.Success;
-		private readonly Exception _exception;
-		private readonly T _result;
-		private readonly string _customMessage = string.Empty;
+using YoderZone.Extensions.NLog;
 
-		/// <summary>
-		/// 	Initializes a new instance of the RemoteResponse class.
-		/// </summary>
-		/// <param name="Result">
-		/// 	The result.
-		/// </param>
-		/// <param name="Status">
-		/// 	The status.
-		/// </param>
-		/// <param name="Ex">
-		/// 	The exception.
-		/// </param>
-		/// <param name="CustomMessage">
-		/// 	A custom message describing the response.
-		/// </param>
+/** =========================================================================
+    <summary>
+    Remote response.
+    </summary>
+    <remarks>
+    This is used to carry a response from one application domain to another
+    in order to reflect the properites of an assembly.
+    </remarks>
+    <typeparam name="T"> Generic type parameter.</typeparam>
+    -----------------------------------------------------------------------**/
 
-		public RemoteResponse(T Result, ResponseStatus Status, Exception Ex, string CustomMessage)
-		{
-			_result = Result;
-			_responseStatus = Status;
-			_exception = Ex;
-			_customMessage = CustomMessage;
-		}
+[Serializable]
+public class RemoteResponse<T>
+{
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
 
-		public RemoteResponse(T Result, ResponseStatus Status, string CustomMessage)
-		{
-			_result = Result;
-			_responseStatus = Status;
-			_customMessage = CustomMessage;
-		}
+    private readonly ResponseStatus _responseStatus = ResponseStatus.Success;
+    private readonly Exception _exception;
+    private readonly T _result;
+    private readonly string _customMessage = string.Empty;
 
-		/// <summary>
-		/// 	Gets a custom message describing the response.
-		/// </summary>
-		/// <value>
-		/// 	A message describing the custom.
-		/// </value>
+    /// <summary>
+    ///     Initializes a new instance of the RemoteResponse class.
+    /// </summary>
+    /// <param name="Result">
+    ///     The result.
+    /// </param>
+    /// <param name="Status">
+    ///     The status.
+    /// </param>
+    /// <param name="Ex">
+    ///     The exception.
+    /// </param>
+    /// <param name="CustomMessage">
+    ///     A custom message describing the response.
+    /// </param>
 
-		public string CustomMessage
-		{
-			get
-			{
-				return _customMessage;
-			}
-		}
+    public RemoteResponse(T Result, ResponseStatus Status, Exception Ex,
+                          string CustomMessage)
+    {
+        _result = Result;
+        _responseStatus = Status;
+        _exception = Ex;
+        _customMessage = CustomMessage;
+    }
 
-		public string CustomMessageAndException
-		{
-			get
-			{
-				var msg = string.Empty;
+    public RemoteResponse(T Result, ResponseStatus Status,
+                          string CustomMessage)
+    {
+        _result = Result;
+        _responseStatus = Status;
+        _customMessage = CustomMessage;
+    }
 
-				if (Exception != null)
-				{
-					msg = Exception.Message;
-				}
-				
-				if (CustomMessage.IsNullOrEmpty())
-				{
-					return msg;
-				}
+    /// <summary>
+    ///     Gets a custom message describing the response.
+    /// </summary>
+    /// <value>
+    ///     A message describing the custom.
+    /// </value>
 
-				return string.Concat(CustomMessage, msg.IsNullOrEmpty() ? 
-														string.Empty : 
-														string.Format("Message : {0}", msg));
-			}
-		}
-		/// <summary>
-		/// 	Gets the result.
-		/// </summary>
-		/// <value>
-		/// 	The result.
-		/// </value>
+    public string CustomMessage
+    {
+        get
+        {
+            return _customMessage;
+        }
+    }
 
-		public T Result
-		{
-			get
-			{
-				return _result;
-			}
-		}
+    public string CustomMessageAndException
+    {
+        get
+        {
+            var msg = string.Empty;
 
-		/// <summary>
-		/// 	Gets the exception.
-		/// </summary>
-		/// <value>
-		/// 	The exception.
-		/// </value>
+            if (Exception != null)
+            {
+                msg = Exception.Message;
+            }
 
-		public Exception Exception
-		{
-			get
-			{
-				return _exception;
-			}
-		}
+            if (CustomMessage.IsNullOrEmpty())
+            {
+                return msg;
+            }
 
-		/// <summary>
-		/// 	Gets the response status.
-		/// </summary>
-		/// <value>
-		/// 	The response status.
-		/// </value>
+            return string.Concat(CustomMessage, msg.IsNullOrEmpty() ?
+                                 string.Empty :
+                                 string.Format("Message : {0}", msg));
+        }
+    }
+    /// <summary>
+    ///     Gets the result.
+    /// </summary>
+    /// <value>
+    ///     The result.
+    /// </value>
 
-		public ResponseStatus ResponseStatus
-		{
-			get
-			{
-				return _responseStatus;
-			}
-		}
+    public T Result
+    {
+        get
+        {
+            return _result;
+        }
+    }
+
+    /// <summary>
+    ///     Gets the exception.
+    /// </summary>
+    /// <value>
+    ///     The exception.
+    /// </value>
+
+    public Exception Exception
+    {
+        get
+        {
+            return _exception;
+        }
+    }
+
+    /// <summary>
+    ///     Gets the response status.
+    /// </summary>
+    /// <value>
+    ///     The response status.
+    /// </value>
+
+    public ResponseStatus ResponseStatus
+    {
+        get
+        {
+            return _responseStatus;
+        }
+    }
 
 
-	}
+}
 }

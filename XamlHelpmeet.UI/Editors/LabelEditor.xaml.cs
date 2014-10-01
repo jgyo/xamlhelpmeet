@@ -2,14 +2,23 @@
 
 namespace XamlHelpmeet.UI.Editors
 {
-	/// <summary>
-	/// Interaction logic for LabelEditor.xaml
-	/// </summary>
-	public partial class LabelEditor : UserControl
-	{
-		public LabelEditor()
-		{
-			InitializeComponent();
-		}
-	}
+using NLog;
+
+using YoderZone.Extensions.NLog;
+
+/// <summary>
+/// Interaction logic for LabelEditor.xaml
+/// </summary>
+public partial class LabelEditor : UserControl
+{
+    private static readonly Logger logger =
+        SettingsHelper.CreateLogger();
+
+    public LabelEditor()
+    {
+        logger.Debug("Entered member.");
+
+        InitializeComponent();
+    }
+}
 }

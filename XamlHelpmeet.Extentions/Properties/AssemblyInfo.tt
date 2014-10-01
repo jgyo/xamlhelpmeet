@@ -1,39 +1,41 @@
-<#@ template  debug="true" hostSpecific="true" #>
+﻿<#@ template  debug="true" hostSpecific="true" #>
 <#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core" #>
 <#@ Assembly Name="System.Windows.Forms" #>
-<#@ import namespace="System" #>
 <#@ import namespace="System.IO" #>
-<#@ import namespace="System.Diagnostics" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Collections" #>
-<#@ import namespace="System.Collections.Generic" #>
 <#
 	string templateDirectory = Path.GetDirectoryName(this.Host.ResolvePath("..\\..\\."));
 	
+    var contents = new string[4];
+	
+	if (templateDirectory == null)
+	{
+	    throw new ArgumentNullException("templateDirectory");
+	}
+
 	string buildFilePath = Path.Combine(templateDirectory, "version.txt");
+
+#if DEBUG
+	Configuration = "Debug";
+    Description = "This is debug code and may have bugs. Use at your own risk.";
+#else
+	Configuration = "Release";
+    Description = "A Visual Studio extension designed to help programmers work with XAML document.";
+#endif
+
 	if (!File.Exists(buildFilePath))
     {
-        BuildNumber = 1;
-        MajorVersion = 0;
-        MinorVersion = 1;
+        throw new InvalidDataException("Unable to find version.txt.");
     }
-	else
-	{
-		var contents = File.ReadAllLines(buildFilePath);
+
+	contents = File.ReadAllLines(buildFilePath);
         MajorVersion = Convert.ToInt32(contents[0]);
         MinorVersion = Convert.ToInt32(contents[1]);
 		BuildNumber = Convert.ToInt32(contents[2]);
-		//File.Delete(buildFilePath);
-	}
-//	File.AppendAllText(buildFilePath, (++BuildNumber).ToString());
-	CopyrightYear = DateTime.UtcNow.Year.ToString();
-	VersionString = string.Format("{0}.{1}.{2}.{3}", MajorVersion, MinorVersion, BuildNumber, RevisionNumber);
-#if DEBUG
-	Configuration = "Debug";
-#else
-	Configuration = "Release";
-#endif
+    this.CopyrightYear = contents[3];
+
+	this.VersionString = string.Format("{0}.{1}.{2}.{3}", this.MajorVersion, this.MinorVersion, this.BuildNumber, this.RevisionNumber);
+	Description = String.Format("{0} This software was compiled at {1} UTC by {2}.", Description, DateTime.UtcNow, Environment.UserName);
 
 #>
 using System;
@@ -46,41 +48,48 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("<#= this.Title #>")]
-[assembly: AssemblyDescription("<#= string.Format(this.Description, DateTime.UtcNow) #>")]
+[assembly: AssemblyTitle("<#= Title #>")]
+[assembly: AssemblyDescription("<#= string.Format(this.Description) #>")]
 [assembly: AssemblyConfiguration("<#= this.Configuration #>")]
-[assembly: AssemblyCompany("<#= this.Company #>")]
-[assembly: AssemblyProduct("<#= this.Product #>")]
-[assembly: AssemblyCopyright("Copyright � <#= this.Company #> <#= this.CopyrightYear #>")]
+[assembly: AssemblyCompany("<#= Company #>")]
+[assembly: AssemblyProduct("<#= Title #>")]
+[assembly: AssemblyCopyright("Copyright © <#= Company #> <#= this.CopyrightYear #>")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: ComVisible(<#= this.IsComVisible.ToString().ToLower() #>)]
-[assembly: NeutralResourcesLanguage("<#= this.Language #>")]
+[assembly: ComVisible(<#= IsComVisible.ToString().ToLower() #>)]
+[assembly: NeutralResourcesLanguage("<#= Language #>")]
 
+//Version Directory: <#= templateDirectory #>
 [assembly: AssemblyVersion("<#= VersionString #>")]
 [assembly: AssemblyFileVersion("<#= VersionString #>")]
-[assembly: GuidAttribute("<#= this.assemblyGuid #>")]
+[assembly: GuidAttribute("<#= assemblyGuid #>")]
 <#+
 	int MajorVersion;
-	int MinorVersion;
-	int BuildNumber;
-	int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2010,1,1)).TotalDays;
+  int MinorVersion;
+  int BuildNumber;
 
-	string Title = "Xaml Helpmeet Extentions";
-    // Product name be the same in all assemblies.
-    private string Product = "Xaml Helpmeet 2012";
-	string Description ="This is beta software and may have bugs. Use at your own risk.";
-	string Company = "The Yoder Zone";
+  private string Description;
 
-	string CopyrightYear;
-	string VersionString;
-	string Configuration;
-	// Setting ComVisible to false makes the types in this assembly not visible 
-	// to COM components.  If you need to access a type in this assembly from 
-	// COM, set the ComVisible attribute to true on that type.
-	bool IsComVisible = false;
-//    bool CLSCompliant = false;
-    string Language= "en-US";
-    string assemblyGuid= "a3e46b5c-b620-48e7-8b08-d39b24dfd28d";
-#>
+  readonly int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2010,1,1)).TotalDays;
+
+  private const string Title = "Xaml Helpmeet Extentions";
+
+  private const string Company = "Gil Yoder";
+
+  string CopyrightYear;
+  string VersionString;
+  string Configuration;
+
+  // Setting ComVisible to false makes the types in this assembly not visible
+  // to COM components.  If you need to access a type in this assembly from
+  // COM, set the ComVisible attribute to true on that type.
+  private const bool IsComVisible = false;
+
+  //    private const bool CLSCompliant = false;
+
+  private const string Language = "en-US";
+
+  private const string assemblyGuid = "744689D6-A3E0-4C90-82CE-379073D1E2B6";
+
+  #>
