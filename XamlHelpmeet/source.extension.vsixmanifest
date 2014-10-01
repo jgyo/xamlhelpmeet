@@ -2,7 +2,7 @@
  
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="37b68c5c-8ac0-436c-8483-0947379cffe9" Version="0.7.87" Language="en-US" Publisher="YoderTools" />
+        <Identity Id="37b68c5c-8ac0-436c-8483-0947379cffe9" Version="0.1.1" Language="en-US" Publisher="YoderZone" />
         <DisplayName>Xaml Helpmeet 2012</DisplayName>
         <Description xml:space="preserve">Xaml Helpmeet 2012 is an extension to Visual Studio 2012 designed to help developers create and edit Xaml documents.</Description>
         <MoreInfo >http://xamlhelpmeet.codeplex.com/</MoreInfo>

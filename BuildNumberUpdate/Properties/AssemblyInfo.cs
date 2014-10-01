@@ -13,7 +13,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("Debug")]
 [assembly: AssemblyCompany("The Yoder Zone")]
 [assembly: AssemblyProduct("Xaml Helpmeet 2012")]
-[assembly: AssemblyCopyright("Copyright © The Yoder Zone 2013")]
+[assembly: AssemblyCopyright("Copyright © The Yoder Zone 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,7 +21,7 @@ using System.Windows;
 [assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US")]
 
-//Version Directory: C:\Users\Yoder\Documents\Visual Studio 2012\Projects\XamlHelpMeet\BuildNumberUpdate\Properties\..\..
+//Version Directory: D:\VS2013PROJECTS\xamlhelpmeet2012\BuildNumberUpdate\Properties\..\..
 //In order to begin building localizable applications, set 
 //<UICulture>CultureYouAreCodingWith</UICulture> in your .csproj file
 //inside a <PropertyGroup>.  For example, if you are using US english
@@ -41,6 +41,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.7.88.1330")]
-[assembly: AssemblyFileVersion("0.7.88.1330")]
+[assembly: AssemblyVersion("0.8.5.1734")]
+[assembly: AssemblyFileVersion("0.8.5.1734")]
 [assembly: GuidAttribute("ABF6BEC4-8035-4714-AF7E-987F09949FA8")]

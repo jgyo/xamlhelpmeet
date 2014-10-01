@@ -3,6 +3,7 @@
 <#@ Assembly Name="System.Core" #>
 <#@ Assembly Name="System.Windows.Forms" #>
 <#@ import namespace="System" #>
+<#@ import namespace="System.Globalization" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.Linq" #>
@@ -16,24 +17,26 @@
 	string buildFilePath = Path.Combine(templateDirectory, "version.txt");
 	if (!File.Exists(buildFilePath))
     {
-        BuildNumber = 1;
-        MajorVersion = 0;
-        MinorVersion = 1;
+		contents = new string[3];
+        contents[2] = 1.ToString(CultureInfo.InvariantCulture);
+        this.BuildNumber = 1;
     }
 	else
 	{
 		contents = File.ReadAllLines(buildFilePath);
-        MajorVersion = Convert.ToInt32(contents[0]);
-        MinorVersion = Convert.ToInt32(contents[1]);
 		BuildNumber = Convert.ToInt32(contents[2]);
 		File.Delete(buildFilePath);
 	}
 
-    BuildNumber++;
-    contents[2]=BuildNumber.ToString();
+	BuildNumber++;
+	
+    contents[0] = MajorVersion.ToString(CultureInfo.InvariantCulture);
+    contents[1] = MinorVersion.ToString(CultureInfo.InvariantCulture);
+	contents[2]=BuildNumber.ToString(CultureInfo.InvariantCulture);
+
     File.AppendAllLines(buildFilePath, contents);
 
-	CopyrightYear = DateTime.UtcNow.Year.ToString();
+	CopyrightYear = DateTime.UtcNow.Year.ToString(CultureInfo.InvariantCulture);
 	VersionString = string.Format("{0}.{1}.{2}.{3}", MajorVersion, MinorVersion, BuildNumber, RevisionNumber);
 #if DEBUG
 	Configuration = "Debug";
@@ -90,9 +93,10 @@ using System.Windows;
 [assembly: GuidAttribute("<#= this.assemblyGuid #>")]
 <#+
 	int MajorVersion = 0;
-	int MinorVersion = 7;
+	int MinorVersion = 8;
 	int BuildNumber;
-	int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2010,1,1)).TotalDays;
+
+    readonly int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2010,1,1)).TotalDays;
 
 	string Title = "Build Number update";
     // Product name be the same in all assemblies.
