@@ -115,6 +115,9 @@
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NLogConfig">
+      <HintPath>..\packages\NLogConfig.1.0.0\lib\net45\NLogConfig.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -136,10 +139,6 @@
     <Compile Include="RemoteWorker.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\nlogconfig\NLogConfig\NLogConfig.csproj">
-      <Project>{0885B814-25A1-4BB4-A1CB-EC79E5DA6A4D}</Project>
-      <Name>NLogConfig</Name>
-    </ProjectReference>
     <ProjectReference Include="..\XamlHelpmeet.Model\XamlHelpmeet.Model.csproj">
       <Project>{C6EB8699-E5BC-4575-AC9A-E712AE58AAAC}</Project>
       <Name>XamlHelpmeet.Model</Name>

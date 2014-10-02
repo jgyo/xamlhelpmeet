@@ -22,8 +22,8 @@ Thumbs.db
 *.lib
 *.sbr
 packages/*
-_*
-bin/*
-org/*
-Backup/*
-obj/*
+*/_*
+*/bin/*
+*/org/*
+*/Backup/*
+*/obj/*

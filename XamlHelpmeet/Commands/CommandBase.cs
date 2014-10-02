@@ -75,6 +75,8 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     /// <summary>
     ///     Finalizes an instance of the CommandBase class.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+            "CA1063:ImplementIDisposableCorrectly")]
     ~CommandBase()
     {
         logger.Debug("Entered member.");
@@ -451,6 +453,8 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     ///     resetting unmanaged resources.
     /// </summary>
     /// <seealso cref="M:System.IDisposable.Dispose()"/>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+            "CA1063:ImplementIDisposableCorrectly")]
     public void Dispose()
     {
         logger.Debug("Entered member.");
@@ -471,17 +475,20 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     {
         logger.Debug("Entered member.");
 
-        if (!_isDisposed)
+        if (_isDisposed)
         {
-            if (disposing)
+            return;
+        }
+
+        if (disposing)
+        {
+            if (_commandBaseCommandBarControl != null)
             {
-                if (_commandBaseCommandBarControl != null)
-                {
-                    _commandBaseCommandBarControl.Delete();
-                    _commandBaseCommandBarControl = null;
-                }
+                _commandBaseCommandBarControl.Delete();
+                _commandBaseCommandBarControl = null;
             }
         }
+
         _isDisposed = true;
     }
 
