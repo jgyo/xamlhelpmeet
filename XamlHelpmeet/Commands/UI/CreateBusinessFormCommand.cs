@@ -113,20 +113,20 @@ public class CreateBusinessFormCommand : CommandBase
         }
     }
 
-    /// <summary>
-    ///     Gets the status.
-    /// </summary>
-    /// <returns>
-    ///     The status.
-    /// </returns>
-    public override vsCommandStatus GetStatus()
-    {
-        logger.Debug("Entered member.");
-        // This command is supported and always enabled.
-        // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
-        return vsCommandStatus.vsCommandStatusSupported |
-               vsCommandStatus.vsCommandStatusEnabled;
-    }
+    /*    /// <summary>
+        ///     Gets the status.
+        /// </summary>
+        /// <returns>
+        ///     The status.
+        /// </returns>
+        public override vsCommandStatus GetStatus()
+        {
+            logger.Debug("Entered member.");
+            // This command is supported and always enabled.
+            // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
+            return vsCommandStatus.vsCommandStatusSupported |
+                   vsCommandStatus.vsCommandStatusEnabled;
+        }*/
 
     #endregion
 }

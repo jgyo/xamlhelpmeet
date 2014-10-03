@@ -9,6 +9,7 @@ namespace XamlHelpmeet.Utility
 #region Imports
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
 using EnvDTE;
 
@@ -99,6 +100,7 @@ public static class XmlHelpers
     /// </returns>
     public static bool AreSiblingsSelected(this TextSelection selection)
     {
+        Contract.Requires<ArgumentNullException>(selection != null);
         logger.Debug("Entered member.");
 
         EditorPoints ep = GetEditorPoints(selection);
@@ -125,6 +127,7 @@ public static class XmlHelpers
     public static NarrowSelectionResult ContractSelection(
         this TextSelection selection)
     {
+        Contract.Requires<ArgumentNullException>(selection != null);
         logger.Debug("Entered member.");
 
         if (selection.IsEmpty)
@@ -137,8 +140,6 @@ public static class XmlHelpers
         //
         //! If the selection begins and ends at the ends of a node, narrow
         //! the selection by removing the node tags from the selection.
-        //
-        //! If neither of the above, report a failure.
 
         // Get the original end points of the selection
         EditorPoints origEndPoints = GetEditorPoints(selection);
@@ -149,13 +150,6 @@ public static class XmlHelpers
                 origEndPoints.TopPoint - 1,
                 origEndPoints.BottomPoint
                 - 1);
-
-        //+ Case: No nodes are returned
-        //  Means that the selection nodes were not within one parent
-        if (firstAndLast == null)
-        {
-            return NarrowSelectionResult.InconsistentSelectionEnds;
-        }
 
         //+ Case: one node is returned.
         if (firstAndLast.Item1 == firstAndLast.Item2)
@@ -206,6 +200,7 @@ public static class XmlHelpers
             selection.MoveToAbsoluteOffset(bottom);
             selection.MoveToAbsoluteOffset(top, true);
         }
+
         selection.Trim();
         return NarrowSelectionResult.Success;
     }
@@ -222,6 +217,7 @@ public static class XmlHelpers
     public static WiddenSelectionResult ExpandSelection(
         this TextSelection selection)
     {
+        Contract.Requires<ArgumentNullException>(selection != null);
         logger.Debug("Entered member.");
 
         EditorPoints ep = selection.GetEditorPoints();
@@ -259,6 +255,7 @@ public static class XmlHelpers
     public static bool IsNodeSelected(this TextSelection selection,
                                       string name = "")
     {
+        Contract.Requires<ArgumentNullException>(selection != null);
         logger.Debug("Entered member.");
 
         EditorPoints ep = GetEditorPoints(selection);
@@ -290,6 +287,7 @@ public static class XmlHelpers
     /// </returns>
     public static bool SelectNode(this TextSelection selection)
     {
+        Contract.Requires<ArgumentNullException>(selection != null);
         logger.Debug("Entered member.");
 
         // Works only when the selected text is empty.
@@ -323,6 +321,7 @@ public static class XmlHelpers
     /// </returns>
     public static bool SelectNodes(this TextSelection selection)
     {
+        Contract.Requires<ArgumentNullException>(selection != null);
         logger.Debug("Entered member.");
 
         EditorPoints ep = GetEditorPoints(selection);
@@ -358,14 +357,18 @@ public static class XmlHelpers
     /// </returns>
     public static bool SelectParent(this TextSelection selection)
     {
+        Contract.Requires<ArgumentNullException>(selection != null);
         logger.Debug("Entered member.");
 
         EditorPoints ep = selection.GetEditorPoints();
         XamlNode[] nodes = _rootNode.GetSelectedNodes(ep);
-        if (nodes == null || nodes == null)
+        logger.Trace("selection: {0}", selection);
+
+        if (nodes.Length == 0)
         {
             return false;
         }
+
         XamlNode parent = nodes[0].Parent;
         selection.SetSelection(parent.BottomPoint + 1, parent.TopPoint + 1);
         return true;
@@ -387,8 +390,7 @@ public static class XmlHelpers
         return ep;
     }
 
-    private static EditorPoints GetEditorPoints(TextSelection sel,
-            bool handleExceptions = true)
+    private static EditorPoints GetEditorPoints(TextSelection sel)
     {
         logger.Debug("Entered member.");
 

@@ -10,6 +10,7 @@ namespace XamlHelpmeet.Utility
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -87,6 +88,8 @@ public class XamlNode
     /// </param>
     public XamlNode(string documentText)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(
+                    documentText));
         logger.Debug("Entered member.");
 
         // The document to be parsed for building a XamlNode tree.
@@ -444,6 +447,14 @@ public class XamlNode
 /// </returns>
     public EditorPoints GetContentEndPoints()
     {
+        Contract.Requires<InvalidOperationException>(!string.IsNullOrEmpty(
+                    this.DocumentText));
+        Contract.Requires<InvalidOperationException>((this.StartTag.BottomPoint +
+                1) <= this.DocumentText.Length);
+        Contract.Requires<InvalidOperationException>((this.StartTag.BottomPoint +
+                1) <= ((this.DocumentText.Length - (this.EndTag.TopPoint -
+                        this.StartTag.BottomPoint + 1))));
+
         logger.Debug("Entered member.");
 
         int top = this.StartTag.BottomPoint + 1;

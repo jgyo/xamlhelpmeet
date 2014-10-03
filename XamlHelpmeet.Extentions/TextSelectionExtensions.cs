@@ -11,6 +11,8 @@ using EnvDTE;
 
 namespace XamlHelpmeet.Extensions
 {
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -38,6 +40,7 @@ public static class TextSelectionExtensions
     public static void SetSelection(this TextSelection target,
                                     int AnchorPoint, int ActivePoint)
     {
+        Contract.Requires<ArgumentNullException>(target != null);
         target.MoveToAbsoluteOffset(AnchorPoint);
         target.MoveToAbsoluteOffset(ActivePoint, true);
     }
@@ -57,6 +60,7 @@ public static class TextSelectionExtensions
     public static bool ResetSelection(this TextSelection target,
                                       EditorPoints originalPoints)
     {
+        Contract.Requires<ArgumentNullException>(target != null);
         target.SetSelection(originalPoints.AnchorPoint,
                             originalPoints.ActivePoint);
         // Usually called when a process fails. This makes it easier to
@@ -75,6 +79,7 @@ public static class TextSelectionExtensions
     /// </returns>
     public static EditorPoints GetEditorPoints(this TextSelection source)
     {
+        Contract.Requires<ArgumentNullException>(source != null);
         return EditorPoints.GetEditorPoints(source);
     }
 
@@ -89,6 +94,7 @@ public static class TextSelectionExtensions
     /// </param>
     public static void Trim(this TextSelection target, bool? topActive = null)
     {
+        Contract.Requires<ArgumentNullException>(target != null);
         if (topActive == null)
         { topActive = target.IsActiveEndGreater == false; }
         var text = target.Text.Replace(Environment.NewLine, "\n");
@@ -116,6 +122,7 @@ public static class TextSelectionExtensions
     public static void ReplaceSelectedText(this TextSelection selection,
                                            string newText)
     {
+        Contract.Requires<ArgumentNullException>(selection != null);
         selection.Trim();
         var editPoint = selection.TopPoint.CreateEditPoint();
         selection.Delete();

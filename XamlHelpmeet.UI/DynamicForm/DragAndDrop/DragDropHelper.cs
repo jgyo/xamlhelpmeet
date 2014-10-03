@@ -9,6 +9,9 @@ using XamlHelpmeet.UI.Editors;
 
 namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 {
+using System;
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -33,11 +36,7 @@ public class DragDropHelper
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = new DragDropHelper();
-            }
-            return _instance;
+            return _instance ?? (_instance = new DragDropHelper());
         }
     }
 
@@ -125,17 +124,17 @@ public class DragDropHelper
 
     #region Dependency Properties
 
-    public static DependencyProperty DragDropTemplateProperty =
+    public static readonly DependencyProperty DragDropTemplateProperty =
         DependencyProperty.RegisterAttached("DragDropTemplate",
                                             typeof(DataTemplate), typeof(DragDropHelper),
                                             new UIPropertyMetadata(null));
 
-    public static DependencyProperty IsDragSourceProperty =
+    public static readonly DependencyProperty IsDragSourceProperty =
         DependencyProperty.RegisterAttached("IsDragSource", typeof(bool),
                                             typeof(DragDropHelper), new UIPropertyMetadata(false,
                                                     DragDropHelper.IsDragSourceChanged));
 
-    public static DependencyProperty IsDropTargetProperty =
+    public static readonly DependencyProperty IsDropTargetProperty =
         DependencyProperty.RegisterAttached("IsDropTarget", typeof(bool),
                                             typeof(DragDropHelper), new UIPropertyMetadata(false,
                                                     DragDropHelper.IsDropTargetChanged));
@@ -146,6 +145,7 @@ public class DragDropHelper
 
     public static DataTemplate GetDragDropTemplate(DependencyObject obj)
     {
+        Contract.Requires<ArgumentNullException>(obj != null);
         logger.Debug("Entered member.");
 
         return (DataTemplate)obj.GetValue(DragDropTemplateProperty);
@@ -153,6 +153,7 @@ public class DragDropHelper
 
     public static bool GetIsDragSource(DependencyObject obj)
     {
+        Contract.Requires<ArgumentNullException>(obj != null);
         logger.Debug("Entered member.");
 
         return (bool)obj.GetValue(DragDropHelper.IsDragSourceProperty);
@@ -160,6 +161,7 @@ public class DragDropHelper
 
     public static bool GetIsDragTarget(DependencyObject obj)
     {
+        Contract.Requires<ArgumentNullException>(obj != null);
         logger.Debug("Entered member.");
 
         return (bool)obj.GetValue(DragDropHelper.IsDropTargetProperty);
@@ -168,6 +170,8 @@ public class DragDropHelper
     public static void SetDragDropTemplate(DependencyObject obj,
                                            DataTemplate value)
     {
+        Contract.Requires<ArgumentNullException>(obj != null);
+        Contract.Requires<ArgumentNullException>(value != null);
         obj.SetValue(DragDropHelper.DragDropTemplateProperty,
                      value);
     }
@@ -175,6 +179,7 @@ public class DragDropHelper
     public static void SetIsDragSource(DependencyObject obj,
                                        bool value)
     {
+        Contract.Requires<ArgumentNullException>(obj != null);
         obj.SetValue(DragDropHelper.IsDragSourceProperty,
                      value);
     }
@@ -182,9 +187,9 @@ public class DragDropHelper
     public static void SetIsDropTarget(DependencyObject obj,
                                        bool value)
     {
+        Contract.Requires<ArgumentNullException>(obj != null);
         obj.SetValue(DragDropHelper.IsDropTargetProperty,
                      value);
-
     }
 
     private static void IsDragSourceChanged(DependencyObject d,
@@ -325,7 +330,7 @@ public class DragDropHelper
     {
         var fe = DynamicFormUtilities.GetItemContainer(sender as ItemsControl,
                  e.OriginalSource as
-                 Visual) as FrameworkElement;
+                 Visual);
 
         if (fe != null && fe.DataContext is PropertyInformation &&
                 (fe.DataContext as PropertyInformation
@@ -373,6 +378,7 @@ public class DragDropHelper
         TopWindow.DragOver += TopWindow_DragOver;
         TopWindow.DragLeave += TopWindow_DragLeave;
 
+        // BUG: effects variable is never used.
         var effects = DragDrop.DoDragDrop(sender as DependencyObject, data,
                                           DragDropEffects.Move);
 
@@ -465,9 +471,8 @@ public class DragDropHelper
         }
 
         // SourceItemsControl is the TargetItemsControl
-        return SourceItemsControl.ItemsSource is ListCollectionView ||
-               DraggedItem is PropertyInformation
-               ? false : DraggedItem is DynamicFormEditor;
+        return !(this.SourceItemsControl.ItemsSource is ListCollectionView) &&
+               !(DraggedItem is PropertyInformation) && DraggedItem is DynamicFormEditor;
     }
 
     private void RemoveDraggedAdorner()

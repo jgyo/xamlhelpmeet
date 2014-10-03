@@ -4,6 +4,9 @@ using System.Windows.Media;
 
 namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 {
+using System;
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -75,15 +78,17 @@ public class InsertionAdorner : Adorner
         Triangle.Freeze();
     }
 
-    public InsertionAdorner(bool IsSeparatorHorizontal, bool IsInFirstHalf,
-                            UIElement AdornedElement, AdornerLayer AdornerLayer)
-    : base(AdornedElement)
+    public InsertionAdorner(bool isSeparatorHorizontal, bool isInFirstHalf,
+                            UIElement adornedElement, AdornerLayer adornerLayer)
+    : base(adornedElement)
     {
-        this.IsSeparatorHorizontal = IsSeparatorHorizontal;
-        this.IsInFirstHalf = IsInFirstHalf;
-        this.AdornerLayer = AdornerLayer;
+        Contract.Requires<ArgumentNullException>(adornedElement != null);
+        Contract.Requires<ArgumentNullException>(adornerLayer != null);
+        this.IsSeparatorHorizontal = isSeparatorHorizontal;
+        this.IsInFirstHalf = isInFirstHalf;
+        this.AdornerLayer = adornerLayer;
         IsHitTestVisible = false;
-        AdornerLayer.Add(this);
+        adornerLayer.Add(this);
     }
 
     #endregion Constructors

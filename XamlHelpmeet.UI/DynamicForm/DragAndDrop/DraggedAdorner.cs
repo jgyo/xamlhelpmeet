@@ -9,6 +9,9 @@ using System.Windows.Media;
 
 namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 {
+using System;
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -67,27 +70,31 @@ public class DraggedAdorner : Adorner
     /// <summary>
     ///     Initializes a new instance of the DraggedAdorner class.
     /// </summary>
-    /// <param name="DragDropData">
+    /// <param name="dragDropData">
     ///     Information describing the drag drop.
     /// </param>
-    /// <param name="DataTemplate">
+    /// <param name="dataTemplate">
     ///     The data template.
     /// </param>
-    /// <param name="AdornedElement">
+    /// <param name="adornedElement">
     ///     The adorned element.
     /// </param>
-    /// <param name="AdornerLayer">
+    /// <param name="adornerLayer">
     ///     The adorner layer.
     /// </param>
-    public DraggedAdorner(object DragDropData, DataTemplate DataTemplate,
-                          UIElement AdornedElement, AdornerLayer AdornerLayer)
-    : base(AdornedElement)
+    public DraggedAdorner(object dragDropData, DataTemplate dataTemplate,
+                          UIElement adornedElement, AdornerLayer adornerLayer)
+    : base(adornedElement)
     {
-        this.AdornerLayer = AdornerLayer;
+        Contract.Requires<ArgumentNullException>(dragDropData != null);
+        Contract.Requires<ArgumentNullException>(dataTemplate != null);
+        Contract.Requires<ArgumentNullException>(adornedElement != null);
+        Contract.Requires<ArgumentNullException>(adornerLayer != null);
+        this.AdornerLayer = adornerLayer;
         ContentPresenter = new ContentPresenter()
         {
-            Content = DragDropData,
-            ContentTemplate = DataTemplate,
+            Content = dragDropData,
+            ContentTemplate = dataTemplate,
             Opacity = 0.7
         };
         this.AdornerLayer.Add(this);

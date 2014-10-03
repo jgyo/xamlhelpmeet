@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 namespace XamlHelpmeet.Utility
 {
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 using NLog;
@@ -32,19 +33,20 @@ public static class PtHelpers
     /// <summary>
     ///     Gets a project's assembly path.
     /// </summary>
-    /// <param name="Project">
+    /// <param name="project">
     ///     The project.
     /// </param>
     /// <returns>
     ///     The assembly path.
     /// </returns>
-    public static string GetAssemblyPath(Project Project)
+    public static string GetAssemblyPath(Project project)
     {
+        Contract.Requires<ArgumentNullException>(project != null);
         logger.Debug("Entered member.");
 
-        var fullPath = Path.GetDirectoryName(Project.FullName);
+        var fullPath = Path.GetDirectoryName(project.FullName);
         var outputPath =
-            Project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
+            project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
         if (fullPath == null)
         {
             throw new Exception("fullPath is null.");
@@ -52,7 +54,7 @@ public static class PtHelpers
 
         var outputDirectory = Path.Combine(fullPath, outputPath);
         var outputFileName =
-            Project.Properties.Item("OutputFileName").Value.ToString();
+            project.Properties.Item("OutputFileName").Value.ToString();
         var assemblyPath = Path.Combine(outputDirectory, outputFileName);
         return assemblyPath;
     }
@@ -70,23 +72,24 @@ public static class PtHelpers
     ///     www.mztools.com/Articles/2007/MZ2007016.aspx
     ///     www.mztools.com/Articles/2007/MZ2007012.aspx.
     /// </remarks>
-    /// <param name="Project">
+    /// <param name="project">
     ///     The project.
     /// </param>
     /// <returns>
     ///     The project's type guids.
     /// </returns>
-    public static string GetProjectTypeGuids(Project Project)
+    public static string GetProjectTypeGuids(Project project)
     {
+        Contract.Requires<ArgumentNullException>(project != null);
         logger.Debug("Entered member.");
 
         var projectTypeGuids = string.Empty;
-        object service = GetService(Project.DTE, typeof(IVsSolution));
+        object service = GetService(project.DTE, typeof(IVsSolution));
         var ivsSolution = service as IVsSolution;
         if (ivsSolution != null)
         {
             IVsHierarchy ivsHierarchy;
-            int result = ivsSolution.GetProjectOfUniqueName(Project.UniqueName,
+            int result = ivsSolution.GetProjectOfUniqueName(project.UniqueName,
                          out ivsHierarchy);
             if (result != 0)
             {
@@ -114,6 +117,7 @@ public static class PtHelpers
     /// </returns>
     public static bool IsProjectBlackListed(IEnumerable<string> aryGuids)
     {
+        Contract.Requires<ArgumentNullException>(aryGuids != null);
         logger.Debug("Entered member.");
         // Shifflett notes here: some are here because I have not
         // tested them, other because I don't want the add-in
@@ -177,6 +181,7 @@ public static class PtHelpers
     /// </returns>
     public static bool IsProjectSilverlight(IEnumerable<string> aryGuids)
     {
+        Contract.Requires<ArgumentNullException>(aryGuids != null);
         logger.Debug("Entered member.");
 
         return aryGuids.Any(item =>

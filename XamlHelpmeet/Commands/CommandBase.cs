@@ -18,13 +18,17 @@ using XamlHelpmeet.Extensions;
 
 namespace XamlHelpmeet.Commands
 {
+using System.Diagnostics;
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
 
 /// <summary>
-///     Command base.
+/// Command base.
 /// </summary>
+/// <seealso cref="T:Microsoft.VisualStudio.Shell.OleMenuCommand"/>
 /// <seealso cref="T:System.IDisposable"/>
 public abstract class CommandBase : OleMenuCommand, IDisposable
 {
@@ -35,20 +39,33 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
         SettingsHelper.CreateLogger();
 
     #region Fields
-
+    /// <summary>
+    /// The white space characters.
+    /// </summary>
     private static readonly char[] whiteSpaceCharacters = { '\r', '\n', '\t', ' ' };
-    private CommandBarControl _commandBaseCommandBarControl;
-    private bool _isDisposed;
+
+    /// <summary>
+    /// The command base command bar control.
+    /// </summary>
+    private CommandBarControl commandBaseCommandBarControl;
+
+    /// <summary>
+    /// true if this XamlHelpmeet.Commands.CommandBase is disposed.
+    /// </summary>
+    private bool isDisposed;
 
     #endregion Fields
 
     #region Constructors and Destructors
-
     /// <summary>
     /// Initializes a new instance of the CommandBase class.
     /// </summary>
-    /// <param name="application">The application.</param>
-    /// <param name="id">The id.</param>
+    /// <param name="application">
+    /// The application.
+    /// </param>
+    /// <param name="id">
+    /// The id.
+    /// </param>
     protected CommandBase(DTE2 application, CommandID id)
     : base(Execute, id)
     {
@@ -61,9 +78,15 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     /// <summary>
     /// Initializes a new instance of the <see cref="CommandBase" /> class.
     /// </summary>
-    /// <param name="application">The application.</param>
-    /// <param name="id">The id.</param>
-    /// <param name="Text">The text.</param>
+    /// <param name="application">
+    /// The application.
+    /// </param>
+    /// <param name="id">
+    /// The id.
+    /// </param>
+    /// <param name="Text">
+    /// The text.
+    /// </param>
     protected CommandBase(DTE2 application, CommandID id, string Text)
     : base(Execute, id, Text)
     {
@@ -73,7 +96,7 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Finalizes an instance of the CommandBase class.
+    /// Finalizes an instance of the CommandBase class.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
             "CA1063:ImplementIDisposableCorrectly")]
@@ -89,9 +112,19 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     /// <summary>
     /// Executes before the query status is read.
     /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
-    /// <exception cref="System.ArgumentNullException">sender</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when one or more arguments have unsupported or illegal values.
+    /// </exception>
+    /// <param name="sender">
+    /// The sender.
+    /// </param>
+    /// <param name="e">
+    /// The <see cref="EventArgs" /> instance containing the event data.
+    /// </param>
+    ///
+    /// ### <exception cref="System.ArgumentNullException">
+    /// sender.
+    /// </exception>
     protected virtual void OnBeforeQueryStatus(object sender, EventArgs e)
     {
         logger.Debug("Entered member.");
@@ -108,12 +141,11 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     #region Properties
-
     /// <summary>
-    ///     Gets or sets the caption.
+    /// Gets or sets the caption.
     /// </summary>
     /// <value>
-    ///     The caption.
+    /// The caption.
     /// </value>
     public string Caption
     {
@@ -122,10 +154,10 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Gets or sets the name of the command.
+    /// Gets or sets the name of the command.
     /// </summary>
     /// <value>
-    ///     The name of the command.
+    /// The name of the command.
     /// </value>
     public string CommandName
     {
@@ -134,10 +166,10 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Gets or sets the menu command.
+    /// Gets or sets the menu command.
     /// </summary>
     /// <value>
-    ///     The menu command.
+    /// The menu command.
     /// </value>
     public OleMenuCommand MenuCommand
     {
@@ -146,10 +178,10 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Gets or sets the tool tip.
+    /// Gets or sets the tool tip.
     /// </summary>
     /// <value>
-    ///     The tool tip.
+    /// The tool tip.
     /// </value>
     public string ToolTip
     {
@@ -158,10 +190,11 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Gets an array of white space characters consisting of CR, LF, TAB, and SPACE.
+    /// Gets an array of white space characters consisting of CR, LF, TAB,
+    /// and SPACE.
     /// </summary>
     /// <value>
-    ///     The white space characters.
+    /// The white space characters.
     /// </value>
     protected static char[] WhiteSpaceCharacters
     {
@@ -174,10 +207,10 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Gets or sets the application.
+    /// Gets or sets the application.
     /// </summary>
     /// <value>
-    ///     The application.
+    /// The application.
     /// </value>
     protected DTE2 Application
     {
@@ -188,15 +221,14 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     #endregion Properties
 
     #region Methods
-
     /// <summary>
-    ///     Determine if we can execute.
+    /// Determine if we can execute.
     /// </summary>
     /// <param name="executeOption">
-    ///     The execute option.
+    /// The execute option.
     /// </param>
     /// <returns>
-    ///     true if we can execute, otherwise false.
+    /// true if we can execute, otherwise false.
     /// </returns>
     public virtual bool CanExecute(vsCommandExecOption executeOption)
     {
@@ -206,40 +238,42 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Executes this CommandBase.
+    /// Executes this CommandBase.
     /// </summary>
     public abstract void Execute();
 
     /// <summary>
-    ///     Gets the status.
+    /// Gets the status.
     /// </summary>
     /// <returns>
-    ///     The status.
+    /// The status.
     /// </returns>
     public virtual vsCommandStatus GetStatus()
     {
         logger.Debug("Entered member.");
 
-        // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
-        return vsCommandStatus.vsCommandStatusEnabled |
-               vsCommandStatus.vsCommandStatusSupported;
+        return
+            vsCommandStatus.vsCommandStatusEnabled + (int)
+            vsCommandStatus.vsCommandStatusSupported;
     }
 
     /// <summary>
-    ///     Adds a name spaces.
+    /// Adds a name spaces.
     /// </summary>
     /// <param name="xmlIn">
-    ///     The XML in.
+    /// The XML in.
     /// </param>
     /// <param name="namespaceManager">
-    ///     Manager for namespace.
+    /// Manager for namespace.
     /// </param>
     /// <param name="addedNamespaces">
-    ///     The added namespaces.
+    /// The added namespaces.
     /// </param>
     protected void AddNameSpaces(string xmlIn,
                                  XmlNamespaceManager namespaceManager, List<string> addedNamespaces)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(xmlIn));
+
         logger.Debug("Entered member.");
 
         var ht = new Hashtable();
@@ -279,8 +313,17 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Executes this CommandBase.
+    /// Executes this CommandBase.
     /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Thrown when one or more arguments have unsupported or illegal values.
+    /// </exception>
+    /// <param name="sender">
+    /// Source of the event.
+    /// </param>
+    /// <param name="e">
+    /// Event information.
+    /// </param>
     private static void Execute(object sender, EventArgs e)
     {
         logger.Debug("Entered member.");
@@ -295,15 +338,14 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     #endregion Methods
 
     #region Helpers
-
     /// <summary>
-    ///     Group into.
+    /// Group into.
     /// </summary>
     /// <param name="wrapperTop">
-    ///     The wrapper top.
+    /// The wrapper top.
     /// </param>
     /// <param name="wrapperBottom">
-    ///     The wrapper bottom.
+    /// The wrapper bottom.
     /// </param>
     protected void GroupInto(string wrapperTop, string wrapperBottom)
     {
@@ -313,10 +355,8 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
                                 TextSelection;
         selectedCodeBlock.Trim();
         var vbCrLfArray = new[] { Environment.NewLine };
-        if (selectedCodeBlock == null)
-        {
-            return;
-        }
+
+        Debug.Assert(selectedCodeBlock != null, "selectedCodeBlock != null");
 
         var selectedLines = selectedCodeBlock.Text.Trim().Split(vbCrLfArray,
                             StringSplitOptions.None);
@@ -334,10 +374,10 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Queries if this CommandBase is text selected.
+    /// Queries if this CommandBase is text selected.
     /// </summary>
     /// <returns>
-    ///     true if text selected, otherwise false.
+    /// true if text selected, otherwise false.
     /// </returns>
     protected bool IsTextSelected()
     {
@@ -353,13 +393,14 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Sets all rows and columns to automatic.
+    /// Sets all rows and columns to automatic.
     /// </summary>
     /// <param name="sb">
-    ///     The sb.
+    /// The sb.
     /// </param>
     protected void SetAllRowsAndColumnsToAuto(StringBuilder sb)
     {
+        Contract.Requires<ArgumentNullException>(sb != null);
         logger.Debug("Entered member.");
 
         SetDefinitionsToAuto(sb, "<RowDefinition Height=\"");
@@ -370,17 +411,18 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Strip unwanted property.
+    /// Strip unwanted property.
     /// </summary>
     /// <param name="propertyToStrip">
-    ///     The property to strip.
+    /// The property to strip.
     /// </param>
     /// <param name="sb">
-    ///     The sb.
+    /// The sb.
     /// </param>
     protected void StripUnwantedProperty(string propertyToStrip,
                                          StringBuilder sb)
     {
+        Contract.Requires<ArgumentNullException>(sb != null);
         logger.Debug("Entered member.");
 
         //var marginsRemoved = false;   // This variable's value is never used
@@ -413,6 +455,15 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
         sb.Replace(" >", ">");
     }
 
+    /// <summary>
+    /// Sets definitions to automatic.
+    /// </summary>
+    /// <param name="sb">
+    /// The sb.
+    /// </param>
+    /// <param name="definitionTag">
+    /// The definition tag.
+    /// </param>
     private static void SetDefinitionsToAuto(StringBuilder sb,
             string definitionTag)
     {
@@ -447,10 +498,9 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     #endregion Helpers
 
     #region Dispose Pattern Implementation
-
     /// <summary>
-    ///     Performs application-defined tasks associated with freeing, releasing, or
-    ///     resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing,
+    /// or resetting unmanaged resources.
     /// </summary>
     /// <seealso cref="M:System.IDisposable.Dispose()"/>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
@@ -464,32 +514,32 @@ public abstract class CommandBase : OleMenuCommand, IDisposable
     }
 
     /// <summary>
-    ///     Performs application-defined tasks associated with freeing, releasing, or
-    ///     resetting unmanaged resources.
+    /// Performs application-defined tasks associated with freeing, releasing,
+    /// or resetting unmanaged resources.
     /// </summary>
     /// <param name="disposing">
-    ///     true to release both managed and unmanaged resources; false to release only
-    ///     unmanaged resources.
+    /// true to release both managed and unmanaged resources; false to
+    /// release only unmanaged resources.
     /// </param>
     protected virtual void Dispose(bool disposing)
     {
         logger.Debug("Entered member.");
 
-        if (_isDisposed)
+        if (this.isDisposed)
         {
             return;
         }
 
         if (disposing)
         {
-            if (_commandBaseCommandBarControl != null)
+            if (this.commandBaseCommandBarControl != null)
             {
-                _commandBaseCommandBarControl.Delete();
-                _commandBaseCommandBarControl = null;
+                this.commandBaseCommandBarControl.Delete();
+                this.commandBaseCommandBarControl = null;
             }
         }
 
-        _isDisposed = true;
+        this.isDisposed = true;
     }
 
     #endregion Dispose Pattern Implementation

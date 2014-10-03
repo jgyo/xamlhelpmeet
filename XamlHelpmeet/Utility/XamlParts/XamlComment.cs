@@ -7,6 +7,9 @@
 
 namespace XamlHelpmeet.Utility.XamlParts
 {
+using System;
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -32,6 +35,7 @@ public class XamlComment : XamlPart
     public XamlComment(string text, int topPoint)
     : base(text, topPoint)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(text));
         logger.Debug("Entered member.");
 
         // TODO: Complete XamlComment method in XamlComment

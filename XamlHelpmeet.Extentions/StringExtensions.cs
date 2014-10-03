@@ -1,5 +1,8 @@
 ﻿namespace XamlHelpmeet.Extensions
 {
+using System;
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -43,7 +46,12 @@ public static class StringExtensions
     /// </returns>
     public static bool IsLetterOrDigit(this string target, int index)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(target));
+        Contract.Requires<ArgumentOutOfRangeException>(0 <= index);
+        Contract.Requires<ArgumentOutOfRangeException>(index < target.Length);
         logger.Debug("Entered member.");
+        logger.Trace("target: {0}", target);
+        logger.Trace("index: {0}", index);
 
         return target[index].IsLetterOrDigit();
     }
@@ -51,49 +59,50 @@ public static class StringExtensions
     /// <summary>
     ///     A string extension method that query if a string is not null.
     /// </summary>
-    /// <param name="Target">
+    /// <param name="target">
     ///     The Target to act on.
     /// </param>
     /// <returns>
     ///     true if not null, false if not.
     /// </returns>
-    public static bool IsNotNull(this string Target)
+    public static bool IsNotNull(this string target)
     {
         logger.Debug("Entered member.");
 
-        return !Target.IsNull();
+        return !target.IsNull();
     }
 
     /// <summary>
     ///     A string extension method that queries if a string is not null or empty.
     /// </summary>
-    /// <param name="Target">
+    /// <param name="target">
     ///     The Target to act on.
     /// </param>
     /// <returns>
     ///     true if a not null or empty, false if it is null or empty.
     /// </returns>
-    public static bool IsNotNullOrEmpty(this string Target)
+    public static bool IsNotNullOrEmpty(this string target)
     {
         logger.Debug("Entered member.");
 
-        return !Target.IsNullOrEmpty();
+        return !target.IsNullOrEmpty();
     }
 
     /// <summary>
     ///     A string extension method that queries if the string is null, empty or whitespace.
     /// </summary>
-    /// <param name="Target">
+    /// <param name="target">
     ///     The Target to act on.
     /// </param>
     /// <returns>
     ///     true if a null, empty, or whitespace, false if not.
     /// </returns>
-    public static bool IsNotNullOrWhiteSpace(this string Target)
+    public static bool IsNotNullOrWhiteSpace(this string target)
     {
         logger.Debug("Entered member.");
+        logger.Trace("Target: {0}", target);
 
-        return !Target.IsNullOrWhiteSpace();
+        return !target.IsNullOrWhiteSpace();
     }
 
     /// <summary>
@@ -127,7 +136,12 @@ public static class StringExtensions
     public static bool IsNotUpper(this string target,
                                   int index)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(target));
+        Contract.Requires<ArgumentOutOfRangeException>(0 <= index);
+        Contract.Requires<ArgumentOutOfRangeException>(index < target.Length);
         logger.Debug("Entered member.");
+        logger.Trace("target: {0}", target);
+        logger.Trace("index: {0}", index);
 
         return !target.IsUpper(index);
     }
@@ -201,7 +215,12 @@ public static class StringExtensions
     /// </returns>
     public static bool IsUpper(this string target, int index)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(target));
+        Contract.Requires<ArgumentOutOfRangeException>(0 <= index);
+        Contract.Requires<ArgumentOutOfRangeException>(index < target.Length);
         logger.Debug("Entered member.");
+        logger.Trace("target: {0}", target);
+        logger.Trace("index: {0}", index);
 
         return target[index].IsUpper();
     }
@@ -225,21 +244,21 @@ public static class StringExtensions
     /// <summary>
     ///     A char extension method that converts a Target character to a lowercase character.
     /// </summary>
-    /// <param name="Target">
+    /// <param name="target">
     ///     The Target character to act on.
     /// </param>
     /// <returns>
     ///     Target as a lowercase chararacter.
     /// </returns>
-    public static char ToLower(this char Target)
+    public static char ToLower(this char target)
     {
         logger.Debug("Entered member.");
 
-        if (Target >= 'A' && Target <= 'Z')
+        if (target >= 'A' && target <= 'Z')
         {
-            return (char)(Target - 'A' + 'a');
+            return (char)(target - 'A' + 'a');
         }
-        return Target;
+        return target;
     }
 }
 }

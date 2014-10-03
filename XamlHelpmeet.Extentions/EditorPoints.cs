@@ -10,6 +10,8 @@ using EnvDTE;
 
 namespace XamlHelpmeet.Extensions
 {
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -160,7 +162,9 @@ public struct EditorPoints
     /// </returns>
     public static EditorPoints GetEditorPoints(TextSelection sel)
     {
+        Contract.Requires<ArgumentNullException>(sel != null);
         logger.Debug("Entered member.");
+        logger.Trace("sel: {0}", sel);
 
         var ep = new EditorPoints(sel);
         ep.RestoreSelectedText(sel);
@@ -171,7 +175,16 @@ public struct EditorPoints
     public static EditorPoints GetEditorPoints(int topPoint, int bottomPoint,
             string documentText)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(
+                    documentText));
+        Contract.Requires<ArgumentOutOfRangeException>(0 <= topPoint);
+        Contract.Requires<ArgumentOutOfRangeException>(0<=bottomPoint - topPoint);
+        Contract.Requires<ArgumentOutOfRangeException>(topPoint <= ((
+                    documentText.Length - bottomPoint - topPoint)));
         logger.Debug("Entered member.");
+        logger.Trace("topPoint: {0}", topPoint);
+        logger.Trace("bottomPoint: {0}", bottomPoint);
+        logger.Trace("documentText: {0}", documentText);
 
         return new EditorPoints(topPoint, bottomPoint, documentText);
     }
@@ -190,7 +203,9 @@ public struct EditorPoints
     /// </returns>
     public TextSelection RestoreSelectedText(TextSelection sel)
     {
+        Contract.Requires<ArgumentNullException>(sel != null);
         logger.Debug("Entered member.");
+        logger.Trace("sel: {0}", sel);
 
         if (IsActiveEndGreater == null)
         { IsActiveEndGreater = sel.IsActiveEndGreater; }

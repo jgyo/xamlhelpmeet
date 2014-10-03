@@ -425,8 +425,11 @@ public class RemoteTypeReflector
     /// <returns>
     /// The project references.
     /// </returns>
-    private List<string> GetProjectReferences(Project TargetProject)
+    private IEnumerable<string> GetProjectReferences(Project TargetProject)
     {
+        Contract.Requires<ArgumentNullException>(TargetProject != null);
+        Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+
         logger.Debug("Entered member.");
 
         var list = new List<string>();

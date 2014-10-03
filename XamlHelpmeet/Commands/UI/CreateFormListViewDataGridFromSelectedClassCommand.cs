@@ -133,12 +133,10 @@ public class CreateFormListViewDataGridFromSelectedClassCommand :
                 || !(this.Application.ActiveDocument.Name.EndsWith("vb")
                      || this.Application.ActiveDocument.Name.EndsWith("cs")))
         {
-            return vsCommandStatus.vsCommandStatusUnsupported
-                   & vsCommandStatus.vsCommandStatusInvisible;
+            return vsCommandStatus.vsCommandStatusInvisible;
         }
 
-        return vsCommandStatus.vsCommandStatusEnabled |
-               vsCommandStatus.vsCommandStatusSupported;
+        return base.GetStatus();
     }
 
     #endregion

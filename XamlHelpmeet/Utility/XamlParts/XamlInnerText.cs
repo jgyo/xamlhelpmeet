@@ -7,6 +7,9 @@
 
 namespace XamlHelpmeet.Utility.XamlParts
 {
+using System;
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -35,10 +38,9 @@ public class XamlInnerText : XamlPart
     public XamlInnerText(string text, int topPoint, int bottomPoint)
     : base(text, topPoint)
     {
-
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(text));
 
         logger.Debug("Entered member.");
-
     }
 }
 }

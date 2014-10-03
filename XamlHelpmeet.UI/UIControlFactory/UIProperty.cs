@@ -4,6 +4,8 @@ using System.Runtime.Serialization;
 
 namespace XamlHelpmeet.UI.UIControlFactory
 {
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -87,6 +89,7 @@ public class UIProperty : INotifyPropertyChanged, ISerializable
 
     protected UIProperty(SerializationInfo info, StreamingContext context)
     {
+        Contract.Requires<ArgumentNullException>(info != null);
         PropertyName = (string)info.GetValue("PropertyName", typeof(string));
         PropertyValue = (string)info.GetValue("PropertyValue", typeof(string));
     }

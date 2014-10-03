@@ -19,7 +19,8 @@ public class UIControl : INotifyPropertyChanged, ISerializable
 
     #region Fields
 
-    private SerializableObservableCollection<UIProperty> _controlProperties;
+    private readonly SerializableObservableCollection<UIProperty>
+    _controlProperties;
     private string _controlType;
 
     private bool _generateControlName;
@@ -124,6 +125,7 @@ public class UIControl : INotifyPropertyChanged, ISerializable
 
     #region Properties
 
+    // BUG: set accessor is never accessed.
     public string BindingPropertyString
     {
         get;

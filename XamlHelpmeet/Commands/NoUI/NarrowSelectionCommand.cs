@@ -99,10 +99,8 @@ public class NarrowSelectionCommand : CommandBase
 
 
         // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
-        return vsCommandStatus.vsCommandStatusSupported |
-               (IsTextSelected() ?
-                vsCommandStatus.vsCommandStatusEnabled :
-                vsCommandStatus.vsCommandStatusUnsupported);
+        return IsTextSelected() ? base.GetStatus() :
+               vsCommandStatus.vsCommandStatusSupported;
     }
 
     /// <summary>

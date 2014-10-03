@@ -27,6 +27,8 @@ using XamlHelpmeet.Extensions;
 
 namespace XamlHelpmeet.Commands.NoUI
 {
+using System.Diagnostics;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -80,7 +82,9 @@ public class SelectContainingControlCommand : CommandBase
                                                "This should not have happened.");
         }
 
-        if (selection != null && selection.Text.Length <= ep.Text.Length)
+        Debug.Assert(selection != null, "selection != null");
+
+        if (selection.Text.Length <= ep.Text.Length)
         { selection.ExpandSelection(); }
     }
 }

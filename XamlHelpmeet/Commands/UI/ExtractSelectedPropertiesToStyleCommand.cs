@@ -249,10 +249,8 @@ public class ExtractSelectedPropertiesToStyleCommand : CommandBase
         // vsCommandStatus.vsCommandStatusUnsupported has a value
         // of zero, so or'ing it with any other value returns the other
         // value.
-        return vsCommandStatus.vsCommandStatusSupported
-               | (this.IsTextSelected()
-                  ? vsCommandStatus.vsCommandStatusEnabled
-                  : vsCommandStatus.vsCommandStatusUnsupported);
+        return this.IsTextSelected() ? base.GetStatus() :
+               vsCommandStatus.vsCommandStatusSupported;
     }
 
     #endregion

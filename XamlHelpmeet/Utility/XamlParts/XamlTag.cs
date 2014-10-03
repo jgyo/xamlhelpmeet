@@ -23,6 +23,7 @@ using System.Text.RegularExpressions;
 
 namespace XamlHelpmeet.Utility.XamlParts
 {
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 using NLog;
@@ -51,6 +52,8 @@ public class XamlTag : XamlPart
     /// </param>
     public XamlTag(Match match) : base(match.Value, match.Index)
     {
+        Contract.Requires<ArgumentNullException>(match != null);
+        Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(match.Value));
         logger.Debug("Entered member.");
 
         try

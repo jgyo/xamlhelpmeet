@@ -3,6 +3,9 @@ using VSLangProj;
 
 namespace XamlHelpmeet.Extensions
 {
+using System;
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -38,6 +41,9 @@ public static class AssemblyHelpers
 
     public static bool IsMicrosoftAssembly(this string AssemblyName)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(
+                    AssemblyName));
+
         logger.Debug("Entered member.");
 
         AssemblyName = AssemblyName.ToLower();
@@ -63,7 +69,13 @@ public static class AssemblyHelpers
 
     public static bool IsMicrosoftAssembly(this Reference reference)
     {
+        Contract.Requires<ArgumentNullException>(reference != null);
+        Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(
+                reference.Name));
+
         logger.Debug("Entered member.");
+        logger.Trace("reference: {0}", reference);
+        logger.Trace("reference.Name: {0}", reference.Name);
 
         return reference.Name.IsMicrosoftAssembly();
     }
@@ -81,6 +93,13 @@ public static class AssemblyHelpers
     public static bool IsMicrosoftAssembly(this AssemblyNameReference
                                            reference)
     {
+        Contract.Requires<ArgumentNullException>(reference != null);
+        Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(
+                reference.Name));
+
+        logger.Debug("Entered member.");
+        logger.Trace("reference: {0}", reference);
+
         return reference.Name.IsMicrosoftAssembly();
     }
 
@@ -97,7 +116,10 @@ public static class AssemblyHelpers
 
     public static bool IsNotMicrosoftAssembly(this string AssemblyName)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(
+                    AssemblyName));
         logger.Debug("Entered member.");
+        logger.Trace("AssemblyName: {0}", AssemblyName);
 
         return !AssemblyName.IsMicrosoftAssembly();
     }
@@ -115,7 +137,12 @@ public static class AssemblyHelpers
 
     public static bool IsNotMicrosoftAssembly(this Reference reference)
     {
+        Contract.Requires<ArgumentNullException>(reference != null);
+        Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(
+                reference.Name));
         logger.Debug("Entered member.");
+        logger.Trace("reference: {0}", reference);
+        logger.Trace("reference.Name: {0}", reference.Name);
 
         return !reference.IsMicrosoftAssembly();
     }
@@ -134,6 +161,13 @@ public static class AssemblyHelpers
     public static bool IsNotMicrosoftAssembly(this AssemblyNameReference
             reference)
     {
+        Contract.Requires<ArgumentNullException>(reference != null);
+        Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(
+                reference.Name));
+        logger.Debug("Entered member.");
+        logger.Trace("reference: {0}", reference);
+        logger.Trace("reference.Name: {0}", reference.Name);
+
         return !reference.IsMicrosoftAssembly();
     }
 }

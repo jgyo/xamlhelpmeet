@@ -23,6 +23,8 @@ using System.Linq;
 
 namespace XamlHelpmeet.Model
 {
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -59,6 +61,8 @@ public class ClassInformationList : List<ClassInformation>
     public ClassInformationList(int capacity)
     : base(capacity)
     {
+        Contract.Requires<ArgumentOutOfRangeException>(capacity >= 0);
+
         logger.Debug("Entered member.");
 
 

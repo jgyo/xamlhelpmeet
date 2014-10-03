@@ -91,22 +91,22 @@ public class FieldsListFromSelectedClassCommand : CommandBase
         }
     }
 
-    /// <summary>
-    ///     Gets the status of the FieldsListFromSelectedClassCommand command.
-    /// </summary>
-    /// <remarks>
-    ///     FieldsListFromSelectedClassCommand is always supported. If text is
-    ///     selected, the
-    ///     command is enabled.
-    /// </remarks>
-    /// <seealso cref="M:XamlHelpmeet.Commands.CommandBase.GetStatus()" />
-    public override vsCommandStatus GetStatus()
-    {
-        logger.Debug("Entered member.");
-        // This command is supported and always enabled.
-        return vsCommandStatus.vsCommandStatusSupported |
-               vsCommandStatus.vsCommandStatusEnabled;
-    }
+    /*    /// <summary>
+        ///     Gets the status of the FieldsListFromSelectedClassCommand command.
+        /// </summary>
+        /// <remarks>
+        ///     FieldsListFromSelectedClassCommand is always supported. If text is
+        ///     selected, the
+        ///     command is enabled.
+        /// </remarks>
+        /// <seealso cref="M:XamlHelpmeet.Commands.CommandBase.GetStatus()" />
+        public override vsCommandStatus GetStatus()
+        {
+            logger.Debug("Entered member.");
+            // This command is supported and always enabled.
+            return vsCommandStatus.vsCommandStatusSupported |
+                   vsCommandStatus.vsCommandStatusEnabled;
+        }*/
 
     #endregion
 }

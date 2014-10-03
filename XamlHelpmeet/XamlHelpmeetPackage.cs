@@ -104,6 +104,18 @@ public sealed class XamlHelpmeetPackage : Package
         this._commandsList = new List<CommandBase>();
     }
 
+
+    static XamlHelpmeetPackage()
+    {
+        var settingsConfig = SettingsHelper.NewConfiguration("XamlHelpmeet",
+                             "YoderZone");
+        var fileTarget = FileTargetFactory.CreateFileTarget("xhmFileTarget",
+                         "XHM${shortdate}.log", settingsConfig);
+        var loggingRule = RuleFactory.CreateRule("XamlHelpmeet.*", fileTarget);
+        settingsConfig.AddTarget(fileTarget, true);
+        settingsConfig.AddRule("xhmRule", loggingRule);
+    }
+
     #endregion
 
     #region Properties

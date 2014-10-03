@@ -9,6 +9,7 @@ namespace XamlHelpmeet.Model
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 
@@ -131,6 +132,9 @@ public class PropertyInformation : INotifyPropertyChanged
     public PropertyInformation(bool canWrite, string name, string typeName,
                                string typeNamespace)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(
+                    typeNamespace));
+
         this.CanWrite = canWrite;
         this.Name = name;
         this.TypeName = typeName;
@@ -464,7 +468,11 @@ public class PropertyInformation : INotifyPropertyChanged
     /// </value>
     public string PascalFieldName
     {
-        get { return string.Concat(this.Name[0].ToLower(), this.Name.Substring(1)); }
+        get
+        {
+            Contract.Requires(0 < this.Name.Length);
+            return string.Concat(this.Name[0].ToLower(), this.Name.Substring(1));
+        }
     }
 
     /// <summary>

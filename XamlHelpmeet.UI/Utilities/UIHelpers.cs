@@ -32,6 +32,8 @@ using XamlHelpmeet.UI.DynamicForm;
 
 namespace XamlHelpmeet.UI.Utilities
 {
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -47,17 +49,18 @@ public class UIHelpers
     /// <summary>
     /// Query if 'Name' is microsoft assembly.
     /// </summary>
-    /// <param name="Name">
+    /// <param name="name">
     /// The name.
     /// </param>
     /// <returns>
     /// true if microsoft assembly, false if not.
     /// </returns>
-    public static bool IsMicrosoftAssembly(string Name)
+    public static bool IsMicrosoftAssembly(string name)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(name));
         logger.Debug("Entered member.");
 
-        return Name.IsMicrosoftAssembly();
+        return name.IsMicrosoftAssembly();
     }
 
     /// <summary>
@@ -72,6 +75,9 @@ public class UIHelpers
     public static DynamicFormEditor DynamicFormEditorFactory(
         PropertyInformation pi)
     {
+        Contract.Requires<ArgumentNullException>(pi != null);
+        Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(pi.Name));
+
         var listBoxContent = new DynamicFormListBoxContent
         {
             AssociatedLabel =
@@ -223,6 +229,7 @@ public class UIHelpers
     /// </returns>
     public static string[] GetSortedEnumNames(Type T)
     {
+        Contract.Requires<ArgumentNullException>(T != null);
         logger.Debug("Entered member.");
 
         if (!T.IsEnum)
@@ -238,23 +245,24 @@ public class UIHelpers
     /// <summary>
     /// Parse property name for label.
     /// </summary>
-    /// <param name="ToParse">
+    /// <param name="toParse">
     /// to parse.
     /// </param>
     /// <returns>
     /// A string.
     /// </returns>
-    public static string ParsePropertyNameForLabel(string ToParse)
+    public static string ParsePropertyNameForLabel(string toParse)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(toParse));
         logger.Debug("Entered member.");
 
         var sb = new StringBuilder(256);
         var foundUpperCase = false;
         var onlyUpperCase = true;
 
-        for (var i = 0; i < ToParse.Length; i++)
+        for (var i = 0; i < toParse.Length; i++)
         {
-            if (!ToParse.IsNotUpper(i))
+            if (!toParse.IsNotUpper(i))
             { continue; }
             onlyUpperCase = false;
             break;
@@ -262,22 +270,22 @@ public class UIHelpers
 
         if (onlyUpperCase)
         {
-            return ToParse;
+            return toParse;
         }
 
-        for (var i = 0; i < ToParse.Length; i++)
+        for (var i = 0; i < toParse.Length; i++)
         {
-            if (!foundUpperCase && ToParse.IsUpper(i))
+            if (!foundUpperCase && toParse.IsUpper(i))
             {
                 foundUpperCase = true;
                 if (i == 0)
                 {
-                    sb.Append(ToParse[i]);
+                    sb.Append(toParse[i]);
                 }
                 else
                 {
                     sb.Append(" ");
-                    sb.Append(ToParse[i]);
+                    sb.Append(toParse[i]);
                 }
                 continue;
             }
@@ -285,14 +293,14 @@ public class UIHelpers
             {
                 continue;
             }
-            if (ToParse.IsUpper(i))
+            if (toParse.IsUpper(i))
             {
                 sb.Append(" ");
-                sb.Append(ToParse[i]);
+                sb.Append(toParse[i]);
             }
-            else if (ToParse.IsLetterOrDigit(i))
+            else if (toParse.IsLetterOrDigit(i))
             {
-                sb.Append(ToParse[i]);
+                sb.Append(toParse[i]);
             }
         }
 

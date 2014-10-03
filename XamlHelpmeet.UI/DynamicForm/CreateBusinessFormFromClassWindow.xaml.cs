@@ -31,9 +31,6 @@ using YoderZone.Extensions.NLog;
 /// </summary>
 public partial class CreateBusinessFormFromClassWindow : Window
 {
-    private static readonly Logger logger =
-        SettingsHelper.CreateLogger();
-
     #region Constants
 
     private const string STR_BUSINESSFORM = "Business Form";
@@ -138,12 +135,12 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
     private const string STR_SILVERLIGHTDATAGRID = "Silverlight Data Grid";
 
+    private const string STR_TODOAddFormattingConverterForFormat =
+        "<!-- TODO - Add formatting converter for format: {0} -->";
+
     private const string STR_TheFollowingNamespaceDeclarationsMayBeNecessaryF
         =
             "<!--The following namespace declarations may be necessary for you to add to the root element of this XAML file.-->";
-
-    private const string STR_TODOAddFormattingConverterForFormat =
-        "<!-- TODO - Add formatting converter for format: {0} -->";
 
     private const string STR_WPFDATAGRID = "WPF Data Grid";
 
@@ -158,14 +155,21 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
     #endregion
 
-    #region Fields
+    #region Static Fields
 
     public static readonly DependencyProperty
     ShowFullDynamicFormContentProperty =
-        DependencyProperty.Register("ShowFullDynamicFormContent",
-                                    typeof(bool),
-                                    typeof(Window),
-                                    new PropertyMetadata(true));
+        DependencyProperty.Register(
+            "ShowFullDynamicFormContent",
+            typeof(bool),
+            typeof(Window),
+            new PropertyMetadata(true));
+
+    private static readonly Logger logger = SettingsHelper.CreateLogger();
+
+    #endregion
+
+    #region Fields
 
     private readonly ClassEntity _classEntity;
 
@@ -175,7 +179,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
     #endregion
 
-    #region Constructors
+    #region Constructors and Destructors
 
     public CreateBusinessFormFromClassWindow(ClassEntity ClassEntity)
     {
@@ -187,32 +191,71 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
     #endregion
 
-    #region Properties and Indexers
+    #region Enums
 
-    public string BusinessForm { get { return this._businessForm; } }
-
-    public ClassEntity ClassEntity { get { return this._classEntity; } }
-
-    public int NumberOfColumnGroups
+    private enum SelectClassberUserControlState
     {
-        get { return this._numberOfColumnGroups; }
-        set { this._numberOfColumnGroups = value; }
-    }
+        Minimized,
 
-    public UIPlatform PlatformType
-    {
-        get { return this.ClassEntity.IsSilverlight ? UIPlatform.Silverlight : UIPlatform.WPF; }
-    }
-
-    public bool ShowFullDynamicFormContent
-    {
-        get { return (bool)this.GetValue(ShowFullDynamicFormContentProperty); }
-        set { this.SetValue(ShowFullDynamicFormContentProperty, value); }
+        Restored
     }
 
     #endregion
 
-    #region Methods (private)
+    #region Public Properties
+
+    public string BusinessForm
+    {
+        get
+        {
+            return this._businessForm;
+        }
+    }
+
+    public ClassEntity ClassEntity
+    {
+        get
+        {
+            return this._classEntity;
+        }
+    }
+
+    public int NumberOfColumnGroups
+    {
+        get
+        {
+            return this._numberOfColumnGroups;
+        }
+        set
+        {
+            this._numberOfColumnGroups = value;
+        }
+    }
+
+    public UIPlatform PlatformType
+    {
+        get
+        {
+            return this.ClassEntity.IsSilverlight ? UIPlatform.Silverlight :
+                   UIPlatform.WPF;
+        }
+    }
+
+    public bool ShowFullDynamicFormContent
+    {
+        get
+        {
+            return (bool)this.GetValue(ShowFullDynamicFormContentProperty);
+        }
+        set
+        {
+            this.SetValue(ShowFullDynamicFormContentProperty, value);
+        }
+    }
+
+    #endregion
+
+    #region Methods
 
     private void ClearAllListBoxFields()
     {
@@ -233,7 +276,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         var collectionView =
             CollectionViewSource.GetDefaultView(this.ClassEntity.PropertyInformation)
-            as CollectionView;
+            as
+            CollectionView;
 
         if (collectionView == null)
         {
@@ -256,35 +300,29 @@ public partial class CreateBusinessFormFromClassWindow : Window
             for (int i = this._numberOfColumnGroups; i < numberOfColumnGroups; i++)
             {
                 this.gridColumnsContainer.ColumnDefinitions.Insert(
-                    this.gridColumnsContainer.ColumnDefinitions.Count
-                    - 2,
+                    this.gridColumnsContainer.ColumnDefinitions.Count - 2,
                     new ColumnDefinition
                 {
-                    Width =
-                    new GridLength(425,
-                    GridUnitType
-                    .Pixel),
+                    Width = new GridLength(425, GridUnitType.Pixel),
                     MinWidth = 50
                 });
                 this.gridColumnsContainer.ColumnDefinitions.Insert(
-                    this.gridColumnsContainer.ColumnDefinitions.Count
-                    - 2,
-                    new ColumnDefinition
-                {
-                    Width =
-                    new GridLength(0,
-                    GridUnitType
-                    .Auto)
-                });
+                    this.gridColumnsContainer.ColumnDefinitions.Count - 2,
+                    new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
 
                 ListBox lb =
                     this.DynamicFormContentListBoxFactory(
                         this.gridColumnsContainer.ColumnDefinitions.Count - 2);
                 this.gridColumnsContainer.Children.Add(lb);
 
-                var objGridSplitter = new GridSplitter { HorizontalAlignment = HorizontalAlignment.Right };
-                objGridSplitter.SetValue(Grid.ColumnProperty,
-                                         this.gridColumnsContainer.ColumnDefinitions.Count - 2);
+                var objGridSplitter = new GridSplitter
+                {
+                    HorizontalAlignment =
+                    HorizontalAlignment.Right
+                };
+                objGridSplitter.SetValue(
+                    Grid.ColumnProperty,
+                    this.gridColumnsContainer.ColumnDefinitions.Count - 2);
                 this.gridColumnsContainer.Children.Add(objGridSplitter);
             }
         }
@@ -298,16 +336,16 @@ public partial class CreateBusinessFormFromClassWindow : Window
             {
                 if (item is GridSplitter)
                 {
-                    if ((int)((item as GridSplitter).GetValue(Grid.ColumnProperty)) >
-                            lastColumnIndexToKeep)
+                    if ((int)((item as GridSplitter).GetValue(Grid.ColumnProperty))
+                            > lastColumnIndexToKeep)
                     {
                         listOfGridSplittersToRemove.Add(item as GridSplitter);
                     }
                 }
                 else if (item is ListBox)
                 {
-                    if ((int)((item as ListBox).GetValue(Grid.ColumnProperty)) >
-                            lastColumnIndexToKeep)
+                    if ((int)((item as ListBox).GetValue(Grid.ColumnProperty))
+                            > lastColumnIndexToKeep)
                     {
                         listOfListBoxesToRemove.Add(item as ListBox);
                     }
@@ -324,8 +362,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
                 foreach (DynamicFormEditor objDynamicFormEditor in objListBox.Items)
                 {
                     string strPropertyName =
-                        (objDynamicFormEditor.DataContext as
-                         DynamicFormListBoxContent).BindingPath;
+                        (objDynamicFormEditor.DataContext as DynamicFormListBoxContent)
+                        .BindingPath;
 
                     foreach (var objPi in this.ClassEntity.PropertyInformation)
                     {
@@ -340,24 +378,23 @@ public partial class CreateBusinessFormFromClassWindow : Window
                 this.gridColumnsContainer.Children.Remove(objListBox);
             }
 
+            // BUG: CodeContracts: requires unproven: index >= 0.
+            // Is it an off-by-one? The static checker can prove i >= (0 - 1) instead
             for (int i = this.gridColumnsContainer.ColumnDefinitions.Count - 1;
-                    i >= lastColumnIndexToKeep; i--)
+                    i >= lastColumnIndexToKeep;
+                    i--)
             {
                 this.gridColumnsContainer.ColumnDefinitions.RemoveAt(i);
             }
 
-            this.gridColumnsContainer.ColumnDefinitions.Add(new ColumnDefinition
-            {
-                Width =
-                new GridLength(0,
-                GridUnitType
-                .Auto)
-            });
+            this.gridColumnsContainer.ColumnDefinitions.Add(
+                new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
         }
 
         var collectionView =
             CollectionViewSource.GetDefaultView(this.ClassEntity.PropertyInformation)
-            as CollectionView;
+            as
+            CollectionView;
 
         if (collectionView != null)
         {
@@ -393,10 +430,11 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         if (numberOfColumns == 0 || numberOfRows == 0)
         {
-            MessageBox.Show("You do not have any properties added to the layout.",
-                            "Invalid Layout",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
+            MessageBox.Show(
+                "You do not have any properties added to the layout.",
+                "Invalid Layout",
+                MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
             return;
         }
 
@@ -430,8 +468,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
             sb.AppendLine(STR_RowDefinitionHeightAuto);
         }
 
-        if (this.chkIncludeButtonRow.IsChecked.HasValue &&
-                this.chkIncludeButtonRow.IsChecked.Value)
+        if (this.chkIncludeButtonRow.IsChecked.HasValue
+                && this.chkIncludeButtonRow.IsChecked.Value)
         {
             sb.AppendLine(STR_RowDefinitionHeightAuto);
         }
@@ -459,8 +497,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
         if (isInsertingTitleRow)
         {
             sb.AppendLine(
-                UIControlFactory.Instance.GetUIControl(UIControlRole.TextBlock,
-                        this.PlatformType)
+                UIControlFactory.Instance.GetUIControl(
+                    UIControlRole.TextBlock,
+                    this.PlatformType)
                 .MakeControlFromDefaults(
                     string.Format(
                         STR_GridColumn0GridRow0GridColumnSpanText,
@@ -484,11 +523,12 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
                 if (!string.IsNullOrEmpty(objField.AssociatedLabel))
                 {
-                    sb.AppendLine(UIControlFactory.Instance.MakeLabelWithoutBinding(
-                                      this.PlatformType,
-                                      i * 3,
-                                      currentRow,
-                                      objField.AssociatedLabel));
+                    sb.AppendLine(
+                        UIControlFactory.Instance.MakeLabelWithoutBinding(
+                            this.PlatformType,
+                            i * 3,
+                            currentRow,
+                            objField.AssociatedLabel));
                 }
 
                 currentRow += 1;
@@ -507,90 +547,105 @@ public partial class CreateBusinessFormFromClassWindow : Window
                      columnGroupListBox[i].Items)
             {
                 var field = objDynamicFormEditor.DataContext as DynamicFormListBoxContent;
-                string bindingPath = string.Concat(this.txtBindingPropertyPrefix.Text,
-                                                   field.BindingPath);
+                string bindingPath = string.Concat(
+                                         this.txtBindingPropertyPrefix.Text,
+                                         field.BindingPath);
 
                 switch (field.ControlType)
                 {
                     case DynamicFormControlType.DatePicker:
-                        sb.AppendLine(UIControlFactory.Instance.MakeDatePicker(this.PlatformType,
-                                      (i * 3) + 1,
-                                      currentRow,
-                                      bindingPath,
-                                      field.Width));
+                        sb.AppendLine(
+                            UIControlFactory.Instance.MakeDatePicker(
+                                this.PlatformType,
+                                (i * 3) + 1,
+                                currentRow,
+                                bindingPath,
+                                field.Width));
                         break;
 
                     case DynamicFormControlType.CheckBox:
-                        sb.AppendLine(UIControlFactory.Instance.MakeCheckBox(this.PlatformType,
-                                      (i * 3) + 1,
-                                      currentRow,
-                                      field.ControlLabel,
-                                      bindingPath,
-                                      field.BindingMode));
+                        sb.AppendLine(
+                            UIControlFactory.Instance.MakeCheckBox(
+                                this.PlatformType,
+                                (i * 3) + 1,
+                                currentRow,
+                                field.ControlLabel,
+                                bindingPath,
+                                field.BindingMode));
                         break;
 
                     case DynamicFormControlType.ComboBox:
-                        sb.AppendLine(UIControlFactory.Instance.MakeComboBox(this.PlatformType,
-                                      (i * 3) + 1,
-                                      currentRow,
-                                      bindingPath,
-                                      field.BindingMode));
+                        sb.AppendLine(
+                            UIControlFactory.Instance.MakeComboBox(
+                                this.PlatformType,
+                                (i * 3) + 1,
+                                currentRow,
+                                bindingPath,
+                                field.BindingMode));
                         break;
 
                     case DynamicFormControlType.Image:
-                        sb.AppendLine(UIControlFactory.Instance.MakeImage(this.PlatformType,
-                                      (i * 3) + 1,
-                                      currentRow,
-                                      bindingPath));
+                        sb.AppendLine(
+                            UIControlFactory.Instance.MakeImage(
+                                this.PlatformType,
+                                (i * 3) + 1,
+                                currentRow,
+                                bindingPath));
                         break;
 
                     case DynamicFormControlType.Label:
                         if (this.ClassEntity.IsSilverlight)
                         {
-                            sb.AppendLine(this.WriteSilverlightStringFomatComment(
-                                              field.StringFormat));
+                            sb.AppendLine(
+                                this.WriteSilverlightStringFomatComment(field.StringFormat));
                         }
 
-                        sb.AppendLine(UIControlFactory.Instance.MakeLabel(this.PlatformType,
-                                      (i * 3) + 1,
-                                      currentRow,
-                                      bindingPath,
-                                      field.StringFormat,
-                                      this.ClassEntity.SilverlightVersion));
+                        sb.AppendLine(
+                            UIControlFactory.Instance.MakeLabel(
+                                this.PlatformType,
+                                (i * 3) + 1,
+                                currentRow,
+                                bindingPath,
+                                field.StringFormat,
+                                this.ClassEntity.SilverlightVersion));
                         break;
 
                     case DynamicFormControlType.TextBlock:
                         if (this.ClassEntity.IsSilverlight)
                         {
-                            sb.AppendLine(this.WriteSilverlightStringFomatComment(
-                                              field.StringFormat));
+                            sb.AppendLine(
+                                this.WriteSilverlightStringFomatComment(field.StringFormat));
                         }
 
-                        sb.AppendLine(UIControlFactory.Instance.MakeTextBlock(this.PlatformType,
-                                      (i * 3) + 1,
-                                      currentRow,
-                                      bindingPath,
-                                      field.StringFormat,
-                                      this.ClassEntity.SilverlightVersion));
+                        sb.AppendLine(
+                            UIControlFactory.Instance.MakeTextBlock(
+                                this.PlatformType,
+                                (i * 3) + 1,
+                                currentRow,
+                                bindingPath,
+                                field.StringFormat,
+                                this.ClassEntity.SilverlightVersion));
                         break;
 
                     case DynamicFormControlType.TextBox:
                         if (this.ClassEntity.IsSilverlight)
                         {
-                            sb.AppendLine(this.WriteSilverlightStringFomatComment(
-                                              field.StringFormat));
+                            sb.AppendLine(
+                                this.WriteSilverlightStringFomatComment(field.StringFormat));
                         }
 
-                        sb.AppendLine(UIControlFactory.Instance.MakeTextBox(this.PlatformType,
-                                      (i * 3) + 1,
-                                      currentRow,
-                                      bindingPath,
-                                      BindingMode.TwoWay,
-                                      field.Width,
-                                      field.MaximumLength,
-                                      field.StringFormat,
-                                      field.DataType.StartsWith("Nullable"),
-                                      this.ClassEntity.SilverlightVersion));
+                        sb.AppendLine(
+                            UIControlFactory.Instance.MakeTextBox(
+                                this.PlatformType,
+                                (i * 3) + 1,
+                                currentRow,
+                                bindingPath,
+                                BindingMode.TwoWay,
+                                field.Width,
+                                field.MaximumLength,
+                                field.StringFormat,
+                                field.DataType.StartsWith("Nullable"),
+                                this.ClassEntity.SilverlightVersion));
                         break;
                 }
 
@@ -600,14 +655,15 @@ public partial class CreateBusinessFormFromClassWindow : Window
             sb.AppendLine();
         }
 
-        if (this.chkIncludeButtonRow.IsChecked.HasValue &&
-                this.chkIncludeButtonRow.IsChecked == true)
+        if (this.chkIncludeButtonRow.IsChecked.HasValue
+                && this.chkIncludeButtonRow.IsChecked == true)
         {
             if (!this.ClassEntity.IsSilverlight)
             {
-                sb.AppendFormat(STR_GridGridColumn0GridRowGridColumnSpanGridIsShared,
-                                lastGridRowIndex,
-                                numberOfColumns);
+                sb.AppendFormat(
+                    STR_GridGridColumn0GridRowGridColumnSpanGridIsShared,
+                    lastGridRowIndex,
+                    numberOfColumns);
                 sb.AppendLine();
                 sb.AppendLine(STR_GridColumnDefinitionsOpen2);
                 sb.AppendLine(STR_ColumnDefinitionSharedSizeGroupButtons);
@@ -620,9 +676,10 @@ public partial class CreateBusinessFormFromClassWindow : Window
             }
             else
             {
-                sb.AppendFormat(STR_GridGridColumn0GridRowGridColumnSpanHorizontalAl,
-                                lastGridRowIndex,
-                                numberOfColumns);
+                sb.AppendFormat(
+                    STR_GridGridColumn0GridRowGridColumnSpanHorizontalAl,
+                    lastGridRowIndex,
+                    numberOfColumns);
                 sb.AppendLine();
                 sb.AppendLine(STR_GridColumnDefinitionsOpen2);
                 sb.AppendLine(STR_ColumnDefinition);
@@ -658,8 +715,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
         // Handles Loaded
         this.InitialLayoutOfDynamicForms();
         this.ShowFullDynamicFormContent = true;
-        this.Title = string.Concat("Create Business Form For Class: ",
-                                   this.ClassEntity.ClassName);
+        this.Title = string.Concat(
+                         "Create Business Form For Class: ",
+                         this.ClassEntity.ClassName);
 
         var obj = new List<string>();
         obj.Add(STR_BUSINESSFORM);
@@ -698,19 +756,21 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         if (listBox == null)
         {
-            MessageBox.Show("Unable to get the ListBox used for layout.",
-                            "Missing ListBox",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
+            MessageBox.Show(
+                "Unable to get the ListBox used for layout.",
+                "Missing ListBox",
+                MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
             return;
         }
 
         if (listBox.Items.Count == 0)
         {
-            MessageBox.Show("You do not have any properties added to the layout.",
-                            "Invalid Layout",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
+            MessageBox.Show(
+                "You do not have any properties added to the layout.",
+                "Invalid Layout",
+                MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
             return;
         }
 
@@ -718,7 +778,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
         sb.AppendLine("<ListView>");
         sb.AppendLine("    <ListView.ItemContainerStyle>");
         sb.AppendLine("        <Style TargetType=\"ListViewItem\">");
-        sb.AppendLine("            <Setter Property=\"HorizontalContentAlignment\" Value=\"Stretch\" />");
+        sb.AppendLine(
+            "            <Setter Property=\"HorizontalContentAlignment\" Value=\"Stretch\" />");
         sb.AppendLine("        </Style>");
         sb.AppendLine("    </ListView.ItemContainerStyle>");
         sb.AppendLine("    <ListView.View>");
@@ -727,14 +788,16 @@ public partial class CreateBusinessFormFromClassWindow : Window
         foreach (DynamicFormEditor objDynamicFormEditor in listBox.Items)
         {
             var field = objDynamicFormEditor.DataContext as DynamicFormListBoxContent;
-            string bindingPath = string.Concat(this.txtBindingPropertyPrefix.Text,
-                                               field.BindingPath);
+            string bindingPath = string.Concat(
+                                     this.txtBindingPropertyPrefix.Text,
+                                     field.BindingPath);
 
             if (string.IsNullOrEmpty(field.StringFormat))
             {
-                sb.AppendFormat("<GridViewColumn Header=\"{0}\" DisplayMemberBinding=\"{{Binding Path={1}}}\" />",
-                                field.AssociatedLabel,
-                                bindingPath);
+                sb.AppendFormat(
+                    "<GridViewColumn Header=\"{0}\" DisplayMemberBinding=\"{{Binding Path={1}}}\" />",
+                    field.AssociatedLabel,
+                    bindingPath);
             }
             else
             {
@@ -751,14 +814,17 @@ public partial class CreateBusinessFormFromClassWindow : Window
                     sb.AppendFormat(
                         "            <TextBlock TextAlignment=\"Right\" Text=\"{{Binding Path={0}, StringFormat={1}}}\" />",
                         bindingPath,
-                        field.StringFormat.Replace("{", "\\{").Replace("}", "\\}"));
+                        field.StringFormat.Replace("{", "\\{")
+                        .Replace("}", "\\}"));
                     sb.AppendLine();
                 }
                 else
                 {
-                    sb.AppendFormat("            <TextBlock Text=\"{{Binding Path={0}, StringFormat={1}}}\" />",
-                                    bindingPath,
-                                    field.StringFormat.Replace("{", "\\{").Replace("}", "\\}"));
+                    sb.AppendFormat(
+                        "            <TextBlock Text=\"{{Binding Path={0}, StringFormat={1}}}\" />",
+                        bindingPath,
+                        field.StringFormat.Replace("{", "\\{")
+                        .Replace("}", "\\}"));
                     sb.AppendLine();
                 }
 
@@ -788,7 +854,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
         sb.AppendLine(string.Empty);
         sb.AppendLine("<!-- Add to your root tag if required");
         sb.AppendLine(string.Empty);
-        sb.AppendLine("xmlns:controls=\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls\" ");
+        sb.AppendLine(
+            "xmlns:controls=\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls\" ");
         sb.AppendLine(
             "xmlns:dataFormToolkit=\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.DataForm.Toolkit\" ");
         sb.AppendLine(string.Empty);
@@ -816,14 +883,18 @@ public partial class CreateBusinessFormFromClassWindow : Window
         {
             sb2.AppendLine();
             sb2.AppendLine();
-            sb.Append(sb2.ToString().Replace(".EditTemplate", ".ReadOnlyTemplate"));
+            sb.Append(
+                sb2.ToString()
+                .Replace(".EditTemplate", ".ReadOnlyTemplate"));
         }
 
         if (this.chkRenderNewItemTemplate.IsChecked == true)
         {
             sb2.AppendLine();
             sb2.AppendLine();
-            sb.Append(sb2.ToString().Replace(".EditTemplate", ".NewItemTemplate"));
+            sb.Append(
+                sb2.ToString()
+                .Replace(".EditTemplate", ".NewItemTemplate"));
         }
 
         sb.Append("</dataFormToolkit:DataForm>");
@@ -859,13 +930,19 @@ public partial class CreateBusinessFormFromClassWindow : Window
             numberOfRows = Math.Max(numberOfRows, lb.Items.Count);
         }
 
+        // BUG: CodeContracts: warning
+        // The Boolean condition columnGroupListBox.Count + 1 != 0 always evaluates to a constant value.
+        // If it (or its negation) appear in the source code, you may have some dead code or redundant
+        // check
+
         // Check that the user has given us what we need to create the form
         if (numberOfColumns == 0 || numberOfRows == 0)
         {
-            MessageBox.Show("You do not have any properties added to the layout.",
-                            "Invalid Layout",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
+            MessageBox.Show(
+                "You do not have any properties added to the layout.",
+                "Invalid Layout",
+                MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
             return;
         }
 
@@ -885,19 +962,25 @@ public partial class CreateBusinessFormFromClassWindow : Window
         bool headerHasContent = false;
         var sb = new StringBuilder(10240);
         var sbHeader = new StringBuilder(1024);
-        string dataGridTag =
-            UIControlFactory.Instance.GetUIControl(UIControlRole.DataGrid,
-                    UIPlatform.Silverlight)
-            .MakeControlFromDefaults(string.Empty, false, string.Empty);
+        string dataGridTag = UIControlFactory.Instance.GetUIControl(
+                                 UIControlRole.DataGrid,
+                                 UIPlatform.Silverlight)
+                             .MakeControlFromDefaults(
+                                 string.Empty,
+                                 false,
+                                 string.Empty);
         string Namespace = string.Empty;
 
         if (dataGridTag.Contains(":"))
         {
-            Namespace = dataGridTag.Substring(1, dataGridTag.IndexOf(":"));
+            Namespace = dataGridTag.Substring(
+                            1,
+                            dataGridTag.IndexOf(":", StringComparison.Ordinal));
             sbHeader.AppendLine(STR_TheFollowingNamespaceDeclarationsMayBeNecessaryF);
-            sbHeader.AppendLine(string.Format(
-                                    STR_XmlnsclrnamespaceSystemWindowsControlsassemblySy,
-                                    Namespace.Replace(":", string.Empty)));
+            sbHeader.AppendLine(
+                string.Format(
+                    STR_XmlnsclrnamespaceSystemWindowsControlsassemblySy,
+                    Namespace.Replace(":", string.Empty)));
             headerHasContent = true;
         }
 
@@ -909,19 +992,29 @@ public partial class CreateBusinessFormFromClassWindow : Window
         {
             var objField = objDynamicFormEditor.DataContext as
                            DynamicFormListBoxContent;
-            string strBindingPath = string.Concat(this.txtBindingPropertyPrefix.Text,
-                                                  objField.BindingPath);
+            string strBindingPath = string.Concat(
+                                        this.txtBindingPropertyPrefix.Text,
+                                        objField.BindingPath);
 
-            if (objField.RenderAsGridTemplateColumn ||
-                    objField.ControlType == DynamicFormControlType.Image
+            if (objField.RenderAsGridTemplateColumn
+                    || objField.ControlType == DynamicFormControlType.Image
                     || objField.ControlType == DynamicFormControlType.ComboBox
                     || objField.ControlType == DynamicFormControlType.DatePicker)
             {
-                this.CreateSilverlightDataGridControl(ref hasDatePicker, sb, Namespace,
-                                                      objField, strBindingPath);
+                this.CreateSilverlightDataGridControl(
+                    ref hasDatePicker,
+                    sb,
+                    Namespace,
+                    objField,
+                    strBindingPath);
             }
             else
             {
+                // BUG: CodeContracts warning.
+                // The Boolean condition ((XamlHelpmeet.UI.DynamicForm.DynamicFormListBoxContent)objField)
+                // .ControlType != 2 always evaluates to a constant value. If it (or its negation) appear in the
+                // source code, you may have some dead code or redundant check (2 more unreached
+                // assertion(s) at the same location)
                 switch (objField.ControlType)
                 {
                     case DynamicFormControlType.CheckBox:
@@ -981,8 +1074,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
             headerHasContent = true;
         }
 
-        this._businessForm = headerHasContent ? string.Concat(sbHeader.ToString(),
-                             sb.ToString()) : sb.ToString();
+        this._businessForm = headerHasContent
+                             ? string.Concat(sbHeader.ToString(), sb.ToString())
+                             : sb.ToString();
     }
 
     private void CreateSilverlightDataGrid()
@@ -1004,19 +1098,21 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         if (listBox == null)
         {
-            MessageBox.Show("Unable to get the ListBox used for layout.",
-                            "Missing ListBox",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
+            MessageBox.Show(
+                "Unable to get the ListBox used for layout.",
+                "Missing ListBox",
+                MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
             return;
         }
 
         if (listBox.Items.Count == 0)
         {
-            MessageBox.Show("You do not have any properties added to the layout.",
-                            "Invalid Layout",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
+            MessageBox.Show(
+                "You do not have any properties added to the layout.",
+                "Invalid Layout",
+                MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
             return;
         }
 
@@ -1024,11 +1120,12 @@ public partial class CreateBusinessFormFromClassWindow : Window
         this.DialogResult = true;
     }
 
-    private void CreateSilverlightDataGridControl(ref bool hasDatePicker,
-            StringBuilder sb,
-            string Namespace,
-            DynamicFormListBoxContent field,
-            string bindingPath)
+    private void CreateSilverlightDataGridControl(
+        ref bool hasDatePicker,
+        StringBuilder sb,
+        string Namespace,
+        DynamicFormListBoxContent field,
+        string bindingPath)
     {
         //const string STR_DataTemplateOpen = "<DataTemplate>";
         //const string STR_DataTemplateClose = "</DataTemplate>";
@@ -1042,24 +1139,26 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
                 sb.AppendLine(this.WriteSilverlightStringFomatComment(
                                   field.StringFormat));
-                sb.AppendLine(UIControlFactory.Instance.MakeTextBlock(
-                                  UIPlatform.Silverlight,
-                                  null,
-                                  null,
-                                  bindingPath,
-                                  field.StringFormat,
-                                  this.ClassEntity.SilverlightVersion));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeTextBlock(
+                        UIPlatform.Silverlight,
+                        null,
+                        null,
+                        bindingPath,
+                        field.StringFormat,
+                        this.ClassEntity.SilverlightVersion));
 
                 sb.Append(this.GetCenterField(Namespace));
 
                 sb.AppendLine(this.WriteSilverlightStringFomatComment(
                                   field.StringFormat));
-                sb.AppendLine(UIControlFactory.Instance.MakeDatePicker(
-                                  UIPlatform.Silverlight,
-                                  null,
-                                  null,
-                                  bindingPath,
-                                  field.Width));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeDatePicker(
+                        UIPlatform.Silverlight,
+                        null,
+                        null,
+                        bindingPath,
+                        field.Width));
 
                 sb.Append(this.GetFieldStop(Namespace));
                 break;
@@ -1068,13 +1167,14 @@ public partial class CreateBusinessFormFromClassWindow : Window
                 sb.Append(this.GetFieldStart(Namespace, field.AssociatedLabel,
                                              bindingPath));
 
-                sb.AppendLine(UIControlFactory.Instance.MakeCheckBox(
-                                  UIPlatform.Silverlight,
-                                  null,
-                                  null,
-                                  string.Empty,
-                                  bindingPath,
-                                  BindingMode.TwoWay));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeCheckBox(
+                        UIPlatform.Silverlight,
+                        null,
+                        null,
+                        string.Empty,
+                        bindingPath,
+                        BindingMode.TwoWay));
 
                 sb.Append(this.GetFieldStop(Namespace));
                 break;
@@ -1083,13 +1183,15 @@ public partial class CreateBusinessFormFromClassWindow : Window
                 sb.Append(this.GetFieldStart(Namespace, field.AssociatedLabel,
                                              bindingPath));
 
-                sb.AppendLine("<!-- Bind Silverlight ComboBox in code after its ItemsSource has been loaded -->");
-                sb.AppendLine(UIControlFactory.Instance.MakeComboBox(
-                                  UIPlatform.Silverlight,
-                                  null,
-                                  null,
-                                  bindingPath,
-                                  BindingMode.TwoWay));
+                sb.AppendLine(
+                    "<!-- Bind Silverlight ComboBox in code after its ItemsSource has been loaded -->");
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeComboBox(
+                        UIPlatform.Silverlight,
+                        null,
+                        null,
+                        bindingPath,
+                        BindingMode.TwoWay));
 
                 sb.Append(this.GetFieldStop(Namespace));
                 break;
@@ -1109,12 +1211,14 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
                 sb.AppendLine(this.WriteSilverlightStringFomatComment(
                                   field.StringFormat));
-                sb.AppendLine(UIControlFactory.Instance.MakeLabel(UIPlatform.Silverlight,
-                              null,
-                              null,
-                              field.AssociatedLabel,
-                              field.StringFormat,
-                              this.ClassEntity.SilverlightVersion));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeLabel(
+                        UIPlatform.Silverlight,
+                        null,
+                        null,
+                        field.AssociatedLabel,
+                        field.StringFormat,
+                        this.ClassEntity.SilverlightVersion));
 
                 sb.Append(this.GetFieldStop(Namespace));
                 break;
@@ -1125,13 +1229,14 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
                 sb.AppendLine(this.WriteSilverlightStringFomatComment(
                                   field.StringFormat));
-                sb.AppendLine(UIControlFactory.Instance.MakeTextBlock(
-                                  UIPlatform.Silverlight,
-                                  null,
-                                  null,
-                                  field.BindingPath,
-                                  field.StringFormat,
-                                  this.ClassEntity.SilverlightVersion));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeTextBlock(
+                        UIPlatform.Silverlight,
+                        null,
+                        null,
+                        field.BindingPath,
+                        field.StringFormat,
+                        this.ClassEntity.SilverlightVersion));
 
                 sb.Append(this.GetFieldStop(Namespace));
                 break;
@@ -1142,29 +1247,31 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
                 sb.AppendLine(this.WriteSilverlightStringFomatComment(
                                   field.StringFormat));
-                sb.AppendLine(UIControlFactory.Instance.MakeTextBlock(
-                                  UIPlatform.Silverlight,
-                                  null,
-                                  null,
-                                  bindingPath,
-                                  field.StringFormat,
-                                  this.ClassEntity.SilverlightVersion));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeTextBlock(
+                        UIPlatform.Silverlight,
+                        null,
+                        null,
+                        bindingPath,
+                        field.StringFormat,
+                        this.ClassEntity.SilverlightVersion));
 
                 sb.Append(this.GetCenterField(Namespace));
 
                 sb.AppendLine(this.WriteSilverlightStringFomatComment(
                                   field.StringFormat));
-                sb.AppendLine(UIControlFactory.Instance.MakeTextBox(
-                                  UIPlatform.Silverlight,
-                                  null,
-                                  null,
-                                  bindingPath,
-                                  BindingMode.TwoWay,
-                                  field.Width,
-                                  field.MaximumLength,
-                                  string.Empty,
-                                  field.DataType.StartsWith("Nullable"),
-                                  this.ClassEntity.SilverlightVersion));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeTextBox(
+                        UIPlatform.Silverlight,
+                        null,
+                        null,
+                        bindingPath,
+                        BindingMode.TwoWay,
+                        field.Width,
+                        field.MaximumLength,
+                        string.Empty,
+                        field.DataType.StartsWith("Nullable"),
+                        this.ClassEntity.SilverlightVersion));
 
                 sb.Append(this.GetFieldStop(Namespace));
                 break;
@@ -1190,27 +1297,32 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         if (objListBox == null)
         {
-            MessageBox.Show("Unable to get the ListBox used for layout.",
-                            "Missing ListBox",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
+            MessageBox.Show(
+                "Unable to get the ListBox used for layout.",
+                "Missing ListBox",
+                MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
             return;
         }
 
         if (objListBox.Items.Count == 0)
         {
-            MessageBox.Show("You do not have any properties added to the layout.",
-                            "Invalid Layout",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
+            MessageBox.Show(
+                "You do not have any properties added to the layout.",
+                "Invalid Layout",
+                MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
             return;
         }
 
         var sb = new StringBuilder(10240);
-        string strDataGridTag =
-            UIControlFactory.Instance.GetUIControl(UIControlRole.DataGrid,
-                    UIPlatform.WPF)
-            .MakeControlFromDefaults(string.Empty, false, string.Empty);
+        string strDataGridTag = UIControlFactory.Instance.GetUIControl(
+                                    UIControlRole.DataGrid,
+                                    UIPlatform.WPF)
+                                .MakeControlFromDefaults(
+                                    string.Empty,
+                                    false,
+                                    string.Empty);
         string strDataGridNamespace = string.Empty;
 
         if (strDataGridTag.Contains(":"))
@@ -1219,9 +1331,10 @@ public partial class CreateBusinessFormFromClassWindow : Window
                                    strDataGridTag.IndexOf(":"));
             sb.AppendLine(
                 "<!--The following namespace declaration may be necessary for you to add to the root element of this XAML file.-->");
-            sb.AppendLine(string.Format(
-                              STR_Xmlnshttpschemasmicrosoftcomwpf2008toolkit,
-                              strDataGridNamespace.Replace(":", string.Empty)));
+            sb.AppendLine(
+                string.Format(
+                    STR_Xmlnshttpschemasmicrosoftcomwpf2008toolkit,
+                    strDataGridNamespace.Replace(":", string.Empty)));
         }
 
         sb.AppendLine(strDataGridTag);
@@ -1232,57 +1345,72 @@ public partial class CreateBusinessFormFromClassWindow : Window
         {
             var objField = objDynamicFormEditor.DataContext as
                            DynamicFormListBoxContent;
-            string strBindingPath = string.Concat(this.txtBindingPropertyPrefix.Text,
-                                                  objField.BindingPath);
+            string strBindingPath = string.Concat(
+                                        this.txtBindingPropertyPrefix.Text,
+                                        objField.BindingPath);
 
             switch (objField.ControlType)
             {
                 case DynamicFormControlType.DatePicker:
-                    sb.AppendLine(string.Format(STR_DataGridTemplateColumnOpen,
-                                                strDataGridNamespace,
-                                                objField.AssociatedLabel,
-                                                strBindingPath));
-                    sb.AppendLine(string.Format(STR_DataGridTemplateColumnCellTemplateOpen,
-                                                strDataGridNamespace));
+                    sb.AppendLine(
+                        string.Format(
+                            STR_DataGridTemplateColumnOpen,
+                            strDataGridNamespace,
+                            objField.AssociatedLabel,
+                            strBindingPath));
+                    sb.AppendLine(
+                        string.Format(
+                            STR_DataGridTemplateColumnCellTemplateOpen,
+                            strDataGridNamespace));
                     sb.AppendLine(STR_DataTemplateOpen);
-                    sb.AppendLine(UIControlFactory.Instance.MakeTextBlock(UIPlatform.WPF,
-                                  null,
-                                  null,
-                                  objField.BindingPath,
-                                  "{0:d}",
-                                  this.ClassEntity.SilverlightVersion));
+                    sb.AppendLine(
+                        UIControlFactory.Instance.MakeTextBlock(
+                            UIPlatform.WPF,
+                            null,
+                            null,
+                            objField.BindingPath,
+                            "{0:d}",
+                            this.ClassEntity.SilverlightVersion));
                     sb.AppendLine(STR_DataTemplateClose);
-                    sb.AppendLine(string.Format(STR_DataGridTemplateColumnCellTemplateClose,
-                                                strDataGridNamespace));
-                    sb.AppendLine(string.Format(
-                                      STR_DataGridTemplateColumnCellEditingTemplateOpen,
-                                      strDataGridNamespace));
+                    sb.AppendLine(
+                        string.Format(
+                            STR_DataGridTemplateColumnCellTemplateClose,
+                            strDataGridNamespace));
+                    sb.AppendLine(
+                        string.Format(
+                            STR_DataGridTemplateColumnCellEditingTemplateOpen,
+                            strDataGridNamespace));
                     sb.AppendLine(STR_DataTemplateOpen);
-                    sb.AppendLine(UIControlFactory.Instance.MakeDatePicker(UIPlatform.WPF,
-                                  null,
-                                  null,
-                                  objField.BindingPath,
-                                  objField.Width));
+                    sb.AppendLine(
+                        UIControlFactory.Instance.MakeDatePicker(
+                            UIPlatform.WPF,
+                            null,
+                            null,
+                            objField.BindingPath,
+                            objField.Width));
                     sb.AppendLine(STR_DataTemplateClose);
-                    sb.AppendLine(string.Format(
-                                      STR_DataGridTemplateColumnCellEditingTemplateClose,
-                                      strDataGridNamespace));
-                    sb.AppendLine(string.Format(STR_DataGridTemplateColumnClose,
-                                                strDataGridNamespace));
+                    sb.AppendLine(
+                        string.Format(
+                            STR_DataGridTemplateColumnCellEditingTemplateClose,
+                            strDataGridNamespace));
+                    sb.AppendLine(
+                        string.Format(STR_DataGridTemplateColumnClose, strDataGridNamespace));
                     break;
 
                 case DynamicFormControlType.CheckBox:
-                    sb.AppendFormat(STR_DataGridCheckBoxColumnBindingindingHeader,
-                                    strDataGridNamespace,
-                                    strBindingPath,
-                                    objField.AssociatedLabel);
+                    sb.AppendFormat(
+                        STR_DataGridCheckBoxColumnBindingindingHeader,
+                        strDataGridNamespace,
+                        strBindingPath,
+                        objField.AssociatedLabel);
                     break;
 
                 case DynamicFormControlType.ComboBox:
-                    sb.AppendFormat(STR_DataGridComboBoxColumnBindingindingHeader,
-                                    strDataGridNamespace,
-                                    strBindingPath,
-                                    objField.AssociatedLabel);
+                    sb.AppendFormat(
+                        STR_DataGridComboBoxColumnBindingindingHeader,
+                        strDataGridNamespace,
+                        strBindingPath,
+                        objField.AssociatedLabel);
                     break;
 
                 case DynamicFormControlType.Image:
@@ -1295,18 +1423,21 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
                     if (string.IsNullOrEmpty(objField.StringFormat))
                     {
-                        sb.AppendFormat(STR_DataGridTextColumnBindingindingHeader,
-                                        strDataGridNamespace,
-                                        strBindingPath,
-                                        objField.AssociatedLabel);
+                        sb.AppendFormat(
+                            STR_DataGridTextColumnBindingindingHeader,
+                            strDataGridNamespace,
+                            strBindingPath,
+                            objField.AssociatedLabel);
                     }
                     else
                     {
-                        sb.AppendFormat(STR_DataGridTextColumnBindingindingStringFormatHeade,
-                                        strDataGridNamespace,
-                                        strBindingPath,
-                                        objField.StringFormat.Replace("{", "\\{").Replace("}", "\\}"),
-                                        objField.AssociatedLabel);
+                        sb.AppendFormat(
+                            STR_DataGridTextColumnBindingindingStringFormatHeade,
+                            strDataGridNamespace,
+                            strBindingPath,
+                            objField.StringFormat.Replace("{", "\\{")
+                            .Replace("}", "\\}"),
+                            objField.AssociatedLabel);
                     }
                     break;
             }
@@ -1339,8 +1470,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
         };
         lb.SetValue(DragDropHelper.IsDragSourceProperty, true);
         lb.SetValue(DragDropHelper.IsDropTargetProperty, true);
-        lb.SetValue(DragDropHelper.DragDropTemplateProperty,
-                    this.FindResource("dynamicFormDragDropDataTemplate"));
+        lb.SetValue(
+            DragDropHelper.DragDropTemplateProperty,
+            this.FindResource("dynamicFormDragDropDataTemplate"));
         lb.ToolTip = "Drag properties here to create layout.";
         lb.SetValue(Grid.ColumnProperty, intGridColumn);
         return lb;
@@ -1354,8 +1486,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
         sb.AppendLine(STR_DataTemplateClose);
         sb.AppendLine(string.Format(STR_DataGridTemplateColumnCellTemplateClose,
                                     Namespace));
-        sb.AppendLine(string.Format(
-                          STR_DataGridTemplateColumnCellEditingTemplateOpen, Namespace));
+        sb.AppendLine(
+            string.Format(STR_DataGridTemplateColumnCellEditingTemplateOpen,
+                          Namespace));
         sb.AppendLine(STR_DataTemplateOpen);
         return sb.ToString();
     }
@@ -1363,30 +1496,36 @@ public partial class CreateBusinessFormFromClassWindow : Window
     private string GetCloseTagForControlFromDefaults(UIControlRole
             enumUIControlRole)
     {
-        return string.Format("</{0}>",
-                             UIControlFactory.Instance.GetUIControl(enumUIControlRole,
-                                     this.ClassEntity.IsSilverlight
-                                     ? UIPlatform.Silverlight
-                                     : UIPlatform.WPF).ControlType);
+        return string.Format(
+                   "</{0}>",
+                   UIControlFactory.Instance.GetUIControl(
+                       enumUIControlRole,
+                       this.ClassEntity.IsSilverlight ? UIPlatform.Silverlight : UIPlatform.WPF)
+                   .ControlType);
     }
 
-    private string GetDataFormField(int currentRow, int currentColumn,
-                                    DynamicFormEditor dynamicFormEditor)
+    private string GetDataFormField(
+        int currentRow,
+        int currentColumn,
+        DynamicFormEditor dynamicFormEditor)
     {
         var sb = new StringBuilder(1024);
         var field = dynamicFormEditor.DataContext as DynamicFormListBoxContent;
-        string bindingPath = string.Concat(this.txtBindingPropertyPrefix.Text,
-                                           field.BindingPath);
+        string bindingPath = string.Concat(
+                                 this.txtBindingPropertyPrefix.Text,
+                                 field.BindingPath);
 
-        sb.AppendFormat("<dataFormToolkit:DataField Grid.Row=\"{0}\" Grid.Column=\"{1}\" ",
-                        currentRow,
-                        currentColumn);
+        sb.AppendFormat(
+            "<dataFormToolkit:DataField Grid.Row=\"{0}\" Grid.Column=\"{1}\" ",
+            currentRow,
+            currentColumn);
 
         if (!string.IsNullOrEmpty(field.FieldDescription))
         {
             sb.AppendFormat("Description=\"{0}\" ", field.FieldDescription);
-            sb.AppendFormat("DescriptionViewerPosition=\"{0}\" ",
-                            field.DescriptionViewerPosition);
+            sb.AppendFormat(
+                "DescriptionViewerPosition=\"{0}\" ",
+                field.DescriptionViewerPosition);
         }
 
         if (!string.IsNullOrEmpty(field.AssociatedLabel))
@@ -1397,90 +1536,106 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         sb.AppendLine(">");
 
-        string strStringFormatNotice = this.WriteSilverlightStringFomatComment(
-                                           field.StringFormat);
+        string strStringFormatNotice =
+            this.WriteSilverlightStringFomatComment(field.StringFormat);
 
         switch (field.ControlType)
         {
             case DynamicFormControlType.DatePicker:
-                sb.AppendLine(UIControlFactory.Instance.MakeDatePicker(this.PlatformType,
-                              null,
-                              null,
-                              bindingPath,
-                              field.Width));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeDatePicker(
+                        this.PlatformType,
+                        null,
+                        null,
+                        bindingPath,
+                        field.Width));
                 break;
 
             case DynamicFormControlType.CheckBox:
-                sb.AppendLine(UIControlFactory.Instance.MakeCheckBox(this.PlatformType,
-                              null,
-                              null,
-                              field.ControlLabel,
-                              bindingPath,
-                              field.BindingMode));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeCheckBox(
+                        this.PlatformType,
+                        null,
+                        null,
+                        field.ControlLabel,
+                        bindingPath,
+                        field.BindingMode));
                 break;
 
             case DynamicFormControlType.ComboBox:
-                sb.AppendLine(UIControlFactory.Instance.MakeComboBox(this.PlatformType,
-                              null,
-                              null,
-                              bindingPath,
-                              field.BindingMode));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeComboBox(
+                        this.PlatformType,
+                        null,
+                        null,
+                        bindingPath,
+                        field.BindingMode));
                 break;
 
             case DynamicFormControlType.Image:
-                sb.AppendLine(UIControlFactory.Instance.MakeImage(this.PlatformType, null,
-                              null, bindingPath));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeImage(
+                        this.PlatformType,
+                        null,
+                        null,
+                        bindingPath));
                 break;
 
             case DynamicFormControlType.Label:
-                if (this.ClassEntity.IsSilverlight &&
-                        !string.IsNullOrEmpty(strStringFormatNotice))
+                if (this.ClassEntity.IsSilverlight
+                        && !string.IsNullOrEmpty(strStringFormatNotice))
                 {
                     sb.AppendLine(strStringFormatNotice);
                 }
 
-                sb.AppendLine(UIControlFactory.Instance.MakeLabel(this.PlatformType,
-                              null,
-                              null,
-                              bindingPath,
-                              field.StringFormat,
-                              this.ClassEntity.SilverlightVersion));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeLabel(
+                        this.PlatformType,
+                        null,
+                        null,
+                        bindingPath,
+                        field.StringFormat,
+                        this.ClassEntity.SilverlightVersion));
                 break;
 
             case DynamicFormControlType.TextBlock:
 
-                if (this.ClassEntity.IsSilverlight &&
-                        !string.IsNullOrEmpty(strStringFormatNotice))
+                if (this.ClassEntity.IsSilverlight
+                        && !string.IsNullOrEmpty(strStringFormatNotice))
                 {
                     sb.AppendLine(strStringFormatNotice);
                 }
 
-                sb.AppendLine(UIControlFactory.Instance.MakeTextBlock(this.PlatformType,
-                              null,
-                              null,
-                              bindingPath,
-                              field.StringFormat,
-                              this.ClassEntity.SilverlightVersion));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeTextBlock(
+                        this.PlatformType,
+                        null,
+                        null,
+                        bindingPath,
+                        field.StringFormat,
+                        this.ClassEntity.SilverlightVersion));
                 break;
 
             case DynamicFormControlType.TextBox:
 
-                if (this.ClassEntity.IsSilverlight &&
-                        !string.IsNullOrEmpty(strStringFormatNotice))
+                if (this.ClassEntity.IsSilverlight
+                        && !string.IsNullOrEmpty(strStringFormatNotice))
                 {
                     sb.AppendLine(strStringFormatNotice);
                 }
 
-                sb.AppendLine(UIControlFactory.Instance.MakeTextBox(this.PlatformType,
-                              null,
-                              null,
-                              bindingPath,
-                              BindingMode.TwoWay,
-                              field.Width,
-                              field.MaximumLength,
-                              field.StringFormat,
-                              field.DataType.StartsWith("Nullable"),
-                              this.ClassEntity.SilverlightVersion));
+                sb.AppendLine(
+                    UIControlFactory.Instance.MakeTextBox(
+                        this.PlatformType,
+                        null,
+                        null,
+                        bindingPath,
+                        BindingMode.TwoWay,
+                        field.Width,
+                        field.MaximumLength,
+                        field.StringFormat,
+                        field.DataType.StartsWith("Nullable"),
+                        this.ClassEntity.SilverlightVersion));
                 break;
         }
 
@@ -1488,8 +1643,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
         return sb.ToString();
     }
 
-    private StringBuilder GetDataFormTemplate(List<ListBox>
-            columnGroupListBox, int numberOfRows)
+    private StringBuilder GetDataFormTemplate(
+        List<ListBox> columnGroupListBox,
+        int numberOfRows)
     {
         // ----------------------------------------------------------------
         // this builds a separate stringbuilder that will be used to create
@@ -1539,8 +1695,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
             foreach (DynamicFormEditor dynamicFormEditor in
                      columnGroupListBox[i].Items)
             {
-                sb.AppendLine(this.GetDataFormField(currentRow++, currentColumn,
-                                                    dynamicFormEditor));
+                sb.AppendLine(
+                    this.GetDataFormField(currentRow++, currentColumn, dynamicFormEditor));
             }
         }
 
@@ -1554,8 +1710,12 @@ public partial class CreateBusinessFormFromClassWindow : Window
                                  string bindingPath)
     {
         var sb = new StringBuilder(512);
-        sb.AppendLine(string.Format(STR_DataGridTemplateColumnOpen, Namespace,
-                                    AssociatedLabel, bindingPath));
+        sb.AppendLine(
+            string.Format(
+                STR_DataGridTemplateColumnOpen,
+                Namespace,
+                AssociatedLabel,
+                bindingPath));
         sb.AppendLine(string.Format(STR_DataGridTemplateColumnCellTemplateOpen,
                                     Namespace));
         sb.AppendLine(STR_DataTemplateOpen);
@@ -1569,8 +1729,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
         var sb = new StringBuilder(512);
 
         sb.AppendLine(STR_DataTemplateClose);
-        sb.AppendLine(string.Format(
-                          STR_DataGridTemplateColumnCellEditingTemplateClose, Namespace));
+        sb.AppendLine(
+            string.Format(STR_DataGridTemplateColumnCellEditingTemplateClose,
+                          Namespace));
         sb.AppendLine(string.Format(STR_DataGridTemplateColumnClose, Namespace));
         return sb.ToString();
     }
@@ -1581,32 +1742,27 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         var objCollectionView =
             CollectionViewSource.GetDefaultView(this._classEntity.PropertyInformation)
-            as CollectionView;
+            as
+            CollectionView;
         objCollectionView.GroupDescriptions.Add(new
                                                 PropertyGroupDescription("HasBeenUsed"));
-        objCollectionView.SortDescriptions.Add(new SortDescription("HasBeenUsed",
-                                               ListSortDirection.Ascending));
-        objCollectionView.SortDescriptions.Add(new SortDescription("Name",
-                                               ListSortDirection.Ascending));
-        this.gridColumnsContainer.ColumnDefinitions.Add(new ColumnDefinition
+        objCollectionView.SortDescriptions.Add(
+            new SortDescription("HasBeenUsed", ListSortDirection.Ascending));
+        objCollectionView.SortDescriptions.Add(
+            new SortDescription("Name", ListSortDirection.Ascending));
+        this.gridColumnsContainer.ColumnDefinitions.Add(
+            new ColumnDefinition
         {
-            Width =
-            new GridLength(425,
-            GridUnitType
-            .Pixel),
+            Width = new GridLength(425, GridUnitType.Pixel),
             MinWidth = 50
         });
-        this.gridColumnsContainer.ColumnDefinitions.Add(new ColumnDefinition
-        {
-            Width =
-            new GridLength(0,
-            GridUnitType
-            .Auto)
-        });
+        this.gridColumnsContainer.ColumnDefinitions.Add(
+            new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
 
         ListBox lb = this.DynamicFormContentListBoxFactory(0);
         this.gridColumnsContainer.Children.Add(lb);
-        this.gridColumnsContainer.Children.Add(new GridSplitter { HorizontalAlignment = HorizontalAlignment.Right });
+        this.gridColumnsContainer.Children.Add(
+            new GridSplitter { HorizontalAlignment = HorizontalAlignment.Right });
         this.txtNumberOfColumnGroups.Text = "1";
         this.txtNumberOfColumnGroupsDataForm.Text = "1";
         this.NumberOfColumnGroups = 1;
@@ -1617,8 +1773,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
     {
         logger.Debug("Entered member.");
 
-        if (this.ClassEntity.SilverlightVersion.StartsWith("3") &&
-                !string.IsNullOrEmpty(strStringFormat))
+        if (this.ClassEntity.SilverlightVersion.StartsWith("3")
+                && !string.IsNullOrEmpty(strStringFormat))
         {
             return string.Format(STR_TODOAddFormattingConverterForFormat,
                                  strStringFormat);
@@ -1626,9 +1782,15 @@ public partial class CreateBusinessFormFromClassWindow : Window
         return string.Empty;
     }
 
-    private void btnCancel_Click(object sender, RoutedEventArgs e) { this.DialogResult = false; }
+    private void btnCancel_Click(object sender, RoutedEventArgs e)
+    {
+        this.DialogResult = false;
+    }
 
-    private void btnClearnAllFields_Click(object sender, RoutedEventArgs e) { this.ClearAllListBoxFields(); }
+    private void btnClearnAllFields_Click(object sender, RoutedEventArgs e)
+    {
+        this.ClearAllListBoxFields();
+    }
 
     private void btnCreateForm_Click(object sender, RoutedEventArgs e)
     {
@@ -1637,8 +1799,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
         this.txtBindingPropertyPrefix.Text =
             this.txtBindingPropertyPrefix.Text.Trim();
 
-        if (this.txtBindingPropertyPrefix.Text.Length > 0 &&
-                !this.txtBindingPropertyPrefix.Text.EndsWith("."))
+        if (this.txtBindingPropertyPrefix.Text.Length > 0
+                && !this.txtBindingPropertyPrefix.Text.EndsWith("."))
         {
             this.txtBindingPropertyPrefix.Text += ".";
         }
@@ -1667,8 +1829,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
             default:
                 MessageBox.Show(
-                    string.Format("Selection {0}, not implemented",
-                                  this.cboSelectObjectToCreate.SelectedValue),
+                    string.Format(
+                        "Selection {0}, not implemented",
+                        this.cboSelectObjectToCreate.SelectedValue),
                     "Not Implemented",
                     MessageBoxButton.OK,
                     MessageBoxImage.Exclamation,
@@ -1677,8 +1840,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
         }
     }
 
-    private void cboSelectObjectToCreate_SelectionChanged(object sender,
-            SelectionChangedEventArgs e)
+    private void cboSelectObjectToCreate_SelectionChanged(
+        object sender,
+        SelectionChangedEventArgs e)
     {
         if (this.cboSelectObjectToCreate == null || this.wpBusinessForm == null
                 || this.cboSelectObjectToCreate.SelectedIndex == -1)
@@ -1727,7 +1891,11 @@ public partial class CreateBusinessFormFromClassWindow : Window
         logger.Debug("Entered member.");
 
         var objHyperlink = sender as Hyperlink;
-        var psi = new ProcessStartInfo { FileName = objHyperlink.NavigateUri.AbsoluteUri, UseShellExecute = true };
+        var psi = new ProcessStartInfo
+        {
+            FileName = objHyperlink.NavigateUri.AbsoluteUri,
+            UseShellExecute = true
+        };
         Process.Start(psi);
     }
 
@@ -1738,8 +1906,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
         {
             int intNumberOfColumnGroups;
 
-            if (int.TryParse((sender as TextBox).Text, out intNumberOfColumnGroups) &&
-                    intNumberOfColumnGroups >= 1)
+            if (int.TryParse((sender as TextBox).Text, out intNumberOfColumnGroups)
+                    && intNumberOfColumnGroups >= 1)
             {
                 this.ClearColumnsExceptFirstColumn(intNumberOfColumnGroups);
             }
@@ -1752,17 +1920,6 @@ public partial class CreateBusinessFormFromClassWindow : Window
                     MessageBoxImage.Exclamation);
             }
         }
-    }
-
-    #endregion
-
-    #region Nested type: SelectClassberUserControlState
-
-    private enum SelectClassberUserControlState
-    {
-        Minimized,
-
-        Restored
     }
 
     #endregion

@@ -138,18 +138,16 @@ internal class CreateViewModelCommandFromSelectedClassCommand :
     {
         logger.Debug("Entered member.");
 
+
+
         if (this.Application.ActiveDocument == null
                 || !(this.Application.ActiveDocument.Name.EndsWith("vb")
                      || this.Application.ActiveDocument.Name.EndsWith("cs")))
         {
-            // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
-            return vsCommandStatus.vsCommandStatusUnsupported
-                   | vsCommandStatus.vsCommandStatusInvisible;
+            return vsCommandStatus.vsCommandStatusInvisible;
         }
 
-        // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
-        return vsCommandStatus.vsCommandStatusEnabled |
-               vsCommandStatus.vsCommandStatusSupported;
+        return base.GetStatus();
     }
 
     #endregion

@@ -5,7 +5,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Mono.Cecil;
 
@@ -28,10 +30,22 @@ using YoderZone.Extensions.NLog;
 ///     to appear in the error list. Visual Studio will use the Microsoft
 ///     class definition, so the warning can be ignored.
 /// </remarks>
+// ReSharper disable once ClassNeverInstantiated.Global
 public class RemoteWorker : MarshalByRefObject
 {
     private static readonly Logger logger =
         SettingsHelper.CreateLogger();
+
+    static RemoteWorker()
+    {
+        var settingsConfig = SettingsHelper.NewConfiguration("XamlHelpmeet",
+                             "YoderZone");
+        var fileTarget = FileTargetFactory.CreateFileTarget("xhmRemoteFileTarget",
+                         "XHM${shortdate}.log", settingsConfig);
+        var loggingRule = RuleFactory.CreateRule("XamlHelpmeet.*", fileTarget);
+        settingsConfig.AddTarget(fileTarget, true);
+        settingsConfig.AddRule("xhmRemoteRule", loggingRule);
+    }
 
     #region Methods (public)
 
@@ -50,64 +64,103 @@ public class RemoteWorker : MarshalByRefObject
     public RemoteResponse<ClassInformationList>
     GetClassEntityFromUserSelectedClass(string assemblyPath,
                                         bool isSilverlight,
-                                        List<string> references)
+                                        IEnumerable<string> references)
     {
-        var ancs = new ClassInformationList();
-        string targetProjectPath = Path.GetDirectoryName(assemblyPath);
-        AssemblyDefinition targetAssemblyDefinition =
-            AssemblyDefinition.ReadAssembly(assemblyPath);
-        Exception ex = null;
-        var assembliesToLoad = new Hashtable();
+        Contract.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(
+                assemblyPath));
+        Contract.Requires<ArgumentNullException>(references != null);
+        Contract.Ensures(Contract.Result<RemoteResponse<ClassInformationList>>()
+                         != null);
 
-        // Load this assembly
-        assembliesToLoad.Add(assemblyPath.ToLower(), null);
-        foreach (var item in
-                 targetAssemblyDefinition.MainModule.AssemblyReferences)
+        logger.Trace("assemblyPath: {0}", assemblyPath);
+        logger.Trace("isSilverlight: {0}", isSilverlight);
+        var enumerable = references as IList<string> ?? references.ToList();
+        logger.Trace("references: {0}", enumerable);
+
+        try
         {
-            if (item.IsNotMicrosoftAssembly())
+            var ancs = new ClassInformationList();
+            string targetProjectPath = Path.GetDirectoryName(assemblyPath);
+            logger.Trace("targetProjectPath: {0}", targetProjectPath);
+
+            AssemblyDefinition targetAssemblyDefinition =
+                AssemblyDefinition.ReadAssembly(assemblyPath);
+            logger.Trace("targetAssemblyDefinition: {0}", targetAssemblyDefinition);
+
+            var assembliesToLoad = new Hashtable { { assemblyPath.ToLower(), null } };
+
+            // Load this assembly
+            foreach (var item in
+                     targetAssemblyDefinition.MainModule.AssemblyReferences)
             {
+                logger.Trace("item: {0}", item);
+
+                if (!item.IsNotMicrosoftAssembly())
+                {
+                    continue;
+                }
+
                 string assemblyFullPath = this.GetAssemblyFullPath(targetProjectPath,
                                           item.Name);
+                logger.Trace("assemblyFullPath: {0}", assemblyFullPath);
+
                 if (assemblyFullPath.IsNotNullOrEmpty()
                         && assembliesToLoad.ContainsKey(assemblyFullPath.ToLower()) == false)
                 {
                     assembliesToLoad.Add(assemblyFullPath.ToLower(), null);
                 }
             }
-        }
 
-        // Load up all assemblies referenced in the project, but that are not
-        // loaded yet.
-        foreach (var name in references)
-        {
-            if (!assembliesToLoad.ContainsKey(Path.GetFileName(name.ToLower())))
+            // Load up all assemblies referenced in the project, but that are not
+            // loaded yet.
+            foreach (var name in enumerable)
             {
-                assembliesToLoad.Add(name.ToLower(), null);
-            }
-        }
+                logger.Trace("name: {0}", name);
 
-        string failedAssemblies = string.Empty;
-        var status = ResponseStatus.Failed;
-        foreach (string assemblyToLoadPath in assembliesToLoad.Keys)
-        {
-            targetAssemblyDefinition = AssemblyDefinition.ReadAssembly(
-                                           assemblyToLoadPath);
-
-            this.LoadAssemblyClasses(targetAssemblyDefinition, isSilverlight, ancs,
-                                     out ex, assembliesToLoad);
-
-            if (ex == null)
-            {
-                status = ResponseStatus.Success;
-                continue;
+                if (!assembliesToLoad.ContainsKey(Path.GetFileName(name.ToLower())))
+                {
+                    assembliesToLoad.Add(name.ToLower(), null);
+                }
             }
 
-            failedAssemblies += String.Format("{0}{1}", targetAssemblyDefinition.Name,
-                                              Environment.NewLine);
-            // return new RemoteResponse<ClassInformationList>(null, ResponseStatus.Exception, ex, String.Format("Unable to load types from target assembly: {0}", targetAssemblyDefinition.Name));
+            string failedAssemblies = string.Empty;
+            var status = ResponseStatus.Failed;
+            foreach (string assemblyToLoadPath in assembliesToLoad.Keys)
+            {
+                logger.Trace("assemblyToLoadPath: {0}", assemblyToLoadPath);
+
+                targetAssemblyDefinition = AssemblyDefinition.ReadAssembly(
+                                               assemblyToLoadPath);
+                logger.Trace("targetAssemblyDefinition: {0}", targetAssemblyDefinition);
+
+                Exception ex;
+                this.LoadAssemblyClasses(targetAssemblyDefinition, isSilverlight, ancs,
+                                         out ex, assembliesToLoad);
+
+                if (ex == null)
+                {
+                    status = ResponseStatus.Success;
+                    logger.Trace("status: {0}", status);
+                    continue;
+                }
+
+                failedAssemblies += String.Format("{0}{1}", targetAssemblyDefinition.Name,
+                                                  Environment.NewLine);
+                // return new RemoteResponse<ClassInformationList>(null, ResponseStatus.Exception, ex, String.Format("Unable to load types from target assembly: {0}", targetAssemblyDefinition.Name));
+            }
+
+            logger.Trace("failedAssemblies: {0}", failedAssemblies);
+            logger.Trace("ancs: {0}", ancs);
+            logger.Trace("status: {0}", status);
+
+            return new RemoteResponse<ClassInformationList>(ancs, status,
+                    failedAssemblies);
         }
-        return new RemoteResponse<ClassInformationList>(ancs, status,
-                failedAssemblies);
+        catch (Exception ex)
+        {
+            logger.Error(ex.Message, ex);
+            throw;
+        }
     }
 
     #endregion
@@ -132,15 +185,6 @@ public class RemoteWorker : MarshalByRefObject
     ///     base
     ///     classes.
     /// </summary>
-    /// <param name="asy">
-    ///     This is the assembly definition for the target TypeDefinition.
-    /// </param>
-    /// <param name="AssemblyType">
-    ///     Type of the assembly.
-    /// </param>
-    /// <param name="AssembliesToLoad">
-    ///     The this is a hashtable of all of the assemblies to load.
-    /// </param>
     /// <returns>
     ///     All properties for the TypedDefinition loaded in a List&lt;
     ///     PropertyDefinition&gt;
@@ -155,11 +199,10 @@ public class RemoteWorker : MarshalByRefObject
         {
             return name;
         }
-        name = name.Remove(name.IndexOf("`"));
+        name = name.Remove(name.IndexOf("`", System.StringComparison.Ordinal));
 
-        if (property.PropertyType == null ||
-                !(property.PropertyType is GenericInstanceType)
-                || fullName.IndexOf(">") == -1)
+        if (!(property.PropertyType is GenericInstanceType)
+                || fullName.IndexOf(">", System.StringComparison.Ordinal) == -1)
         {
             return name;
         }
@@ -186,19 +229,13 @@ public class RemoteWorker : MarshalByRefObject
         return sb.ToString();
     }
 
-    private List<PropertyDefinition> GetAllPropertiesForType(
-        AssemblyDefinition assemblyDefinition,
+    private IEnumerable<PropertyDefinition> GetAllPropertiesForType(
         TypeDefinition assemblyType,
         Hashtable assembliesToLoad)
     {
-        var returnValue = new List<PropertyDefinition>();
-        foreach (var item in assemblyType.Properties)
-        {
-            returnValue.Add(item);
-        }
+        var returnValue = assemblyType.Properties.ToList();
 
-        if (assemblyType != null &&
-                assemblyType.BaseType == assemblyType.Module.Import(typeof(object))
+        if (assemblyType.BaseType == assemblyType.Module.Import(typeof(object))
                 && assemblyType.BaseType.Scope != null)
         {
             string baseTypeAssemblyName = string.Empty;
@@ -227,18 +264,12 @@ public class RemoteWorker : MarshalByRefObject
 
             if (baseTypeAssemblyName.IsNullOrWhiteSpace())
             {
-                AssemblyDefinition targetAssemblyDefinition = null;
-
-                foreach (string assemblyName in assembliesToLoad.Keys)
-                {
-                    if (!assemblyName.EndsWith(baseTypeAssemblyName)
-                            && assemblyName.IndexOf(baseTypeAssemblyName) <= -1)
-                    {
-                        continue;
-                    }
-                    targetAssemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyName);
-                    break;
-                }
+                AssemblyDefinition targetAssemblyDefinition = (from string assemblyName in
+                        assembliesToLoad.Keys
+                        where assemblyName.EndsWith(baseTypeAssemblyName) ||
+                        assemblyName.IndexOf(baseTypeAssemblyName,
+                                             System.StringComparison.Ordinal) > -1
+                        select AssemblyDefinition.ReadAssembly(assemblyName)).FirstOrDefault();
 
                 if (targetAssemblyDefinition != null)
                 {
@@ -250,8 +281,7 @@ public class RemoteWorker : MarshalByRefObject
                         {
                             continue;
                         }
-                        returnValue.AddRange(this.GetAllPropertiesForType(assemblyDefinition,
-                                             baseTypeDefinition,
+                        returnValue.AddRange(this.GetAllPropertiesForType(baseTypeDefinition,
                                              assembliesToLoad));
                         break;
                     }
@@ -278,18 +308,9 @@ public class RemoteWorker : MarshalByRefObject
                         && !type.Name.Contains("AnonymousType") && !type.Name.StartsWith("_")
                         && !type.Name.EndsWith("AssemblyInfo"))
                 {
-                    bool previouslyLoaded = false;
-
-                    foreach (var anc in ancs)
-                    {
-                        if (type.Name != anc.TypeName || type.Namespace != anc.Namespace
-                                || assemblyDefinition.Name.Name != anc.AssemblyName)
-                        {
-                            continue;
-                        }
-                        previouslyLoaded = true;
-                        break;
-                    }
+                    bool previouslyLoaded = ancs.Any(anc => type.Name == anc.TypeName &&
+                                                     type.Namespace == anc.Namespace &&
+                                                     assemblyDefinition.Name.Name == anc.AssemblyName);
 
                     if (!previouslyLoaded)
                     {
@@ -299,7 +320,7 @@ public class RemoteWorker : MarshalByRefObject
 
                             foreach (
                                 var property in
-                                this.GetAllPropertiesForType(assemblyDefinition, type, assembliesToLoad))
+                                this.GetAllPropertiesForType(type, assembliesToLoad))
                             {
                                 if (property.GetMethod != null && property.GetMethod.IsPublic)
                                 {

@@ -85,9 +85,9 @@ public class GroupIntoStackPanelHorizontal : CommandBase
         // vsCommandStatusUnsupported leaves vsCommandStatusSupported
         // unchanged.
         // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
-        return vsCommandStatus.vsCommandStatusSupported | (IsTextSelected() ?
-                vsCommandStatus.vsCommandStatusEnabled :
-                vsCommandStatus.vsCommandStatusUnsupported);
+
+        return IsTextSelected() ? base.GetStatus() :
+               vsCommandStatus.vsCommandStatusSupported;
     }
 }
 }

@@ -7,6 +7,9 @@
 
 namespace XamlHelpmeet.Utility.XamlParts
 {
+using System;
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -35,6 +38,7 @@ public class XamlWhiteSpace : XamlPart
     public XamlWhiteSpace(string text, int topPoint)
     : base(text, topPoint)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(text));
         logger.Debug("Entered member.");
     }
 }

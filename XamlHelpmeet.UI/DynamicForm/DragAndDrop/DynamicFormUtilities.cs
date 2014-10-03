@@ -9,6 +9,8 @@ using XamlHelpmeet.UI.Utilities;
 
 namespace XamlHelpmeet.UI.DynamicForm.DragAndDrop
 {
+using System.Diagnostics.Contracts;
+
 using NLog;
 
 using YoderZone.Extensions.NLog;
@@ -136,16 +138,18 @@ public class DynamicFormUtilities
         }
     }
 
-    public static bool IsInFirstHalf(FrameworkElement Container,
-                                     Point ClickedPoint,
-                                     bool HasVerticalOrientation)
+    public static bool IsInFirstHalf(FrameworkElement container,
+                                     Point clickedPoint,
+                                     bool hasVerticalOrientation)
     {
-        if (HasVerticalOrientation)
+        Contract.Requires<ArgumentNullException>(clickedPoint != null);
+        Contract.Requires<ArgumentNullException>(container != null);
+        if (hasVerticalOrientation)
         {
-            return ClickedPoint.Y < (Container.ActualHeight / 2);
+            return clickedPoint.Y < (container.ActualHeight / 2);
         }
 
-        return ClickedPoint.X < (Container.ActualWidth / 2);
+        return clickedPoint.X < (container.ActualWidth / 2);
     }
 
     public static bool IsMovementBigEnough(Point InitialMousePosition,

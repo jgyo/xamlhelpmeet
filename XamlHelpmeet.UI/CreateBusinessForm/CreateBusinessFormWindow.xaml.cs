@@ -661,6 +661,8 @@ public partial class CreateBusinessFormWindow : Window,
         logger.Debug("Entered member.");
 
         string[] rowColumnArray = arg.Split(ROW_COLUMN_KEY_SEPARATOR);
+
+        // WARNING: Array access might be above the upper bound
         return int.Parse(rowColumnArray[1]);
     }
 
@@ -885,20 +887,28 @@ public partial class CreateBusinessFormWindow : Window,
         int dimension;
         if (!(int.TryParse(txt.Text, out dimension) && dimension >= 0))
         {
-            MessageBox.Show("The dimention must be an integer greater than or equal to zero, please reenter.",
+            MessageBox.Show("The dimension must be an integer greater than or equal to zero, please reenter.",
                             "Invalid Data",
                             MessageBoxButton.OK,
                             MessageBoxImage.Exclamation);
             return;
         }
 
+        // if the textBox's Tag is not set to a number
         if (txt.Tag == null)
         {
+            // iterate once for each row.
             for (int i = 0; i < this.NumberOfRows - 1; i++)
             {
+                // set the tag to the current index.
                 txt.Tag = i;
+                // then set the dimension of the textBox according to the value of doRow.
+                // Note: This call is recursive.
+                // The recursion is stopped in the next iteration since in it Tag will not be null.
                 this.SetDimension(txt, doRow);
             }
+
+            // Reset the Tag back to null.
             txt.Tag = null;
             return;
         }
@@ -919,6 +929,8 @@ public partial class CreateBusinessFormWindow : Window,
             GridLengthCollection = this.ColumnWidthsCollection;
         }
 
+        // BUG: CodeContracts: requires unproven: index >= 0
+        //
         TextBlockCollection[index].Text = dimension.ToString(
                                               CultureInfo.InvariantCulture);
         GridLengthCollection[index] = new GridLength(dimension);

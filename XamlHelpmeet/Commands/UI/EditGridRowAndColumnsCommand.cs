@@ -9,6 +9,7 @@ namespace XamlHelpmeet.Commands.UI
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -74,18 +75,19 @@ public class EditGridRowAndColumnsCommand : CommandBase
     /// <summary>
     ///     Adds a name spaces to 'NamespaceManager'.
     /// </summary>
-    /// <param name="XMLIn">
+    /// <param name="xmlIn">
     ///     The XML in.
     /// </param>
     /// <param name="NamespaceManager">
     ///     Manager for namespace.
     /// </param>
-    public void AddNameSpaces(string XMLIn,
+    public void AddNameSpaces(string xmlIn,
                               XmlNamespaceManager NamespaceManager)
     {
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(xmlIn));
         logger.Debug("Entered member.");
 
-        base.AddNameSpaces(XMLIn, NamespaceManager, this._addedNamespaces);
+        this.AddNameSpaces(xmlIn, NamespaceManager, this._addedNamespaces);
     }
 
     /// <summary>
@@ -123,6 +125,11 @@ public class EditGridRowAndColumnsCommand : CommandBase
             }
             var selectedCodeBlock = this.Application.ActiveDocument.Selection as
                                     TextSelection;
+            if (selectedCodeBlock == null)
+            {
+                throw new InvalidOperationException("selectionCodeBlock == null");
+            }
+
             string XAML = selectedCodeBlock.Text.Trim(WhiteSpaceCharacters);
 
             // Modified to beaf up the selection test. Old test just insured
@@ -204,12 +211,8 @@ public class EditGridRowAndColumnsCommand : CommandBase
     {
         logger.Debug("Entered member.");
 
-        if (this.IsTextSelected())
-        {
-            return vsCommandStatus.vsCommandStatusEnabled
-                   | vsCommandStatus.vsCommandStatusSupported;
-        }
-        return vsCommandStatus.vsCommandStatusSupported;
+        return this.IsTextSelected() ? base.GetStatus() :
+               vsCommandStatus.vsCommandStatusSupported;
     }
 
     #endregion
