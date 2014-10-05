@@ -142,7 +142,6 @@ public class DynamicFormUtilities
                                      Point clickedPoint,
                                      bool hasVerticalOrientation)
     {
-        Contract.Requires<ArgumentNullException>(clickedPoint != null);
         Contract.Requires<ArgumentNullException>(container != null);
         if (hasVerticalOrientation)
         {

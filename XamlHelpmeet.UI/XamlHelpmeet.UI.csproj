@@ -332,6 +332,7 @@
     <Compile Include="CheckListBox\CheckListBox.cs" />
     <Compile Include="CheckListBox\CheckListBoxIndicatorItem.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\Counter.cs" />
     <Compile Include="Converters\BindingModeEnumConverter.cs" />
     <Compile Include="Converters\ControlTypeEnumConverterWithSelect.cs" />
     <Compile Include="Converters\ControlTypeEnumConverter.cs" />
