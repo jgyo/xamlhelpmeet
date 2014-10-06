@@ -1,6 +1,7 @@
 ﻿<Window x:Class="XamlHelpmeet.UI.DynamicForm.CreateBusinessFormFromClassWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:XamlHelpmeet.UI.Controls"
         xmlns:cvtrs="clr-namespace:XamlHelpmeet.UI.Converters"
         xmlns:dandd="clr-namespace:XamlHelpmeet.UI.DynamicForm.DragAndDrop"
         xmlns:local="clr-namespace:XamlHelpmeet.UI.DynamicForm"
@@ -32,7 +33,8 @@
         </ControlTemplate>
 
         <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}" />
+            <Setter Property="Validation.ErrorTemplate"
+                    Value="{StaticResource validationTemplate}" />
         </Style>
 
         <DataTemplate x:Key="fieldsListDragDropDataTemplate">
@@ -63,15 +65,24 @@
         </Style>
 
         <Style TargetType="{x:Type GridSplitter}">
-            <Setter Property="PreviewStyle" Value="{StaticResource GridSplitterPreviewStyle}" />
-            <Setter Property="Cursor" Value="SizeWE" />
-            <Setter Property="Focusable" Value="False" />
-            <Setter Property="ShowsPreview" Value="True" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="Width" Value="4" />
-            <Setter Property="Height" Value="Auto" />
-            <Setter Property="Padding" Value="2" />
+            <Setter Property="PreviewStyle"
+                    Value="{StaticResource GridSplitterPreviewStyle}" />
+            <Setter Property="Cursor"
+                    Value="SizeWE" />
+            <Setter Property="Focusable"
+                    Value="False" />
+            <Setter Property="ShowsPreview"
+                    Value="True" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Center" />
+            <Setter Property="VerticalAlignment"
+                    Value="Stretch" />
+            <Setter Property="Width"
+                    Value="4" />
+            <Setter Property="Height"
+                    Value="Auto" />
+            <Setter Property="Padding"
+                    Value="2" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GridSplitter}">
@@ -90,8 +101,12 @@
                                                   ViewportUnits="Absolute">
                                         <DrawingBrush.Drawing>
                                             <DrawingGroup>
-                                                <GeometryDrawing Brush="{Binding Path=Stroke, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Rectangle}}}" Geometry="M 1 1 L 1 3 L 3 3 L 3 1 z" />
-                                                <GeometryDrawing Brush="#C6C3C6" Geometry="M 0 0 L 0 2 L 2 2 L 2 0 z" />
+                                                <GeometryDrawing Brush="{Binding Path=Stroke,
+                                                                                 RelativeSource={RelativeSource FindAncestor,
+                                                                                                                AncestorType={x:Type Rectangle}}}"
+                                                                 Geometry="M 1 1 L 1 3 L 3 3 L 3 1 z" />
+                                                <GeometryDrawing Brush="#C6C3C6"
+                                                                 Geometry="M 0 0 L 0 2 L 2 2 L 2 0 z" />
                                             </DrawingGroup>
                                         </DrawingBrush.Drawing>
                                     </DrawingBrush>
@@ -99,16 +114,66 @@
                             </Rectangle>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="rectangle" Property="Stroke" Value="#FF515151" />
-                                <Setter TargetName="rectangle" Property="StrokeThickness" Value="0" />
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter TargetName="rectangle"
+                                        Property="Stroke"
+                                        Value="#FF515151" />
+                                <Setter TargetName="rectangle"
+                                        Property="StrokeThickness"
+                                        Value="0" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="{x:Type controls:Counter}">
+            <Setter Property="FontSize"
+                    Value="8" />
+            <Setter Property="FontWeight"
+                    Value="Bold" />
+            <Setter Property="Height"
+                    Value="15.3" />
+            <Setter Property="Template">
 
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type controls:Counter}">
+                        <Grid Margin="{TemplateBinding Padding}"
+                              HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <RepeatButton Grid.Column="0"
+                                          Width="{Binding ActualHeight,
+                                                          RelativeSource={RelativeSource Self}}"
+                                          Command="{Binding DecrementCommand,
+                                                            RelativeSource={RelativeSource FindAncestor,
+                                                                                           AncestorType={x:Type controls:Counter}}}"
+                                          Content="-"
+                                          Padding="0" />
+                            <TextBlock Grid.Column="1"
+                                       Width="Auto"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding Count,
+                                                      RelativeSource={RelativeSource FindAncestor,
+                                                                                     AncestorType=controls:Counter}}" />
+                            <RepeatButton Grid.Column="2"
+                                          Width="{Binding ActualHeight,
+                                                          RelativeSource={RelativeSource Self}}"
+                                          Command="{Binding IncrementCommand,
+                                                            RelativeSource={RelativeSource FindAncestor,
+                                                                                           AncestorType={x:Type controls:Counter}}}"
+                                          Content="+"
+                                          Padding="0" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -118,7 +183,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" MinWidth="200" />
+            <ColumnDefinition Width="200"
+                              MinWidth="200" />
             <ColumnDefinition Width="8" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -139,13 +205,16 @@
                           VerticalAlignment="Center"
                           SelectionChanged="cboSelectObjectToCreate_SelectionChanged" />
 
-                <WrapPanel x:Name="wpWPFDataGrid" Visibility="Collapsed">
+                <WrapPanel x:Name="wpWPFDataGrid"
+                           Visibility="Collapsed">
                     <WrapPanel.Resources>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Margin" Value="7,0,0,3" />
+                            <Setter Property="Margin"
+                                    Value="7,0,0,3" />
                         </Style>
                     </WrapPanel.Resources>
-                    <TextBlock VerticalAlignment="Center" Text="Click to read resources: " />
+                    <TextBlock VerticalAlignment="Center"
+                               Text="Click to read resources: " />
                     <TextBlock VerticalAlignment="Center">
                         <Hyperlink Click="hlJaime_Click"
                                    NavigateUri="http://blogs.msdn.com/jaimer/archive/2008/08/13/dabbling-around-the-new-wpf-datagrid-part-1.aspx"
@@ -169,13 +238,16 @@
                     </TextBlock>
                 </WrapPanel>
 
-                <WrapPanel x:Name="wpSilverlightDataGrid" Visibility="Collapsed">
+                <WrapPanel x:Name="wpSilverlightDataGrid"
+                           Visibility="Collapsed">
                     <WrapPanel.Resources>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Margin" Value="7,0,0,3" />
+                            <Setter Property="Margin"
+                                    Value="7,0,0,3" />
                         </Style>
                     </WrapPanel.Resources>
-                    <TextBlock VerticalAlignment="Center" Text="Click to read resources: " />
+                    <TextBlock VerticalAlignment="Center"
+                               Text="Click to read resources: " />
                     <TextBlock VerticalAlignment="Center">
                         <Hyperlink Click="hlJaime_Click"
                                    NavigateUri="http://weblogs.asp.net/manishdalal/archive/2008/08/28/silverlight-business-application-part-3-validation-sync.aspx"
@@ -193,25 +265,38 @@
 
                 </WrapPanel>
 
-                <WrapPanel x:Name="wpListView" Visibility="Collapsed">
-                    <TextBlock VerticalAlignment="Center" Text="This creates a simple ListView control with all columns as read-only GridViewColumn." />
+                <WrapPanel x:Name="wpListView"
+                           Visibility="Collapsed">
+                    <TextBlock VerticalAlignment="Center"
+                               Text="This creates a simple ListView control with all columns as read-only GridViewColumn." />
                 </WrapPanel>
 
                 <WrapPanel x:Name="wpBusinessForm">
-                    <StackPanel Margin="5" Orientation="Horizontal">
-                        <TextBlock Margin="10,0,5,0"
+                    <StackPanel Margin="5"
+                                Orientation="Horizontal">
+                        <TextBlock Margin="10,0"
                                    VerticalAlignment="Center"
                                    Text="Column Groups" />
-                        <TextBox x:Name="txtNumberOfColumnGroups"
-                                 Width="35"
-                                 Margin="0,0,20,0"
-                                 KeyDown="txtNumberOfColumnGroups_KeyDown"
-                                 MaxLength="2"
-                                 Text="2" />
+                        <controls:Counter Width="85"
+                                          Count="{Binding NumberOfColumnGroups,
+                                                          Mode=TwoWay}"
+                                          DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                               AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
+                                          Maximum="24" />
+                        <!--
+                            <TextBox x:Name="txtNumberOfColumnGroups"
+                            Width="35"
+                            Margin="0,0,20,0"
+                            KeyDown="txtNumberOfColumnGroups_KeyDown"
+                            MaxLength="2"
+                            Text="2" />
+                        -->
                     </StackPanel>
 
-                    <StackPanel Margin="5" Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center" Text="Form Title" />
+                    <StackPanel Margin="5"
+                                Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center"
+                                   Text="Form Title" />
                         <TextBox x:Name="txtFormTitle"
                                  Width="150"
                                  Margin="5,0,0,0"
@@ -232,21 +317,28 @@
                               ToolTip="If selected, an addition row will be add to the bottom that contains an OK and Cancel button." />
                 </WrapPanel>
 
-                <WrapPanel x:Name="wpSilverlightDataForm" Visibility="Collapsed">
-                    <StackPanel Margin="5" Orientation="Horizontal">
+                <WrapPanel x:Name="wpSilverlightDataForm"
+                           Visibility="Collapsed">
+                    <StackPanel Margin="5"
+                                Orientation="Horizontal">
                         <TextBlock Margin="10,0,5,0"
                                    VerticalAlignment="Center"
                                    Text="Column Groups" />
-                        <TextBox x:Name="txtNumberOfColumnGroupsDataForm"
-                                 Width="35"
-                                 Margin="0,0,20,0"
-                                 KeyDown="txtNumberOfColumnGroups_KeyDown"
-                                 MaxLength="2"
-                                 Text="2" />
+                        <!--  ++ TODO: Exchange this with a Counter control  -->
+                        <!--
+                            <TextBox x:Name="txtNumberOfColumnGroupsDataForm"
+                            Width="35"
+                            Margin="0,0,20,0"
+                            KeyDown="txtNumberOfColumnGroups_KeyDown"
+                            MaxLength="2"
+                            Text="2" />
+                        -->
                     </StackPanel>
 
-                    <StackPanel Margin="5" Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center" Text="Form Header" />
+                    <StackPanel Margin="5"
+                                Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center"
+                                   Text="Form Header" />
                         <TextBox x:Name="txtDataFormHeader"
                                  Width="150"
                                  Margin="5,0,0,0"
@@ -271,32 +363,6 @@
                 </WrapPanel>
             </StackPanel>
         </Border>
-        <StackPanel Grid.Row="1"
-                    Grid.Column="2"
-                    Margin="5,0,0,0"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-            <CheckBox Margin="0,0,20,0"
-                      VerticalAlignment="Center"
-                      Content="Show Expanded View"
-                      IsChecked="{Binding ElementName=frmCreateBusinessFormFromClassWindow,
-                                          Path=ShowFullDynamicFormContent,
-                                          Mode=TwoWay,
-                                          UpdateSourceTrigger=PropertyChanged}" />
-            <Button Click="btnClearnAllFields_Click" Content="Clear All Fields" />
-            <TextBlock Margin="20,0,0,0"
-                       VerticalAlignment="Center"
-                       Text="Binding Property Prefix"
-                       ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding property names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
-            <TextBox x:Name="txtBindingPropertyPrefix"
-                     Width="150"
-                     Margin="7,0,0,0"
-                     VerticalAlignment="Center"
-                     MaxLength="50"
-                     ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding property names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
-        </StackPanel>
-
         <Grid Grid.Row="1"
               Grid.RowSpan="3"
               Grid.Column="0">
@@ -372,17 +438,48 @@
                       Grid.RowSpan="3"
                       Grid.Column="1" />
 
+        <StackPanel Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="5,0,0,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+            <CheckBox Margin="0,0,20,0"
+                      VerticalAlignment="Center"
+                      Content="Show Expanded View"
+                      IsChecked="{Binding ElementName=frmCreateBusinessFormFromClassWindow,
+                                          Path=ShowFullDynamicFormContent,
+                                          Mode=TwoWay,
+                                          UpdateSourceTrigger=PropertyChanged}" />
+            <Button Click="btnClearnAllFields_Click"
+                    Content="Clear All Fields" />
+            <TextBlock Margin="20,0,0,0"
+                       VerticalAlignment="Center"
+                       Text="Binding Property Prefix"
+                       ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding property names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
+            <TextBox x:Name="txtBindingPropertyPrefix"
+                     Width="150"
+                     Margin="7,0,0,0"
+                     VerticalAlignment="Center"
+                     MaxLength="50"
+                     ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding property names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
+        </StackPanel>
+
         <Grid x:Name="gridColumnsContainer"
               Grid.Row="2"
               Grid.Column="2"
               VerticalAlignment="Stretch">
+            <!--  ++ Note: gridColumnsContainer starts empty  -->
             <Grid.Resources>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Style.Resources>
                         <!--  this is where the default colors for the ListBox SelectedItem are changed  -->
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="WhiteSmoke" />
-                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{x:Static SystemColors.ControlTextColor}" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                                         Color="WhiteSmoke" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}"
+                                         Color="Transparent" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
+                                         Color="{x:Static SystemColors.ControlTextColor}" />
                     </Style.Resources>
                 </Style>
             </Grid.Resources>
