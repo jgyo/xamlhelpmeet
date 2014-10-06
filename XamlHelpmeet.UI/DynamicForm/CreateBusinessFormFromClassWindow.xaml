@@ -5,7 +5,6 @@
         xmlns:cvtrs="clr-namespace:XamlHelpmeet.UI.Converters"
         xmlns:dandd="clr-namespace:XamlHelpmeet.UI.DynamicForm.DragAndDrop"
         xmlns:local="clr-namespace:XamlHelpmeet.UI.DynamicForm"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         x:Name="frmCreateBusinessFormFromClassWindow"
         Width="1100"
         Height="600"
@@ -14,9 +13,7 @@
         WindowStyle="ToolWindow">
     <Window.Resources>
 
-        <cvtrs:BindingModeEnumConverter x:Key="bindingModeEnumConverter" />
         <cvtrs:FieldsGroupingConverter x:Key="fieldsGroupingConverter" />
-        <cvtrs:DynamicFormControlTypeEnumConverter x:Key="dynamicFormControlTypeEnumConverter" />
         <cvtrs:FieldListForegroundConverter x:Key="fieldListForegroundConverter" />
 
         <ControlTemplate x:Key="validationTemplate">
@@ -41,15 +38,6 @@
             <StackPanel Background="LightYellow">
                 <TextBlock FontWeight="Bold"
                            Text="{Binding Path=NameAndWriteable}"
-                           TextAlignment="Center" />
-            </StackPanel>
-        </DataTemplate>
-
-        <DataTemplate x:Key="dynamicFormDragDropDataTemplate">
-            <StackPanel>
-                <TextBlock Background="LightYellow"
-                           FontWeight="Bold"
-                           Text="{Binding Path=DataContext.NameAndWriteable}"
                            TextAlignment="Center" />
             </StackPanel>
         </DataTemplate>
@@ -282,38 +270,37 @@
                                                           Mode=TwoWay}"
                                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
                                                                                                AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
-                                          Maximum="24" />
-                        <!--
-                            <TextBox x:Name="txtNumberOfColumnGroups"
-                            Width="35"
-                            Margin="0,0,20,0"
-                            KeyDown="txtNumberOfColumnGroups_KeyDown"
-                            MaxLength="2"
-                            Text="2" />
-                        -->
+                                          Maximum="24"
+                                          Minimum="1" />
                     </StackPanel>
 
                     <StackPanel Margin="5"
                                 Orientation="Horizontal">
                         <TextBlock VerticalAlignment="Center"
                                    Text="Form Title" />
-                        <TextBox x:Name="txtFormTitle"
-                                 Width="150"
+                        <TextBox Width="150"
                                  Margin="5,0,0,0"
                                  VerticalAlignment="Center"
+                                 DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                      AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
                                  MaxLength="100"
+                                 Text="{Binding FormTitle}"
                                  ToolTip="If entered, a row will be prepended with this text in a TextBlock control." />
                     </StackPanel>
 
-                    <CheckBox x:Name="chkWrapInBorder"
-                              Margin="5"
+                    <CheckBox Margin="5"
                               VerticalAlignment="Center"
                               Content="Wrap In Border"
+                              DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                   AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
+                              IsChecked="{Binding WrapInBorder}"
                               ToolTip="If selected, the created form will be wrapped in a Border Control." />
-                    <CheckBox x:Name="chkIncludeButtonRow"
-                              Margin="5"
+                    <CheckBox Margin="5"
                               VerticalAlignment="Center"
                               Content="Include Button Row"
+                              DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                   AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
+                              IsChecked="{Binding IncludeButtonRow}"
                               ToolTip="If selected, an addition row will be add to the bottom that contains an OK and Cancel button." />
                 </WrapPanel>
 
@@ -324,42 +311,47 @@
                         <TextBlock Margin="10,0,5,0"
                                    VerticalAlignment="Center"
                                    Text="Column Groups" />
-                        <!--  ++ TODO: Exchange this with a Counter control  -->
-                        <!--
-                            <TextBox x:Name="txtNumberOfColumnGroupsDataForm"
-                            Width="35"
-                            Margin="0,0,20,0"
-                            KeyDown="txtNumberOfColumnGroups_KeyDown"
-                            MaxLength="2"
-                            Text="2" />
-                        -->
+                        <controls:Counter Width="85"
+                                          Count="{Binding NumberOfColumnGroups,
+                                                          Mode=TwoWay}"
+                                          DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                               AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
+                                          Maximum="24"
+                                          Minimum="1" />
                     </StackPanel>
 
                     <StackPanel Margin="5"
+                                DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                     AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
                                 Orientation="Horizontal">
                         <TextBlock VerticalAlignment="Center"
                                    Text="Form Header" />
-                        <TextBox x:Name="txtDataFormHeader"
-                                 Width="150"
+                        <TextBox Width="150"
                                  Margin="5,0,0,0"
                                  VerticalAlignment="Center"
                                  MaxLength="100"
+                                 Text="{Binding DataFormHeader}"
                                  ToolTip="Not required." />
                     </StackPanel>
 
-                    <CheckBox x:Name="chkRenderEditTemplate"
-                              Margin="5"
+                    <CheckBox Margin="5"
                               VerticalAlignment="Center"
                               Content="Render Edit Template"
-                              IsChecked="True" />
-                    <CheckBox x:Name="chkRenderNewItemTemplate"
-                              Margin="5"
+                              DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                   AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
+                              IsChecked="{Binding RenderEditTemplate}" />
+                    <CheckBox Margin="5"
                               VerticalAlignment="Center"
-                              Content="Render New Item Template" />
-                    <CheckBox x:Name="chkRenderReadOnlyTemplate"
-                              Margin="5"
+                              Content="Render New Item Template"
+                              DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                   AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
+                              IsChecked="{Binding RenderNewItemTemplate}" />
+                    <CheckBox Margin="5"
                               VerticalAlignment="Center"
-                              Content="Render ReadOnly Template" />
+                              Content="Render ReadOnly Template"
+                              DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                   AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
+                              IsChecked="{Binding RenderReadOnlyTemplate}" />
                 </WrapPanel>
             </StackPanel>
         </Border>
@@ -457,11 +449,13 @@
                        VerticalAlignment="Center"
                        Text="Binding Property Prefix"
                        ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding property names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
-            <TextBox x:Name="txtBindingPropertyPrefix"
-                     Width="150"
+            <TextBox Width="150"
                      Margin="7,0,0,0"
                      VerticalAlignment="Center"
+                     DataContext="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                          AncestorType={x:Type local:CreateBusinessFormFromClassWindow}}}"
                      MaxLength="50"
+                     Text="{Binding BindingPropertyPrefix}"
                      ToolTip="Feature is great when binding to ViewModel data.  This feature will prepend the entered class name to all rendered binding property names.  This feature enables 'dotting' in when your DataContext is nested.  This prevents you from having to 'dot' your DataContext's if you so desire." />
         </StackPanel>
 
@@ -469,7 +463,7 @@
               Grid.Row="2"
               Grid.Column="2"
               VerticalAlignment="Stretch">
-            <!--  ++ Note: gridColumnsContainer starts empty  -->
+            <!--  Note: gridColumnsContainer starts empty  -->
             <Grid.Resources>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Style.Resources>
@@ -485,7 +479,7 @@
             </Grid.Resources>
         </Grid>
 
-        <DockPanel Grid.Row="4"
+        <DockPanel Grid.Row="3"
                    Grid.Column="2"
                    Margin="0,10,0,10"
                    HorizontalAlignment="Stretch"

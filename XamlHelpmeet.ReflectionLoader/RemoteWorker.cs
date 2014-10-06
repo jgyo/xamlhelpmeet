@@ -9,9 +9,12 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 using Mono.Cecil;
 
 using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 using XamlHelpmeet.Extensions;
 using XamlHelpmeet.Model;
@@ -33,38 +36,55 @@ using YoderZone.Extensions.NLog;
 // ReSharper disable once ClassNeverInstantiated.Global
 public class RemoteWorker : MarshalByRefObject
 {
-    private static readonly Logger logger =
-        SettingsHelper.CreateLogger();
+    #region Static Fields
+
+    private static readonly Logger logger = SettingsHelper.CreateLogger();
+
+    #endregion
+
+    #region Constructors and Destructors
 
     static RemoteWorker()
     {
-        var settingsConfig = SettingsHelper.NewConfiguration("XamlHelpmeet",
-                             "YoderZone");
-        var fileTarget = FileTargetFactory.CreateFileTarget("xhmRemoteFileTarget",
-                         "XHM${shortdate}.log", settingsConfig);
-        var loggingRule = RuleFactory.CreateRule("XamlHelpmeet.*", fileTarget);
+        SettingsHelper settingsConfig = SettingsHelper.NewConfiguration(
+                                            "XamlHelpmeet",
+                                            "YoderZone");
+        FileTarget fileTarget = FileTargetFactory.CreateFileTarget(
+                                    "xhmRemoteFileTarget",
+                                    "XHM${shortdate}.log",
+                                    settingsConfig);
+        LoggingRule loggingRule = RuleFactory.CreateRule("XamlHelpmeet.*",
+                                  fileTarget);
         settingsConfig.AddTarget(fileTarget, true);
         settingsConfig.AddRule("xhmRemoteRule", loggingRule);
     }
 
-    #region Methods (public)
+    #endregion
 
-    public string GetAssemblyFullPath(string TargetProjectPath,
-                                      string AssemblyName)
+    #region Public Methods and Operators
+
+    public string GetAssemblyFullPath(string targetProjectPath,
+                                      string assemblyName)
     {
-        if (File.Exists(Path.Combine(TargetProjectPath, AssemblyName, ".dll")))
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(
+                    targetProjectPath));
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(
+                    assemblyName));
+
+        if (File.Exists(Path.Combine(targetProjectPath, assemblyName, ".dll")))
         {
-            return Path.Combine(TargetProjectPath, AssemblyName, ".dll");
+            return Path.Combine(targetProjectPath, assemblyName, ".dll");
         }
-        return File.Exists(Path.Combine(TargetProjectPath, AssemblyName, ".exe"))
-               ? Path.Combine(TargetProjectPath, AssemblyName, ".exe")
+        return File.Exists(Path.Combine(targetProjectPath, assemblyName, ".exe"))
+               ? Path.Combine(targetProjectPath, assemblyName, ".exe")
                : string.Empty;
     }
 
     public RemoteResponse<ClassInformationList>
-    GetClassEntityFromUserSelectedClass(string assemblyPath,
-                                        bool isSilverlight,
-                                        IEnumerable<string> references)
+    GetClassEntityFromUserSelectedClass(
+        string assemblyPath,
+        bool isSilverlight,
+        IEnumerable<string> references)
     {
         Contract.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(
                 assemblyPath));
@@ -74,7 +94,8 @@ public class RemoteWorker : MarshalByRefObject
 
         logger.Trace("assemblyPath: {0}", assemblyPath);
         logger.Trace("isSilverlight: {0}", isSilverlight);
-        var enumerable = references as IList<string> ?? references.ToList();
+        IList<string> enumerable = references as IList<string> ??
+                                   references.ToList();
         logger.Trace("references: {0}", enumerable);
 
         try
@@ -134,8 +155,12 @@ public class RemoteWorker : MarshalByRefObject
                 logger.Trace("targetAssemblyDefinition: {0}", targetAssemblyDefinition);
 
                 Exception ex;
-                this.LoadAssemblyClasses(targetAssemblyDefinition, isSilverlight, ancs,
-                                         out ex, assembliesToLoad);
+                this.LoadAssemblyClasses(
+                    targetAssemblyDefinition,
+                    isSilverlight,
+                    ancs,
+                    out ex,
+                    assembliesToLoad);
 
                 if (ex == null)
                 {
@@ -144,8 +169,10 @@ public class RemoteWorker : MarshalByRefObject
                     continue;
                 }
 
-                failedAssemblies += String.Format("{0}{1}", targetAssemblyDefinition.Name,
-                                                  Environment.NewLine);
+                failedAssemblies += String.Format(
+                                        "{0}{1}",
+                                        targetAssemblyDefinition.Name,
+                                        Environment.NewLine);
                 // return new RemoteResponse<ClassInformationList>(null, ResponseStatus.Exception, ex, String.Format("Unable to load types from target assembly: {0}", targetAssemblyDefinition.Name));
             }
 
@@ -165,13 +192,14 @@ public class RemoteWorker : MarshalByRefObject
 
     #endregion
 
-    #region Methods (private)
+    #region Methods
 
-    private bool CanWrite(PropertyDefinition Property)
+    private bool CanWrite(PropertyDefinition property)
     {
+        Contract.Requires<ArgumentNullException>(property != null);
         logger.Debug("Entered member.");
 
-        return Property.SetMethod != null && Property.SetMethod.IsPublic;
+        return property.SetMethod != null && property.SetMethod.IsPublic;
     }
 
     /// <summary>
@@ -191,18 +219,21 @@ public class RemoteWorker : MarshalByRefObject
     /// </returns>
     private string FormatPropertyTypeName(PropertyDefinition property)
     {
+        Contract.Requires<ArgumentNullException>(property != null);
+
         logger.Debug("Entered member.");
 
         string name = property.PropertyType.Name;
         string fullName = property.PropertyType.FullName;
+
         if (name.Contains("`") == false)
         {
             return name;
         }
-        name = name.Remove(name.IndexOf("`", System.StringComparison.Ordinal));
+        name = name.Remove(name.IndexOf("`", StringComparison.Ordinal));
 
         if (!(property.PropertyType is GenericInstanceType)
-                || fullName.IndexOf(">", System.StringComparison.Ordinal) == -1)
+                || fullName.IndexOf(">", StringComparison.Ordinal) == -1)
         {
             return name;
         }
@@ -233,142 +264,163 @@ public class RemoteWorker : MarshalByRefObject
         TypeDefinition assemblyType,
         Hashtable assembliesToLoad)
     {
-        var returnValue = assemblyType.Properties.ToList();
+        Contract.Requires<ArgumentNullException>(assemblyType != null);
+        Contract.Requires<ArgumentNullException>(assembliesToLoad != null);
 
-        if (assemblyType.BaseType == assemblyType.Module.Import(typeof(object))
-                && assemblyType.BaseType.Scope != null)
+        List<PropertyDefinition> returnValue = assemblyType.Properties.ToList();
+
+        if (assemblyType.BaseType != assemblyType.Module.Import(typeof(object))
+                || assemblyType.BaseType.Scope == null)
         {
-            string baseTypeAssemblyName = string.Empty;
-            var typeDef = assemblyType.BaseType as TypeDefinition;
+            return returnValue;
+        }
 
-            if (typeDef != null)
+        string baseTypeAssemblyName = string.Empty;
+        var typeDef = assemblyType.BaseType as TypeDefinition;
+
+        if (typeDef != null)
+        {
+            var moduleDef = typeDef.Scope as ModuleDefinition;
+
+            if (moduleDef != null)
             {
-                var moduleDef = typeDef.Scope as ModuleDefinition;
-
-                if (moduleDef != null)
-                {
-                    baseTypeAssemblyName = moduleDef.Name.ToLower();
-                }
-            }
-
-            if (baseTypeAssemblyName.IsNull())
-            {
-                var assemblyNameReference = assemblyType.BaseType.Scope as
-                                            AssemblyNameReference;
-
-                if (assemblyNameReference != null)
-                {
-                    baseTypeAssemblyName = assemblyNameReference.Name.ToLower();
-                }
-            }
-
-            if (baseTypeAssemblyName.IsNullOrWhiteSpace())
-            {
-                AssemblyDefinition targetAssemblyDefinition = (from string assemblyName in
-                        assembliesToLoad.Keys
-                        where assemblyName.EndsWith(baseTypeAssemblyName) ||
-                        assemblyName.IndexOf(baseTypeAssemblyName,
-                                             System.StringComparison.Ordinal) > -1
-                        select AssemblyDefinition.ReadAssembly(assemblyName)).FirstOrDefault();
-
-                if (targetAssemblyDefinition != null)
-                {
-                    foreach (var baseTypeDefinition in
-                             targetAssemblyDefinition.MainModule.Types)
-                    {
-                        if (!baseTypeDefinition.IsClass ||
-                                baseTypeDefinition.Name != assemblyType.BaseType.Name)
-                        {
-                            continue;
-                        }
-                        returnValue.AddRange(this.GetAllPropertiesForType(baseTypeDefinition,
-                                             assembliesToLoad));
-                        break;
-                    }
-                }
+                baseTypeAssemblyName = moduleDef.Name.ToLower();
             }
         }
+
+        if (baseTypeAssemblyName.IsNull())
+        {
+            var assemblyNameReference = assemblyType.BaseType.Scope as
+                                        AssemblyNameReference;
+
+            if (assemblyNameReference != null)
+            {
+                baseTypeAssemblyName = assemblyNameReference.Name.ToLower();
+            }
+        }
+
+        if (!baseTypeAssemblyName.IsNullOrWhiteSpace())
+        {
+            return returnValue;
+        }
+
+        AssemblyDefinition targetAssemblyDefinition =
+            (from string assemblyName in assembliesToLoad.Keys
+             where
+             assemblyName.EndsWith(baseTypeAssemblyName)
+             || assemblyName.IndexOf(baseTypeAssemblyName,
+                                     StringComparison.Ordinal) > -1
+             select AssemblyDefinition.ReadAssembly(assemblyName)).FirstOrDefault();
+
+        if (targetAssemblyDefinition == null)
+        {
+            return returnValue;
+        }
+
+        foreach (var baseTypeDefinition in
+                 targetAssemblyDefinition.MainModule.Types)
+        {
+            if (!baseTypeDefinition.IsClass
+                    || baseTypeDefinition.Name != assemblyType.BaseType.Name)
+            {
+                continue;
+            }
+
+            returnValue.AddRange(
+                this.GetAllPropertiesForType(baseTypeDefinition, assembliesToLoad));
+            break;
+        }
+
         return returnValue;
     }
 
-    private void LoadAssemblyClasses(AssemblyDefinition assemblyDefinition,
-                                     bool isSilverlight,
-                                     ClassInformationList ancs,
-                                     out Exception exOut,
-                                     Hashtable assembliesToLoad)
+    private void LoadAssemblyClasses(
+        AssemblyDefinition assemblyDefinition,
+        bool isSilverlight,
+        ClassInformationList ancs,
+        out Exception exception,
+        Hashtable assembliesToLoad)
     {
-        exOut = null;
+        exception = null;
 
         try
         {
             foreach (var type in assemblyDefinition.MainModule.Types)
             {
-                if (type.IsPublic && type.IsClass && !type.IsAbstract &&
-                        !type.Name.Contains("<Module>")
-                        && !type.Name.Contains("AnonymousType") && !type.Name.StartsWith("_")
-                        && !type.Name.EndsWith("AssemblyInfo"))
+                if (!type.IsPublic || !type.IsClass || type.IsAbstract
+                        || type.Name.Contains("<Module>") || type.Name.Contains("AnonymousType")
+                        || type.Name.StartsWith("_") || type.Name.EndsWith("AssemblyInfo"))
                 {
-                    bool previouslyLoaded = ancs.Any(anc => type.Name == anc.TypeName &&
-                                                     type.Namespace == anc.Namespace &&
-                                                     assemblyDefinition.Name.Name == anc.AssemblyName);
+                    continue;
+                }
 
-                    if (!previouslyLoaded)
+                bool previouslyLoaded =
+                    ancs.Any(
+                        anc =>
+                        type.Name == anc.TypeName && type.Namespace == anc.Namespace
+                        && assemblyDefinition.Name.Name == anc.AssemblyName);
+
+                if (previouslyLoaded)
+                {
+                    continue;
+                }
+
+                if (type.BaseType != null && type.BaseType.Name == "MulticastDelegate")
+                {
+                    continue;
+                }
+
+                var classEntity = new ClassEntity(type.Name, isSilverlight);
+
+                foreach (var property in
+                         this.GetAllPropertiesForType(type, assembliesToLoad))
+                {
+                    if (property.GetMethod == null || !property.GetMethod.IsPublic)
                     {
-                        if (type.BaseType == null || type.BaseType.Name != "MulticastDelegate")
+                        continue;
+                    }
+
+                    var propertyInfo = new PropertyInformation(
+                        this.CanWrite(property),
+                        property.Name,
+                        this.FormatPropertyTypeName(property),
+                        property.PropertyType.Namespace);
+
+                    var git = property.PropertyType as GenericInstanceType;
+
+                    if (git != null && git.HasGenericArguments)
+                    {
+                        foreach (var typeRef in git.GenericArguments)
                         {
-                            var classEntity = new ClassEntity(type.Name, isSilverlight);
-
-                            foreach (
-                                var property in
-                                this.GetAllPropertiesForType(type, assembliesToLoad))
-                            {
-                                if (property.GetMethod != null && property.GetMethod.IsPublic)
-                                {
-                                    var propertyInfo = new PropertyInformation(this.CanWrite(property),
-                                            property.Name,
-                                            this.FormatPropertyTypeName(property),
-                                            property.PropertyType.Namespace);
-
-                                    // BMK Test the logic of this line.
-                                    // I'm not sure about the Type handling here. JGYO
-                                    // var result1 = property.PropertyType is GenericInstanceType;
-                                    // var result2 = property.PropertyType.GetType() == typeof(GenericInstanceType);
-                                    var git = property.PropertyType as GenericInstanceType;
-
-                                    if (git != null)
-                                    {
-                                        if (git.HasGenericArguments)
-                                        {
-                                            foreach (var typeRef in git.GenericArguments)
-                                            {
-                                                propertyInfo.GenericArguments.Add(typeRef.Name);
-                                            }
-                                        }
-                                    }
-                                    if (property.HasParameters)
-                                    {
-                                        foreach (var parameter in property.Parameters)
-                                        {
-                                            propertyInfo.PropertyParameters.Add(new PropertyParameter(
-                                                                                    parameter.Name,
-                                                                                    parameter.ParameterType.Name));
-                                        }
-                                    }
-                                    classEntity.PropertyInformation.Add(propertyInfo);
-                                }
-                            }
-                            ancs.Add(new ClassInformation(assemblyDefinition.Name.Name,
-                                                          type.Namespace,
-                                                          type.Name,
-                                                          classEntity));
+                            propertyInfo.GenericArguments.Add(typeRef.Name);
                         }
                     }
+
+                    if (property.HasParameters)
+                    {
+                        foreach (var parameter in property.Parameters)
+                        {
+                            propertyInfo.PropertyParameters.Add(
+                                new PropertyParameter(
+                                    parameter.Name,
+                                    parameter.ParameterType.Name));
+                        }
+                    }
+
+                    classEntity.PropertyInformation.Add(propertyInfo);
                 }
+
+                ancs.Add(
+                    new ClassInformation(
+                        assemblyDefinition.Name.Name,
+                        type.Namespace,
+                        type.Name,
+                        classEntity));
             }
         }
         catch (Exception ex)
         {
-            exOut = ex;
+            exception = ex;
         }
     }
 

@@ -13,7 +13,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 
 using NLog;
@@ -159,6 +158,65 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
     #region Static Fields
 
+    public static readonly DependencyProperty BindingPropertyPrefixProperty =
+        DependencyProperty.Register(
+            "BindingPropertyPrefix",
+            typeof(string),
+            typeof(CreateBusinessFormFromClassWindow),
+            new FrameworkPropertyMetadata(default(string)));
+
+    public static readonly DependencyProperty DataFormHeaderProperty =
+        DependencyProperty.Register(
+            "DataFormHeader",
+            typeof(string),
+            typeof(CreateBusinessFormFromClassWindow),
+            new FrameworkPropertyMetadata(default(string)));
+
+    public static readonly DependencyProperty FormTitleProperty =
+        DependencyProperty.Register(
+            "FormTitle",
+            typeof(string),
+            typeof(CreateBusinessFormFromClassWindow),
+            new PropertyMetadata(default(string)));
+
+    public static readonly DependencyProperty IncludeButtonRowProperty =
+        DependencyProperty.Register(
+            "IncludeButtonRow",
+            typeof(bool),
+            typeof(CreateBusinessFormFromClassWindow),
+            new PropertyMetadata(default(bool)));
+
+    public static readonly DependencyProperty NumberOfColumnGroupsProperty =
+        DependencyProperty.Register(
+            "NumberOfColumnGroups",
+            typeof(int),
+            typeof(CreateBusinessFormFromClassWindow),
+            new FrameworkPropertyMetadata(
+                default(int),
+                OnNumberOfColumnGroupsPropertyChanged,
+                CoerceNumberOfColumnGroupsProperty));
+
+    public static readonly DependencyProperty RenderEditTemplateProperty =
+        DependencyProperty.Register(
+            "RenderEditTemplate",
+            typeof(bool),
+            typeof(CreateBusinessFormFromClassWindow),
+            new FrameworkPropertyMetadata(true));
+
+    public static readonly DependencyProperty RenderNewItemTemplateProperty =
+        DependencyProperty.Register(
+            "RenderNewItemTemplate",
+            typeof(bool),
+            typeof(CreateBusinessFormFromClassWindow),
+            new FrameworkPropertyMetadata(default(bool)));
+
+    public static readonly DependencyProperty RenderReadOnlyTemplateProperty =
+        DependencyProperty.Register(
+            "RenderReadOnlyTemplate",
+            typeof(bool),
+            typeof(CreateBusinessFormFromClassWindow),
+            new FrameworkPropertyMetadata(default(bool)));
+
     public static readonly DependencyProperty
     ShowFullDynamicFormContentProperty =
         DependencyProperty.Register(
@@ -166,6 +224,13 @@ public partial class CreateBusinessFormFromClassWindow : Window
             typeof(bool),
             typeof(Window),
             new PropertyMetadata(true));
+
+    public static readonly DependencyProperty WrapInBorderProperty =
+        DependencyProperty.Register(
+            "WrapInBorder",
+            typeof(bool),
+            typeof(CreateBusinessFormFromClassWindow),
+            new PropertyMetadata(default(bool)));
 
     private static readonly Logger logger = SettingsHelper.CreateLogger();
 
@@ -176,8 +241,6 @@ public partial class CreateBusinessFormFromClassWindow : Window
     private readonly ClassEntity classEntity;
 
     private string businessForm = string.Empty;
-
-    private int numberOfColumnGroups = 2;
 
     #endregion
 
@@ -195,6 +258,18 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
     #region Public Properties
 
+    public string BindingPropertyPrefix
+    {
+        get
+        {
+            return (string)this.GetValue(BindingPropertyPrefixProperty);
+        }
+        set
+        {
+            this.SetValue(BindingPropertyPrefixProperty, value);
+        }
+    }
+
     public string BusinessForm
     {
         get
@@ -211,59 +286,51 @@ public partial class CreateBusinessFormFromClassWindow : Window
         }
     }
 
-    public static readonly DependencyProperty NumberOfColumnGroupsProperty =
-        DependencyProperty.Register(
-            "NumberOfColumnGroups",
-            typeof(int),
-            typeof(CreateBusinessFormFromClassWindow),
-            new FrameworkPropertyMetadata(default(int),
-                                          OnNumberOfColumnGroupsPropertyChanged,
-                                          CoerceNumberOfColumnGroupsProperty));
-
-    private static object CoerceNumberOfColumnGroupsProperty(
-        DependencyObject d, object basevalue)
+    public string DataFormHeader
     {
-        var window = d as CreateBusinessFormFromClassWindow;
-        if (window == null)
+        get
         {
-            return basevalue;
+            return (string)this.GetValue(DataFormHeaderProperty);
         }
-
-        var value = basevalue is int ? (int)basevalue : 1;
-        if (value < 1)
+        set
         {
-            return 1;
+            this.SetValue(DataFormHeaderProperty, value);
         }
-
-        if (value > 24)
-        {
-            return 24;
-        }
-
-        return value;
     }
 
-    private static void OnNumberOfColumnGroupsPropertyChanged(
-        DependencyObject d, DependencyPropertyChangedEventArgs e)
+    public string FormTitle
     {
-        var window = d as CreateBusinessFormFromClassWindow;
-        if (window == null)
+        get
         {
-            return;
+            return (string)this.GetValue(FormTitleProperty);
         }
+        set
+        {
+            this.SetValue(FormTitleProperty, value);
+        }
+    }
 
-        window.ClearColumnsExceptFirstColumn();
+    public bool IncludeButtonRow
+    {
+        get
+        {
+            return (bool)this.GetValue(IncludeButtonRowProperty);
+        }
+        set
+        {
+            this.SetValue(IncludeButtonRowProperty, value);
+        }
     }
 
     public int NumberOfColumnGroups
     {
         get
         {
-            return (int)GetValue(NumberOfColumnGroupsProperty);
+            return (int)this.GetValue(NumberOfColumnGroupsProperty);
         }
         set
         {
-            SetValue(NumberOfColumnGroupsProperty, value);
+            this.SetValue(NumberOfColumnGroupsProperty, value);
         }
     }
 
@@ -273,6 +340,42 @@ public partial class CreateBusinessFormFromClassWindow : Window
         {
             return this.ClassEntity.IsSilverlight ? UIPlatform.Silverlight :
                    UIPlatform.WPF;
+        }
+    }
+
+    public bool RenderEditTemplate
+    {
+        get
+        {
+            return (bool)this.GetValue(RenderEditTemplateProperty);
+        }
+        set
+        {
+            this.SetValue(RenderEditTemplateProperty, value);
+        }
+    }
+
+    public bool RenderNewItemTemplate
+    {
+        get
+        {
+            return (bool)this.GetValue(RenderNewItemTemplateProperty);
+        }
+        set
+        {
+            this.SetValue(RenderNewItemTemplateProperty, value);
+        }
+    }
+
+    public bool RenderReadOnlyTemplate
+    {
+        get
+        {
+            return (bool)this.GetValue(RenderReadOnlyTemplateProperty);
+        }
+        set
+        {
+            this.SetValue(RenderReadOnlyTemplateProperty, value);
         }
     }
 
@@ -288,9 +391,58 @@ public partial class CreateBusinessFormFromClassWindow : Window
         }
     }
 
+    public bool WrapInBorder
+    {
+        get
+        {
+            return (bool)this.GetValue(WrapInBorderProperty);
+        }
+        set
+        {
+            this.SetValue(WrapInBorderProperty, value);
+        }
+    }
+
     #endregion
 
     #region Methods
+
+    private static object CoerceNumberOfColumnGroupsProperty(
+        DependencyObject d,
+        object basevalue)
+    {
+        var window = d as CreateBusinessFormFromClassWindow;
+        if (window == null)
+        {
+            return basevalue;
+        }
+
+        int value = basevalue is int ? (int)basevalue : 1;
+        if (value < 1)
+        {
+            return 1;
+        }
+
+        if (value > 24)
+        {
+            return 24;
+        }
+
+        return value;
+    }
+
+    private static void OnNumberOfColumnGroupsPropertyChanged(
+        DependencyObject d,
+        DependencyPropertyChangedEventArgs e)
+    {
+        var window = d as CreateBusinessFormFromClassWindow;
+        if (window == null)
+        {
+            return;
+        }
+
+        window.ClearColumnsExceptFirstColumn();
+    }
 
     private void ClearAllListBoxFields()
     {
@@ -325,7 +477,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
     {
         logger.Debug("Entered member.");
 
-        var columnGroupCount = this.gridColumnsContainer.ColumnDefinitions.Count /
+        int columnGroupCount = this.gridColumnsContainer.ColumnDefinitions.Count /
                                2;
 
         // When the requested count is greater than the actual count
@@ -335,8 +487,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
             {
                 // Insert new ColumnDefinition at the end
                 this.gridColumnsContainer.ColumnDefinitions.Insert(
-                    index: this.gridColumnsContainer.ColumnDefinitions.Count,
-                    value: new ColumnDefinition
+                    this.gridColumnsContainer.ColumnDefinitions.Count,
+                    new ColumnDefinition
                 {
                     Width = new GridLength(425, GridUnitType.Pixel),
                     MinWidth = 50
@@ -368,7 +520,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
         }
         else // When requested count is less than or equal to the actual count
         {
-            var lastColumnIndexToKeep = this.NumberOfColumnGroups * 2 - 1;
+            int lastColumnIndexToKeep = this.NumberOfColumnGroups * 2 - 1;
             var listOfGridSplittersToRemove = new List<GridSplitter>();
             var listOfListBoxesToRemove = new List<ListBox>();
 
@@ -401,8 +553,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
             {
                 foreach (DynamicFormEditor dynamicFormEditor in listBox.Items)
                 {
-                    var dynamicFormListBoxContent = dynamicFormEditor.DataContext as
-                                                    DynamicFormListBoxContent;
+                    var dynamicFormListBoxContent =
+                        dynamicFormEditor.DataContext as DynamicFormListBoxContent;
 
                     if (dynamicFormListBoxContent == null)
                     {
@@ -412,8 +564,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
                     string propertyName = dynamicFormListBoxContent.BindingPath;
 
                     foreach (var propertyInformation in
-                             this.ClassEntity.PropertyInformation.Where(propertyInformation =>
-                                     propertyInformation.Name == propertyName))
+                             this.ClassEntity.PropertyInformation.Where(
+                                 propertyInformation => propertyInformation.Name == propertyName))
                     {
                         propertyInformation.HasBeenUsed = false;
                     }
@@ -428,7 +580,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
             while (this.gridColumnsContainer.ColumnDefinitions.Count >
                     lastColumnIndexToKeep + 1)
             {
-                var count = this.gridColumnsContainer.ColumnDefinitions.Count;
+                int count = this.gridColumnsContainer.ColumnDefinitions.Count;
                 this.gridColumnsContainer.ColumnDefinitions.RemoveAt(count - 1);
             }
 
@@ -439,7 +591,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         var collectionView =
             CollectionViewSource.GetDefaultView(this.ClassEntity.PropertyInformation)
-            as CollectionView;
+            as
+            CollectionView;
 
         if (collectionView != null)
         {
@@ -451,8 +604,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
     {
         logger.Debug("Entered member.");
 
-        bool isInsertingTitleRow = !string.IsNullOrEmpty(this.txtFormTitle.Text);
-        var columnGroupListBox =
+        bool isInsertingTitleRow = !string.IsNullOrEmpty(this.FormTitle);
+        List<ListBox> columnGroupListBox =
             this.gridColumnsContainer.Children.OfType<ListBox>()
             .Select(item => item)
             .ToList();
@@ -460,8 +613,12 @@ public partial class CreateBusinessFormFromClassWindow : Window
         int numberOfColumns = (columnGroupListBox.Count * 3) - 1;
         int numberOfRows = columnGroupListBox.Select(listBox =>
                            listBox.Items.Count)
-                           .Concat(new[] { 0 })
-                           .Max();
+                           .Concat(
+                               new[]
+        {
+            0
+        })
+        .Max();
 
         if (numberOfColumns == 0 || numberOfRows == 0)
         {
@@ -477,8 +634,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         var sb = new StringBuilder(10240);
 
-        if (this.chkWrapInBorder.IsChecked.HasValue &&
-                this.chkWrapInBorder.IsChecked.Value)
+        if (this.WrapInBorder)
         {
             sb.AppendLine(
                 UIControlFactory.Instance.GetUIControl(UIControlRole.Border,
@@ -503,8 +659,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
             sb.AppendLine(STR_RowDefinitionHeightAuto);
         }
 
-        if (this.chkIncludeButtonRow.IsChecked.HasValue
-                && this.chkIncludeButtonRow.IsChecked.Value)
+        if (this.IncludeButtonRow)
         {
             sb.AppendLine(STR_RowDefinitionHeightAuto);
         }
@@ -539,7 +694,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
                     string.Format(
                         STR_GridColumn0GridRow0GridColumnSpanText,
                         numberOfColumns,
-                        this.txtFormTitle.Text),
+                        this.FormTitle),
                     true,
                     string.Empty));
         }
@@ -592,7 +747,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
                 }
 
                 string bindingPath = string.Concat(
-                                         this.txtBindingPropertyPrefix.Text,
+                                         this.BindingPropertyPrefix,
                                          field.BindingPath);
 
                 switch (field.ControlType)
@@ -699,8 +854,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
             sb.AppendLine();
         }
 
-        if (this.chkIncludeButtonRow.IsChecked.HasValue
-                && this.chkIncludeButtonRow.IsChecked == true)
+        if (this.IncludeButtonRow)
         {
             if (!this.ClassEntity.IsSilverlight)
             {
@@ -742,8 +896,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
         sb.Replace("  ", " ");
         sb.AppendLine(this.GetCloseTagForControlFromDefaults(UIControlRole.Grid));
 
-        if (this.chkWrapInBorder.IsChecked.HasValue &&
-                this.chkWrapInBorder.IsChecked.Value)
+        if (this.WrapInBorder)
         {
             sb.AppendLine(this.GetCloseTagForControlFromDefaults(
                               UIControlRole.Border));
@@ -827,9 +980,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
                 throw new InvalidOperationException("field is null");
             }
 
-            string bindingPath = string.Concat(
-                                     this.txtBindingPropertyPrefix.Text,
-                                     field.BindingPath);
+            string bindingPath = string.Concat(this.BindingPropertyPrefix,
+                                               field.BindingPath);
 
             if (string.IsNullOrEmpty(field.StringFormat))
             {
@@ -889,6 +1041,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
     private void CreateSilverlightDataForm(List<ListBox> columnGroupListBox,
                                            int numberOfRows)
     {
+        Contract.Requires<ArgumentNullException>(columnGroupListBox != null);
+        Contract.Requires<ArgumentOutOfRangeException>(numberOfRows < 0);
+
         var sb = new StringBuilder(10240);
         sb.AppendLine(string.Empty);
         sb.AppendLine("<!-- Add to your root tag if required");
@@ -902,9 +1057,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
         sb.AppendLine(string.Empty);
         sb.Append("<dataFormToolkit:DataForm  AutoGenerateFields=\"false\" ");
 
-        if (!string.IsNullOrEmpty(this.txtDataFormHeader.Text))
+        if (!string.IsNullOrEmpty(this.DataFormHeader))
         {
-            sb.AppendFormat("Header=\"{0}\" ", this.txtDataFormHeader.Text);
+            sb.AppendFormat("Header=\"{0}\" ", this.DataFormHeader);
         }
 
         sb.AppendLine(">");
@@ -913,12 +1068,12 @@ public partial class CreateBusinessFormFromClassWindow : Window
                             numberOfRows);
 
         // --------------------------------------------------------
-        if (this.chkRenderEditTemplate.IsChecked == true)
+        if (this.RenderEditTemplate)
         {
             sb.Append(sb2);
         }
 
-        if (this.chkRenderReadOnlyTemplate.IsChecked == true)
+        if (this.RenderReadOnlyTemplate)
         {
             sb2.AppendLine();
             sb2.AppendLine();
@@ -927,7 +1082,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
                 .Replace(".EditTemplate", ".ReadOnlyTemplate"));
         }
 
-        if (this.chkRenderNewItemTemplate.IsChecked == true)
+        if (this.RenderNewItemTemplate)
         {
             sb2.AppendLine();
             sb2.AppendLine();
@@ -949,19 +1104,22 @@ public partial class CreateBusinessFormFromClassWindow : Window
         logger.Debug("Entered member.");
 
         // Setup data to create the form
-        var columnGroupListBox =
+        List<ListBox> columnGroupListBox =
             this.gridColumnsContainer.Children.OfType<ListBox>()
             .Select(obj => obj)
             .ToList();
 
-        int numberOfColumns = columnGroupListBox.Count + 1;
         int numberOfRows = columnGroupListBox.Select(listBox =>
                            listBox.Items.Count)
-                           .Concat(new[] { 0 })
-                           .Max();
+                           .Concat(
+                               new[]
+        {
+            0
+        })
+        .Max();
 
         // Check that the user has given us what we need to create the form
-        if (numberOfColumns == 0 || numberOfRows == 0)
+        if (numberOfRows == 0)
         {
             MessageBox.Show(
                 "You do not have any properties added to the layout.",
@@ -970,8 +1128,6 @@ public partial class CreateBusinessFormFromClassWindow : Window
                 MessageBoxImage.Exclamation);
             return;
         }
-
-        //lastGridRowIndex = numberOfRows;
 
         // Now create the form
         this.CreateSilverlightDataForm(columnGroupListBox, numberOfRows);
@@ -1014,18 +1170,16 @@ public partial class CreateBusinessFormFromClassWindow : Window
         sb.AppendFormat(STR_DataGridColumnsOpen, Namespace);
         sb.AppendLine();
 
-        foreach (DynamicFormEditor objDynamicFormEditor in listBox.Items)
+        foreach (DynamicFormEditor dynamicFormEditor in listBox.Items)
         {
-            var field = objDynamicFormEditor.DataContext as
-                        DynamicFormListBoxContent;
+            var field = dynamicFormEditor.DataContext as DynamicFormListBoxContent;
             if (field == null)
             {
                 throw new InvalidOperationException("field is null");
             }
 
-            string strBindingPath = string.Concat(
-                                        this.txtBindingPropertyPrefix.Text,
-                                        field.BindingPath);
+            string bindingPath = string.Concat(this.BindingPropertyPrefix,
+                                               field.BindingPath);
 
             if (field.RenderAsGridTemplateColumn
                     || field.ControlType == DynamicFormControlType.Image
@@ -1037,15 +1191,10 @@ public partial class CreateBusinessFormFromClassWindow : Window
                     sb,
                     Namespace,
                     field,
-                    strBindingPath);
+                    bindingPath);
             }
             else
             {
-                // BUG: CodeContracts warning.
-                // The Boolean condition ((XamlHelpmeet.UI.DynamicForm.DynamicFormListBoxContent)objField)
-                // .ControlType != 2 always evaluates to a constant value. If it (or its negation) appear in the
-                // source code, you may have some dead code or redundant check (2 more unreached
-                // assertion(s) at the same location)
                 switch (field.ControlType)
                 {
                     case DynamicFormControlType.CheckBox:
@@ -1053,7 +1202,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
                             "<{0}DataGridCheckBoxColumn Header=\"{1}\" Binding=\"{{Binding {2}}}\" SortberPath=\"{2}\" /> ",
                             Namespace,
                             field.AssociatedLabel,
-                            strBindingPath);
+                            bindingPath);
                         break;
 
                     case DynamicFormControlType.Label:
@@ -1063,7 +1212,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
                                 "<{0}DataGridTextColumn IsReadOnly=\"true\" Header=\"{1}\" Binding=\"{{Binding {2}}}\" SortberPath=\"{2}\" />",
                                 Namespace,
                                 field.AssociatedLabel,
-                                strBindingPath));
+                                bindingPath));
                         break;
 
                     case DynamicFormControlType.TextBox:
@@ -1072,7 +1221,7 @@ public partial class CreateBusinessFormFromClassWindow : Window
                                 "<{0}DataGridTextColumn Header=\"{1}\" Binding=\"{{Binding {2}}}\" SortberPath=\"{2}\" />",
                                 Namespace,
                                 field.AssociatedLabel,
-                                strBindingPath));
+                                bindingPath));
                         break;
 
                     default:
@@ -1340,8 +1489,9 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         if (strDataGridTag.Contains(":"))
         {
-            strDataGridNamespace = strDataGridTag.Substring(1,
-                                   strDataGridTag.IndexOf(":", System.StringComparison.Ordinal));
+            strDataGridNamespace = strDataGridTag.Substring(
+                                       1,
+                                       strDataGridTag.IndexOf(":", StringComparison.Ordinal));
             sb.AppendLine(
                 "<!--The following namespace declaration may be necessary for you to add to the root element of this XAML file.-->");
             sb.AppendLine(
@@ -1356,16 +1506,14 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         foreach (DynamicFormEditor objDynamicFormEditor in listBox.Items)
         {
-            var field = objDynamicFormEditor.DataContext as
-                        DynamicFormListBoxContent;
+            var field = objDynamicFormEditor.DataContext as DynamicFormListBoxContent;
             if (field == null)
             {
                 throw new InvalidOperationException("field is null");
             }
 
-            string strBindingPath = string.Concat(
-                                        this.txtBindingPropertyPrefix.Text,
-                                        field.BindingPath);
+            string strBindingPath = string.Concat(this.BindingPropertyPrefix,
+                                                  field.BindingPath);
 
             switch (field.ControlType)
             {
@@ -1534,9 +1682,8 @@ public partial class CreateBusinessFormFromClassWindow : Window
             throw new InvalidOperationException("field is null");
         }
 
-        string bindingPath = string.Concat(
-                                 this.txtBindingPropertyPrefix.Text,
-                                 field.BindingPath);
+        string bindingPath = string.Concat(this.BindingPropertyPrefix,
+                                           field.BindingPath);
 
         sb.AppendFormat(
             "<dataFormToolkit:DataField Grid.Row=\"{0}\" Grid.Column=\"{1}\" ",
@@ -1762,19 +1909,19 @@ public partial class CreateBusinessFormFromClassWindow : Window
 
         var source =
             CollectionViewSource.GetDefaultView(this.classEntity.PropertyInformation)
-            as CollectionView;
+            as
+            CollectionView;
         if (source == null)
         {
             throw new InvalidOperationException("objCollectionView is null");
         }
 
         Contract.Assume(source.GroupDescriptions != null);
-        source.GroupDescriptions.Add(new
-                                     PropertyGroupDescription("HasBeenUsed"));
+        source.GroupDescriptions.Add(new PropertyGroupDescription("HasBeenUsed"));
         source.SortDescriptions.Add(
             new SortDescription("HasBeenUsed", ListSortDirection.Ascending));
-        source.SortDescriptions.Add(
-            new SortDescription("Name", ListSortDirection.Ascending));
+        source.SortDescriptions.Add(new SortDescription("Name",
+                                    ListSortDirection.Ascending));
 
         // ++ Creates a list column and a grid splitter as
         // ++ first two columns of gridColumnsContainer.
@@ -1828,13 +1975,15 @@ public partial class CreateBusinessFormFromClassWindow : Window
     {
         logger.Debug("Entered member.");
 
-        this.txtBindingPropertyPrefix.Text =
-            this.txtBindingPropertyPrefix.Text.Trim();
+        this.SetCurrentValue(BindingPropertyPrefixProperty,
+                             this.BindingPropertyPrefix.Trim());
 
-        if (this.txtBindingPropertyPrefix.Text.Length > 0
-                && !this.txtBindingPropertyPrefix.Text.EndsWith("."))
+        if (this.BindingPropertyPrefix.Length > 0 &&
+                !this.BindingPropertyPrefix.EndsWith("."))
         {
-            this.txtBindingPropertyPrefix.Text += ".";
+            this.SetCurrentValue(
+                BindingPropertyPrefixProperty,
+                this.BindingPropertyPrefix + ".");
         }
 
         switch (this.cboSelectObjectToCreate.SelectedValue as string)
@@ -1937,31 +2086,31 @@ public partial class CreateBusinessFormFromClassWindow : Window
         Process.Start(psi);
     }
 
-    /*    private void txtNumberOfColumnGroups_KeyDown(object sender,
-                KeyEventArgs e)
-        {
-            Contract.Requires<InvalidOperationException>(sender is TextBox);
-
-            if (e.Key == Key.Enter)
-            {
-                int intNumberOfColumnGroups;
-
-                if (int.TryParse((sender as TextBox).Text, out intNumberOfColumnGroups)
-                        && intNumberOfColumnGroups >= 1)
-                {
-                    this.ClearColumnsExceptFirstColumn(intNumberOfColumnGroups);
-                }
-                else
-                {
-                    MessageBox.Show(
-                        "The number of column groups must be an integer greater than or equal to one, please reenter.",
-                        "Invalid Data",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Exclamation);
-                }
-            }
-        }*/
-
     #endregion
+
+    /*    private void txtNumberOfColumnGroups_KeyDown(object sender,
+            KeyEventArgs e)
+        {
+        Contract.Requires<InvalidOperationException>(sender is TextBox);
+
+        if (e.Key == Key.Enter)
+        {
+            int intNumberOfColumnGroups;
+
+            if (int.TryParse((sender as TextBox).Text, out intNumberOfColumnGroups)
+                    && intNumberOfColumnGroups >= 1)
+            {
+                this.ClearColumnsExceptFirstColumn(intNumberOfColumnGroups);
+            }
+            else
+            {
+                MessageBox.Show(
+                    "The number of column groups must be an integer greater than or equal to one, please reenter.",
+                    "Invalid Data",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Exclamation);
+            }
+        }
+        }*/
 }
 }
